@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>アイギス大雑把計算機</title>
+<link type="text/css" rel="stylesheet" href="css/main.css">
+<link type="text/css" rel="stylesheet" href="css/theme.blue.css">
+<link type="text/css" rel="stylesheet" href="css/sorter.css">
+</head>
+<body>
+<div id="contents">
+    <div id="main">
+        <div class="mainrow">
+            <div class="maincap">確認内容：</div>
+            <div class="mainval">
+                <select id="chkMode">
+                    <option value="atk">攻撃
+                    <option value="def">耐久
+                    <option value="reha">リハビリ
+                    <option value="mix">耐+DPS
+                </select>
+            </div>
+        </div>
+
+        <!-- 攻撃 -->
+        <div id="atkField" class="admField">
+            <div class="mainrow">
+                <label class="maincap">特攻：</label>
+                <select id="atksp">
+                    <option value="999">なし
+                    <option value="1">地上
+                    <option value="2">飛行
+                    <option value="3">アーマー
+                    <option value="4">アンデッド
+                    <option value="5">ドラゴン
+                    <option value="6">妖怪
+                    <option value="7">デーモン
+                </select>
+            </div>
+            
+            <div class="mainrow">
+                <label class="maincap">ＨＰ：</label>
+                <input type="number" id="atkHP" class="num6" min="1" value="614" />
+            </div>
+
+            <div class="mainrow">
+                <label class="maincap">防御：</label>
+                <input type="number" id="atkDef" class="num5" min="0" value="0" />
+            </div>
+
+            <div class="mainrow">
+                <label class="maincap">魔耐：</label>
+                <input type="number" id="atkResi" class="num3" min="0" max="100" value="0" />
+            </div>
+
+            <div class="mainrow">
+                <label class="maincap">回数：</label>
+                <input type="radio" name="atkMode" value="cnt" checked />
+                <input type="number" id="atkCnt" class="num3" min="1" value="1" /> 発以内
+            </div>
+            
+            <div class="mainrow">
+                <label class="maincap">時間：</label>
+                <input type="radio" name="atkMode" value="time" />
+                <input type="number" id="atkTime" class="num3" min="1" value="20" disabled /> 秒以内
+            </div>
+                        
+            <div class="mainrow">
+                <label class="maincap">DPS：</label>
+                <input type="radio" name="atkMode" value="dps" style="margin-top: 4px;"/>
+            </div>
+        </div>
+
+        <!-- 耐久 -->
+        <div id="defField" class="admField" style="display:none;">
+            <div class="mainrow">
+                <label class="maincap">攻撃：</label>
+                <input type="number" id="defAtk" class="num5" min="1" value="5200" />
+            </div>
+
+            <div class="mainrow">
+                <label class="maincap">物魔：</label>
+                <select id="defType">
+                    <option value="1">物理
+                    <option value="2">魔法
+                </select>
+            </div>
+
+            <div class="mainrow">
+                <label class="maincap">回数：</label>
+                <input type="number" id="defCnt" class="num3" min="1" value="1" /> 発
+            </div>
+        </div>
+        
+        <!-- リハビリ -->
+        <div id="rehaField" class="admField" style="display:none;">
+            <div class="mainrow">
+                <label class="maincap">内容：</label>
+                <select id="rehaMode">
+                    <option value="all">全て
+                    <option value="hp">ＨＰ
+                    <option value="atk">攻撃
+                    <option value="def">防御
+                </select>
+            </div>
+        </div>
+
+        <!-- 耐+DPS -->
+        <div id="mixField" class="admField" style="display: none;">
+            <div class="mainrow">
+                <label class="maincap">特攻：</label>
+                <select id="mixsp">
+                    <option value="999">なし
+                    <option value="1">地上
+                    <option value="2">飛行
+                    <option value="3">アーマー
+                    <option value="4">アンデッド
+                    <option value="5">ドラゴン
+                    <option value="6">妖怪
+                    <option value="7">デーモン
+                </select>
+            </div>
+            
+            <div class="mainrow">
+                <label class="maincap">攻撃：</label>
+                <input type="number" id="mixAtk" class="num6" min="1" value="2500" />
+            </div>
+            
+            <div class="mainrow">
+                <label class="maincap">物魔：</label>
+                <select id="mixType">
+                    <option value="1">物理
+                    <option value="2">魔法
+                </select>
+            </div>
+
+
+            <div class="mainrow">
+                <label class="maincap">防御：</label>
+                <input type="number" id="mixDef" class="num5" min="0" value="1000" />
+            </div>
+
+            <div class="mainrow">
+                <label class="maincap">魔耐：</label>
+                <input type="number" id="mixResi" class="num3" min="0" max="100" value="50" />
+            </div>
+            
+            <div class="mainrow">
+                <label class="maincap">Ｌｖ：</label>
+                <label><input type="radio" name="mixLv" value="0" style="margin-top: 4px;" checked />最低限</label>
+                <label><input type="radio" name="mixLv" value="1"/>カンスト</label>
+            </div>
+        </div>
+        
+        <!-- submit -->
+        <div class="mainrow">
+            <label class="maincap">　</label>
+            <input type="button" class="submit" value="データロード中" style="margin-top: 5px;" disabled />
+        </div>
+
+        <!-- フィルタ -->
+        <div class="mainrow">　</div>
+        <div id="filter">
+            <div class="optrow">
+                <label class="optcap">ﾌｨﾙﾀ類：</label>
+                <label><input type="checkbox" id="use_skill" />スキル使用</label>
+            </div>
+
+            <div class="optrow">
+                <label class="optcap">CC：</label>
+                <label><input type="checkbox" id="ccall" group="cc_" checked />全</label>
+                <label><input type="checkbox" id="cc_0" group="cc_" grouptop="ccall" value="0" />未</label>
+                <label><input type="checkbox" id="cc_1" group="cc_" grouptop="ccall" value="1" />CC</label>
+                <label><input type="checkbox" id="cc_2" group="cc_" grouptop="ccall" value="2" />覚</label>
+                <label><input type="checkbox" id="cc_3" group="cc_" grouptop="ccall" value="3" />Ｓ</label>
+            </div>
+
+            <div class="optrow">
+                <label class="optcap">レア：</label>
+                <label><input type="checkbox" id="rareall" group="rare_" checked />全</label>
+                <label><input type="checkbox" id="rare_1" group="rare_" grouptop="rareall" value="1" />鉄</label>
+                <label><input type="checkbox" id="rare_2" group="rare_" grouptop="rareall" value="2" />銅</label>
+                <label><input type="checkbox" id="rare_3" group="rare_" grouptop="rareall" value="3" />銀</label>
+            </div>
+
+            <div class="optrow">
+                <label class="optcap">　</label>
+                <label><input type="checkbox" id="rare_4" group="rare_" grouptop="rareall"  value="4" />金</label>
+                <label><input type="checkbox" id="rare_5" group="rare_" grouptop="rareall"  value="5" />白</label>
+                <label><input type="checkbox" id="rare_6" group="rare_" grouptop="rareall"  value="6" />黒</label>
+                <label><input type="checkbox" id="rare_7" group="rare_" grouptop="rareall"  value="7" />青</label>
+            </div>
+
+            <div class="optrow">
+                <label class="optcap">属性：</label>
+                <label class="tooltip" tooltip="物理" ><input type="checkbox" id="atkmat"checked />物</label>
+                <label class="tooltip" tooltip="魔法"><input type="checkbox" id="atkmag" checked />魔</label>
+                <label class="tooltip" tooltip="回復"><input type="checkbox" id="atkheal" />回</label>
+                <label class="tooltip" tooltip="ニート"><input type="checkbox" id="atkneet" />NEET</label>
+            </div>
+
+            <div class="optrow">
+                <label class="optcap">遠近：</label>
+                <label><input type="checkbox" id="atkmelee" class="filter_melran" checked />近距離</label>
+                <label><input type="checkbox" id="atkranged" class="filter_melran" checked />遠距離</label>
+            </div>
+
+            <div class="optrow">
+                <label class="optcap">職：</label>
+                <label class="region_toggle" region="filter_class">
+                    <label>田</label>　(クリックで開閉)
+                </label>
+            </div>
+
+            <div class="optrow">
+                <div id="filter_class" class="bufrow hiddenrow" style="display: none; height: 200px !important;">
+                    <label class="optcap">　</label>
+                    <div class="fildiv">
+                        <table id='fil_class_melee' class="filtbl" border="1" rules="rows">
+                            <tr>
+                                <td>
+                                    <label><input type="checkbox" id="clsmel" class="filclass" group="cls_mel" checked />全て</label>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br>
+                    <label class="optcap">　</label>
+                    <div class="fildiv">
+                        <table id='fil_class_ranged' class="filtbl" border="1" rules="rows">
+                            <tr>
+                                <td>
+                                    <label><input type="checkbox" id="clsran" class="filclass" group="cls_ran" checked />全て</label>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="option">
+        <div id="buff">
+            <div class="bufrow">
+                <label class="bufcap">好感度：</label>
+                <label><input type="radio" name="bonus" value="0" />なし</label>
+                <label><input type="radio" name="bonus" value="1" checked />あり</label>   
+            </div>
+
+            <div class="bufrow">
+                <label class="bufcap">士気高揚：</label>
+                <label class="tooltip" tooltip="１倍" ><input type="radio" name="op_prince" class="skillradio" value="1" style="margin-right: 3px !important;" />なし</label>
+                <label class="tooltip" tooltip="１．１５倍" ><input type="radio" name="op_prince" class="skillradio" value="1.15" style="margin: 0px 3px 0px 6px !important;" />末裔</label>
+                <label class="tooltip" tooltip="１．１７倍" ><input type="radio" name="op_prince" class="skillradio" value="1.17" style="margin: 0px 3px 0px 6px !important;" />勇者</label>
+                <label class="tooltip" tooltip="１．１９倍" ><input type="radio" name="op_prince" class="skillradio" value="1.19" style="margin: 0px 3px 0px 6px !important;" />救世主</label>
+                <label class="tooltip" tooltip="１．２１倍" ><input type="radio" name="op_prince" class="skillradio" value="1.21" style="margin: 0px 3px 0px 6px !important;" checked />大英雄</label>
+                <label class="tooltip" tooltip="１．１２倍" ><input type="radio" name="op_prince" class="skillradio" value="1.12" style="margin: 0px 3px 0px 6px !important;" />その他</label>
+            </div>
+
+            <div class="bufrow">
+                <label class="bufcap">ＨＰ強化：</label>
+                <label><input type="checkbox" id="op_hp1" value="" class="hage" />【小】</label>
+                <label class="tooltip" tooltip="アデル(１０％)" ><input type="checkbox" id="op_hp2" value="0.1" />【中】</label>
+                <label class="tooltip" tooltip="アイシャ(１４％)" ><input type="checkbox" id="op_hp3" value="0.14" />【大】</label>
+            </div>
+
+            <div class="bufrow">
+                <label class="bufcap">攻撃強化：</label>
+                <label class="tooltip" tooltip="アリア(２％)" ><input type="checkbox" id="op_atk1" value="0.02" />【小】</label>
+                <label class="tooltip" tooltip="ウズメ(５％)" ><input type="checkbox" id="op_atk2" value="0.05" />【中】</label>
+                <label class="tooltip" tooltip="キキョウ(７％)" ><input type="checkbox" id="op_atk3" value="0.07" />【大】</label>
+            </div>
+
+            <div class="bufrow">
+                <label class="bufcap">防御強化：</label>
+                <label class="tooltip" tooltip="ケイティ(２％)" ><input type="checkbox" id="op_def1" value="0.02" />【小】</label>
+                <label class="tooltip" tooltip="レン(５％)" ><input type="checkbox" id="op_def2" value="0.05" />【中】</label>
+                <label class="tooltip" tooltip="イリス(７％)" ><input type="checkbox" id="op_def3" value="0.07" />【大】</label>
+                <label class="tooltip" tooltip="(１７％)" ><input type="checkbox" id="op_louise" value="0.17" />ルイーズ</label>
+            </div>
+
+            <div class="bufrow">
+                <label class="bufcap">特殊強化：</label>
+                <label class="tooltip" tooltip="<s>面倒なので</s>未実装です、王子！" ><input type="checkbox" id="op_anna" class="hage"/>アンナ　</label>
+                <label class="tooltip" tooltip="竜族(ドラゴンライダー系含)のＨＰ,防御＋５％" ><input type="checkbox" id="op_ekidona" />エキドナ</label>
+                <label class="tooltip" tooltip="メイジ、ビショップ、メイジアーマー、魔法剣士の攻撃力＋５％" ><input type="checkbox" id="op_ester" />エステル</label>
+                <label class="tooltip" tooltip="エルフとドワーフのＨＰ＋１５％" ><input type="checkbox" id="op_olivie" />オリヴィエ</label>
+            </div>
+
+            <div class="bufrow">
+                <label class="bufcap">　</label>
+                <label class="tooltip" tooltip="金以下のユニットのＨＰ,攻撃,防御＋５％" ><input type="checkbox" id="op_sherry" />シェリー</label>
+                <label class="tooltip" tooltip="月姫カグヤの攻撃,防御＋１０％" ><input type="checkbox" id="op_hikage" />ヒカゲ　</label>
+                <label class="tooltip" tooltip="竜族(ドラゴンライダー系含)の攻撃力＋７％" ><input type="checkbox" id="op_lubinus" />ルビナス</label>
+            </div>
+
+            <div class="bufrow">
+                <label class="bufcap">近接強化：</label>
+                <label class="tooltip" tooltip="近接の攻撃力＋５％" ><input type="checkbox" id="op_kagura" />カグラ　</label>
+                <label class="tooltip" tooltip="近接のＨＰ,攻撃,防御＋５％" ><input type="checkbox" id="op_matsuri" />マツリ　</label>
+                <label class="tooltip" tooltip="近接の魔法耐性＋１０" ><input type="checkbox" id="op_grace" value="500"/>グレース</label>
+            </div>
+
+            <div class="bufrow">
+                <label class="bufcap">職別強化：</label>
+                <label class="region_toggle" region="div_melee">
+                    <label>田</label>　近接(クリックで開閉)
+                </label>
+            </div>
+
+            <div class="bufrow">
+                <div id="div_melee" class="bufrow hiddenrow">
+                    <label class="bufcap">　</label>
+                    <div class="overflow-y">
+                        <table id="op_melee" class="bufftbl" border="1" rules="rows"></table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bufrow">
+                <label class="bufcap">　</label>
+                <label class="region_toggle" region="div_ranged">
+                    <label>田</label>　遠距離(クリックで開閉)
+                </label>
+            </div>
+
+            <div class="bufrow">
+                <div id="div_ranged" class="bufrow hiddenrow">
+                    <label class="bufcap">　</label>
+                    <div class="overflow-y">
+                        <table id="op_ranged" class="bufftbl" border="1" rules="rows"></table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bufrow">
+                <label class="bufcap">スキルバフ：</label>
+                <label class="region_toggle" region="div_skillbuff">
+                    <label>田</label>　(クリックで開閉)
+                </label>
+            </div>
+
+            <div id="div_skillbuff" class="region">
+                <div class="bufrow">
+                    <label class="bufcap">攻撃強化：</label>
+                    <label><input type="radio" name="incatk" class="skillradio" value="1.0" style="margin-right: 3px !important;" checked />なし</label>
+                    <span>　<label id="incatk" btype="a1">1.0</label>倍</span>
+                </div>
+
+                <div class="bufrow">
+                    <label class="bufcap">　</label>
+                    <input type="radio" name="incatk" class="skillradio" value="1.05" />
+                    <select id="skill_shuka" class="skillsel" bmin="1.05" bmax="1.1" bslv="5" btgt="incatk">
+                        <option value="0">猛将の鼓舞
+                        <option value="0">Lv1
+                        <option value="1">Lv2
+                        <option value="2">Lv3
+                        <option value="3">Lv4
+                        <option value="4">Lv5
+                    </select>
+
+                    <input type="radio" name="incatk" class="skillradio" value="1.1" />
+                    <select id="skill_uzume" class="skillsel" bmin="1.1" bmax="1.2" bslv="5" btgt="incatk">
+                        <option value="0">烈火の陣
+                        <option value="0">Lv1
+                        <option value="1">Lv2
+                        <option value="2">Lv3
+                        <option value="3">Lv4
+                        <option value="4">Lv5
+                    </select>
+
+                    <input type="radio" name="incatk" class="skillradio" value="1.2" />
+                    <select id="skill_uzume_s" class="skillsel" bmin="1.2" bmax="1.3" bslv="3" btgt="incatk">
+                        <option value="0">猛火の陣
+                        <option value="0">1回目
+                        <option value="1">2回目
+                        <option value="2">3回目
+                    </select>
+                </div>
+
+                <div class="bufrow">
+                    <label class="bufcap">防御強化：</label>
+                    <label><input type="radio" name="incdef" class="skillradio" value="1.0" style="margin-right: 3px !important;" checked />なし</label>
+                    <span>　<label id="incdef" btype="d1">1.0</label>倍</span>
+                </div>
+                <div class="bufrow">
+                    <label class="bufcap">　</label>
+                    <input type="radio" name="incdef" class="skillradio" value="1.1" />
+                    <select id="skill_ren" class="skillsel" bmin="1.1" bmax="1.2" bslv="5" btgt="incdef">
+                        <option value="0">鉄壁の陣
+                        <option value="0">Lv1
+                        <option value="1">Lv2
+                        <option value="2">Lv3
+                        <option value="3">Lv4
+                        <option value="4">Lv5
+                    </select>
+
+                    <input type="radio" name="incdef" class="skillradio" value="1.2" />
+                    <select id="skill_ren_s" class="skillsel" bmin="1.2" bmax="1.3" bslv="3" btgt="incdef">
+                        <option value="0">金城の陣
+                        <option value="0">1回目
+                        <option value="1">2回目
+                        <option value="2">3回目
+                    </select>
+                </div>
+
+                <div class="bufrow">
+                    <label class="bufcap">プロテクション：</label>
+                    <label><input type="radio" name="incpro" class="skillradio" value="1.0" checked />なし</label>
+                    <span>　<label id="incpro">1.0</label>倍</span>
+                </div>
+                <div class="bufrow">
+                    <label class="bufcap">　</label>
+                    <input type="radio" name="incpro" class="skillradio" value="1.3" />
+                    <select id="skill_iris_1" class="skillsel" btype="d2" bmin="1.3" bmax="1.7" bslv="5" btgt="incpro">
+                        <option value="0">プロテクションI
+                        <option value="0">Lv1
+                        <option value="1">Lv2
+                        <option value="2">Lv3
+                        <option value="3">Lv4
+                        <option value="4">Lv5
+                    </select>
+
+                    <input type="radio" name="incpro" class="skillradio" value="1.5" />
+                    <select id="skill_iris_2" class="skillsel" btype="d2" bmin="1.5" bmax="2" bslv="5" btgt="incpro">
+                        <option value="0">プロテクションII
+                        <option value="0">Lv1
+                        <option value="1">Lv2
+                        <option value="2">Lv3
+                        <option value="3">Lv4
+                        <option value="4">Lv5
+                    </select>
+
+                    <input type="radio" name="incpro" class="skillradio" value="2.5" />
+                    <select id="skill_iris_s" class="skillsel" btype="d2" bmin="2.5" bmax="2.5" bslv="1" btgt="incpro">
+                        <option value="0">聖女の結界
+                    </select>
+                </div>
+
+                <!--
+                <div class="bufrow">
+                    <label class="bufcap">物理ﾀﾞﾒｰｼﾞ減少：</label>
+                    <label><input type="radio" name="dmgcut_mat" class="skillradio" value="1.0" style="margin-right: 3px !important;" checked />なし</label>
+                    <span>　<label id="dmgcut_mat" btype="mat1">1.0</label>倍</span>
+                </div>
+                -->
+
+                <div class="bufrow">
+                    <label class="bufcap">魔法ﾀﾞﾒｰｼﾞ減少：</label>
+                    <label><input type="radio" name="dmgcut_mag" class="skillradio" value="1.0" style="margin-right: 3px !important;" checked />なし</label>
+                    <span>　<label id="dmgcut_mag" btype="mag1">1.0</label>倍</span>
+                </div>
+                <div class="bufrow">
+                    <label class="bufcap">　</label>
+                    <input type="radio" name="dmgcut_mag" class="skillradio" value="0.95" />
+                    <select id="skill_odette" class="skillsel" bmin="0.95" bmax="0.8" bslv="16" btgt="dmgcut_mag">
+                        <option value="0">マジックバリア
+                        <option value="0">Lv1
+                        <option value="1">Lv2
+                        <option value="2">Lv3
+                        <option value="3">Lv4
+                        <option value="4">Lv5
+                        <option value="5">Lv6
+                        <option value="6">Lv7
+                        <option value="7">Lv8
+                        <option value="8">Lv9
+                        <option value="9">Lv10
+                        <option value="10">Lv11
+                        <option value="11">Lv12
+                        <option value="12">Lv13
+                        <option value="13">Lv14
+                        <option value="14">Lv15
+                        <option value="15">Lv16
+                    </select>
+                </div>
+
+                <div class="bufrow">
+                    <label class="bufcap" style="margin-top: 4px;">特殊強化：</label>
+                    <label class="tooltip" tooltip="スキル中、銀ユニの攻撃,防御を上昇<br>Lv1:　1.1倍<br>Lv2:約1.1倍<br>Lv3:約1.1倍<br>Lv4:約1.2倍<br>Lv5:　1.2倍">
+                        <input type="checkbox" id="inc_rosette" class="skillcheckbox" value="1" />ロゼット
+                    </label>
+                    <select id="skill_rosette" bmin="1.1" bmax="1.2" bslv="5" btgt="inc_rosette" disabled>
+                        <option value="0">ダモクレスの剣
+                        <option value="0">Lv1
+                        <option value="1">Lv2
+                        <option value="2">Lv3
+                        <option value="3">Lv4
+                        <option value="4">Lv5
+                    </select>
+                </div>
+
+                <div class="bufrow">
+                    <label class="bufcap">　</label>
+                    <label><input type="checkbox" id="op_enchant" />マジックウェポン</label>
+                </div>
+            </div><!-- div_skillbuff -->
+
+            <div class="bufrow">
+                <label class="bufcap">敵デバフ：</label>
+                <label class="region_toggle" region="div_enemydebuff">
+                    <label>田</label>　(クリックで開閉)
+                </label>
+            </div>
+
+            <div id="div_enemydebuff" class="region">
+                <div class="bufrow">
+                    <label class="bufcap">攻撃力減少：</label>
+                    <label><input type="radio" name="emy_debatk" class="skillradio" value="1.0" style="margin-right: 3px !important;" checked />なし</label>
+                    <span>　<label id="emy_debatk" btype="debatk1">1.0</label>倍</span>
+                </div>
+                <div class="bufrow">
+                    <label class="bufcap">　</label>
+                    <label class="tooltip" tooltip="１０％">
+                        <input type="radio" name="emy_debatk" class="skillradio" value="0.9" btgt="emy_debatk" style="margin-right: 3px !important;" />呪術師
+                    </label>
+
+                    <input type="radio" name="emy_debatk" class="skillradio" value="0.84" btgt="emy_debatk" />
+                    <select class="skillsel" bmin="0.84" bmax="0.8" bslv="5" btgt="emy_debatk">
+                        <option value="0">カースボイス
+                        <option value="0">Lv1
+                        <option value="1">Lv2
+                        <option value="2">Lv3
+                        <option value="3">Lv4
+                        <option value="4">Lv5
+                    </select>
+
+                    <input type="radio" name="emy_debatk" class="skillradio" value="0.97" />
+                    <select class="skillsel" bmin="0.97" bmax="0.9" bslv="10" btgt="emy_debatk">
+                        <option value="0">暗黒オーラ
+                        <option value="0">Lv1
+                        <option value="1">Lv2
+                        <option value="2">Lv3
+                        <option value="3">Lv4
+                        <option value="4">Lv5
+                        <option value="5">Lv6
+                        <option value="6">Lv7
+                        <option value="7">Lv8
+                        <option value="8">Lv9
+                        <option value="9">Lv10
+                    </select>
+
+                    <input type="radio" name="emy_debatk" class="skillradio" value="0.75" />
+                    <select class="skillsel" bmin="0.75" bmax="0.7" bslv="5" btgt="emy_debatk">
+                        <option value="0">真・暗黒オーラ
+                        <option value="0">Lv1
+                        <option value="1">Lv2
+                        <option value="2">Lv3
+                        <option value="3">Lv4
+                        <option value="4">Lv5
+                    </select>
+                </div>
+            
+                <div class="bufrow">
+                    <label class="bufcap">物理攻撃減少：</label>
+                    <label><input type="radio" name="emy_debmat" class="skillradio" value="1.0" style="margin-right: 3px !important;" checked />なし</label>
+                    <span>　<label id="emy_debmat" btype="debmat">1.0</label>倍</span>
+                </div>
+                
+                <div class="bufrow">
+                    <label class="bufcap">　</label>
+                    <input type="radio" name="emy_debmat" class="skillradio" value="0.9" />
+                    <select id="skill_yurina_s" class="skillsel" btgt="emy_debmat">
+                        <option value="0">聖なるオーラ
+                    </select>
+
+                    <input type="radio" name="emy_debmat" class="skillradio" value="0.85" />
+                    <select id="skill_seria" class="skillsel" bmin="0.85" bmax="0.8" bslv="5" btgt="emy_debmat">
+                        <option value="0">聖霊の護り
+                        <option value="0">Lv1
+                        <option value="1">Lv2
+                        <option value="2">Lv3
+                        <option value="3">Lv4
+                        <option value="4">Lv5
+                    </select>
+                </div>
+
+                <div class="bufrow">
+                    <label class="bufcap">防御力減少：</label>
+                    <label><input type="radio" name="emy_debdef" class="skillradio" value="1.0" style="margin-right: 3px !important;" checked />なし</label>
+                    <span>　<label id="emy_debdef" btype="emy_debdef">1.0</label>倍</span>
+                </div>
+                <div class="bufrow">
+                    <label class="bufcap">　</label>
+                    <label class="tooltip" tooltip="５０％">
+                        <input type="radio" name="emy_debdef" class="skillradio" value="0.5" style="margin-right: 3px !important;" />アルケミスト
+                    </label>
+                </div>
+
+                <div class="bufrow">
+                    <label class="bufcap">魔法耐性減少：</label>
+                    <label><input type="radio" name="emy_debresi" class="skillradio" value="1.0" style="margin-right: 3px !important;" checked />なし</label>
+                    <span>　<label id="emy_debresi">1.0</label>倍</span>
+                </div>
+                <div class="bufrow">
+                    <label class="bufcap">　</label>
+                    <label class="tooltip" tooltip="５０％" ><input type="radio" name="emy_debresi" class="skillradio" value="0.5" style="margin-right: 3px !important;" />天杖　</label>
+                    <label class="tooltip" tooltip="７０％" ><input type="radio" name="emy_debresi" class="skillradio" value="0.3" style="margin-right: 3px !important;" />魔杖</label>
+                </div>
+            </div><!-- div_skilldebuff -->
+
+
+            <div class="bufrow">
+                <div id="div_ranged" class="bufrow">
+                    <label class="bufcap" style="margin-top: 4px;">ダンサー：</label>
+                    <label><input type="checkbox" id="op_dance" class="actchk" ctgt=".dance"/>使用</label>　
+                    攻：<input type="number" id="dance_atk" class="num4 dance" min="0" value="0" disabled />　
+                    防：<input type="number" id="dance_def" class="num4 dance" min="0" value="0" disabled />
+                </div>
+            </div>
+            
+            <div class="bufrow">
+                <label class="bufcap" style="margin-top: 4px;">マップ効果：</label>
+                <label><input type="checkbox" id="op_areaAtk" class="actchk" ctgt="#areaAtk"/>攻撃</label>
+                <input type="number" id="areaAtk" class="num4" min="1" value="100" disabled /> ％　
+            </div>
+            <div class="bufrow">
+                <label class="bufcap" style="margin-top: 4px;">　</label>
+                <label><input type="checkbox" id="op_areaDef" class="actchk" ctgt="#areaDef"/>防御</label>
+                <input type="number" id="areaDef" class="num4" min="1" value="100" disabled /> ％　
+            </div>
+        </div>
+        
+    </div>
+
+    <input type="button" class="submit" style="width: inherit; margin-top: 50px; margin-bottom: 50px;" value="データロード中" disabled></input>
+    <div style="clear:both;"></div>
+
+    <input type="button" id="sortReset" value=" ソート解除 ">
+    <span id="result">(´・ω・｀)仲良く使ってね</span>
+    <table id="outputTable" class="focus-highlight widget-zebra tablesorter-blue" border="1" width="890" style="margin: 0px !important; vertical-align: middle;">
+        <thead>
+	        <tr id="outputHead" style="text-align: center;">
+	            <th width="117">名前
+	            <th width="127">ｸﾗｽ
+	            <th width="26">ﾚｱ
+	            <th width="26">CC
+	            <th width="35" data-sorter="false">Lv
+	            <th width="26">HP
+	            <th width="26">攻撃
+	            <th width="26">防御
+	            <th width="26">魔耐
+	            <th width="26">Dmg
+	            <th width="37">DPS
+	            <th width="47" id="head_sdmg">ｽｷﾙ計
+	            <th width="127">ｽｷﾙ
+	            <th width="26" data-sorter="false">sLv
+	        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <div id="memo" style="margin-top: 50px;">
+        　　使い方：直感かフィーリング、あるいは髪のお導きでご利用ください<br>
+        <br>
+        　　　　　　出力されるテーブルはヘッダをクリックすると任意ソートが可能らしいです<br>
+        　　　　　　　また、Shiftを押しながらクリックしていくと押した順の優先度でソートされていくらしいです<br>
+        　　　　　　　テーブルの上に配置されている<b>[ソート解除]</b>ボタンで出力時の状態に戻るらしいです<br>
+        　　　　　　　※ソートは数値順、あるいは文字順にソートされます<br>
+        　　　　　　　　wikiやゲーム内の順にソートさせるとかは現状では出来ません<br>
+        <br>
+        雑な説明類：<label class="region_toggle" region="notes"><label>田</label>　(クリックで開閉)</label>
+        <div id="notes" class="region">
+            <br>
+            　確認内容：<b>攻撃</b><br>
+            　　　　　　　【回数】ＨＰ○○、防御○○の敵をｎ発で倒したい<br>
+            　　　　　　　【時間】ＨＰ○○、防御○○の敵をｎ秒で倒したい(削りたい)<br>
+            　　　　　　　【DPS】防御○○の相手に対してのDPSをざっと見てみたい<br>
+            　　　　　　　そんな時に使えるのかもしれません<br>
+            <br>
+            　　　　　　　回復系ユニットはＨＰ、回数のみを計算します<br>
+            　　　　　　　ＨＰ○○をｎ回で回復したい、そんな時に使えるのかもしれません<br>
+            <br>
+            　　　　　　<b>耐久</b><br>
+            　　　　　　　攻撃○○の(物理/魔法)攻撃をｎ発耐えたい、そんな時に使えるのかもしれません<br>
+            　　　　　　　避雷針やゴーレム対策の検討なんかに使えるのかもしれません<br>
+            <br>
+            　　　　　　<b>リハビリ</b><br>
+            　　　　　　　覚醒後のリハビリ完了レベルを確認したい、そんな時に使えるのかもしれません<br>
+            　　　　　　　ＨＰ、攻撃、防御、全ての4パターンで計算できるようにしたつもりらしいです<br>
+            　　　　　　　※山賊の防御のようにカンストしてもリハビリが完了出来ない場合は最大レベルが表示されるはずです<br>
+            <br>
+            　　　　　　<b>耐+DPS</b><br>
+            　　　　　　　耐久計算(1発)の結果にDPSがくっついてきます<br>
+            　　　　　　　攻撃○○を1発以上受けられるユニットを検索し、そのユニット群でDPS計算をするらしいです<br>
+            　　　　　　　Lvの選択によって受けられる最低ラインでDPS計算をするか、受けられるユニットの最大レベルでDPS計算をするかが選べるらしいです<br>
+            　　　　　　　受けつつダメージも稼げる候補を探す時に使えるのかもしれません<br>
+            　　　　　　　入力する情報はLv選択以外は全て敵のステータスとなります<br>
+            <br>
+            <br>
+            　　ﾌｨﾙﾀ類：<b>スキル使用</b><br>
+            　　　　　　　スキル使用前提(スキルマ)で計算をするらしいです<br>
+            <br>
+            　　　　　　<b>CC</b><br>
+            　　　　　　　見たままですが「Ｓ」はスキル覚醒らしいです<br>
+            　　　　　　　スキル覚醒ユニットは基本スペック自体は変わらないため、通常の覚醒とは別の分類としています<br>
+            　　　　　　　スキル覚醒ユニットを表示する場合は「スキル使用」のチェックも必要となります<br>
+            <br>
+            <br>
+            　　バフ類：<b>好感度</b><br>
+            　　　　　　　なし(0)かあり(50/100)の2択しかありません<br>
+            　　　　　　　イリスのような硬直軽減があるユニットは、この設定に関わらず常に最大としています<br>
+            <br>
+            <br>
+            　仕様とか：<b>確率系(必殺の一撃、影矢等)</b><br>
+            　　　　　　　一切考慮しておらず、弾かれも無効です<br>
+            　　　　　　　※フラメル、コーネリアの100%発動は特攻として計算しています<br>
+            <br>
+            　　　　　　<b>ダンサー及びマップ効果</b><br>
+            　　　　　　　ダンサーは王子やスキルまでの各種計算を行ったあとに最終的に単純加算します<br>
+            　　　　　　　素の値を入れるだけで編成バフやスキルバフによる加算も計算されるといったことはありません<br>
+            　　　　　　　マップ効果は王子やスキルによる計算結果を切り捨てたものに乗算されます<br>
+            　　　　　　　※リコラの碑石、エターナーの小人で確認<br>
+            　　　　　　　　覚醒クリッサLv99＋大英雄勝利のるーん＋碑石　⇒　2632　(参考：<a href="http://aoi.bbspink.com/test/read.cgi/mobpink/1444280414/790
+                " target="_blank">本スレ4179年目>>790</a>)<br>
+            　　　　　　　　覚醒ジェロニキLv59＋小人(編成時の攻475→配置後237、大英雄で287)<br>
+            <br>
+            　　　　　　<b>基本的にwikiの情報を基準に作っています</b><br>
+            　　　　　　　ただしデータ作成時に未確認となっているステータス(wikiで*印付きのもの)を持つユニットは<br>
+            　　　　　　　結果の出力時に<font color="red">名前とクラスの部分が赤文字</font>で表示されるようになっています<br>
+            　　　　　　　（例：CCアサルちゃん、CCアリア等）<br>
+            <br>
+            　　　　　　<b>フィルタ・バフ類</b><br>
+            　　　　　　　結果の出力後にフィルタやバフ等の設定を変更しても出力結果には反映されません<br>
+            　　　　　　　結果の最大数が800弱(公開時現在)となるため、ポチるたびに若干のラグが発生する可能性があるのは(中の人的に)ストレスを感じるらしいです<br>
+            <br>
+            　　　　　　<b>ロゼットの"スキル：ダモクレスの剣"(銀ユニの攻防UP)</b><br>
+            　　　　　　　暫定的にシュウカやウズメ、レンのスキルとは重複不可にしています<br>
+            　　　　　　　確認したいので誰かこの子か情報をください<br>
+            <br>
+            　　　　　　<b>DPSについて</b><br>
+            　　　　　　　wikiのフレーム数を参考に計算しているつもりらしいです<br>
+            　　　　　　　大雑把に書くと　Dmg * 30[frm] / 攻撃間隔[frm]　で計算しているらしいです<br>
+            　　　　　　　VHや後衛軍師、クアドラ系は撃ち切るまでを一括りにしているため、実測値とは誤差が出ます<br>
+            　　　　　　　スキル使用時は着火した瞬間から計測開始としているらしいです<br>
+            　　　　　　　攻撃(DPS)及び耐+DPSの検索を行う場合はDPSが高い順で出力されるらしいです<br>
+            <br>
+            　　　　　　画面サイズ次第では所々で出てくる説明文的なツールチップの表示が残念な事になります<br>
+            <br>
+            <br>
+            　　注意点：<font color="red">自身を含む複数のユニットを強化する編成バフは選択されない限り所持者本人に対しても適用されません</font><br>
+            　　　　　　　※アイシャのHP、アリアの攻撃、KTの防御、アルティアのソルHP、ベルニスのアーマー防御、等々<br>
+            <br>
+            　　　　　　<font color="red">仕様上、レベルによる基礎ステータス変化の部分で誤差があります</font><br>
+            　　　　　　　育成目標にする場合は表示レベルに+1したり、実際に使用する前にステータスの誤差確認をしたほうが無難です<br>
+            　　　　　　　信じて送り出したユニットがｷｬｰしたりｳｧｰしたり、そのせいで(｡i _ i｡)ｷｭｯてしたりﾊﾟﾘﾝしたりしても責任は取れません<br>
+            　　　　　　　　※一次関数でないものを一次関数に落とし込んでいるために誤差が出ます<br>
+            　　　　　　　　　完璧なデータが欲しいという場合、現行のwikiには無い情報を集める必要が出てきます...<br>
+                           <label class="region_toggle" region="lv_sample" align="center">
+            　　　　　　　　　　<label>田</label>　ｻﾝﾌﾟﾙ 未CCミトラ Lv1→50 (クリックで開閉)</label>
+                           </label>
+        <br>
+                           <div id="lv_sample" class="region" style="margin-left: 146px;">
+                               <span class="sampling">背景が緑色の部分</span>に着目し、その後の増分と比較してみてください(Excel等の使用を推奨)<br>
+                               緑色の部分がループしていることがわかると思います<br>
+                               また、他ユニットの同様のデータでは0～2や8～10が混在するなど<br>
+                               ステータスは定量的に上がるものではなく、切り上げ等の処理も行われていないことがわかります<br>
+                               ※この手法で計算すれば最低Lvが1でないユニットのステータスも(多分)正確に逆算可能です
+            　　　　　　　　　　<table id="sample" border="1" style="width: 230px !important;">
+                               <tr><th>Lv<th>ＨＰ<th>増<th>攻撃<th>増<th>防御<th>増</tr>
+                               <tr><td>1<td>776<td><td>67<td><td>41<td></tr>
+                               <tr><td>2<td>781<td class="sampling">5<td>68<td class="sampling">1<td>41<td class="sampling">0</tr>
+                               <tr><td>3<td>787<td class="sampling">6<td>69<td class="sampling">1<td>42<td class="sampling">1</tr>
+                               <tr><td>4<td>792<td class="sampling">5<td>70<td class="sampling">1<td>42<td class="sampling">0</tr>
+                               <tr><td>5<td>798<td class="sampling">6<td>72<td class="sampling">2<td>43<td class="sampling">1</tr>
+                               <tr><td>6<td>804<td class="sampling">6<td>73<td class="sampling">1<td>44<td class="sampling">1</tr>
+                               <tr><td>7<td>809<td>5<td>74<td class="sampling">1<td>44<td>0</tr>
+                               <tr><td>8<td>815<td>6<td>75<td class="sampling">1<td>45<td>1</tr>
+                               <tr><td>9<td>820<td>5<td>76<td class="sampling">1<td>45<td>0</tr>
+                               <tr><td>10<td>826<td>6<td>77<td class="sampling">1<td>46<td>1</tr>
+                               <tr><td>11<td>832<td>6<td>78<td class="sampling">1<td>47<td>1</tr>
+                               <tr><td>12<td>837<td>5<td>79<td>1<td>47<td>0</tr>
+                               <tr><td>13<td>843<td>6<td>80<td>1<td>48<td>1</tr>
+                               <tr><td>14<td>848<td>5<td>81<td>1<td>48<td>0</tr>
+                               <tr><td>15<td>854<td>6<td>83<td>2<td>49<td>1</tr>
+                               <tr><td>16<td>860<td>6<td>84<td>1<td>50<td>1</tr>
+                               <tr><td>17<td>865<td>5<td>85<td>1<td>50<td>0</tr>
+                               <tr><td>18<td>871<td>6<td>86<td>1<td>51<td>1</tr>
+                               <tr><td>19<td>876<td>5<td>87<td>1<td>51<td>0</tr>
+                               <tr><td>20<td>882<td>6<td>88<td>1<td>52<td>1</tr>
+                               <tr><td>21<td>888<td>6<td>89<td>1<td>53<td>1</tr>
+                               <tr><td>22<td>893<td>5<td>90<td>1<td>53<td>0</tr>
+                               <tr><td>23<td>899<td>6<td>91<td>1<td>54<td>1</tr>
+                               <tr><td>24<td>904<td>5<td>92<td>1<td>54<td>0</tr>
+                               <tr><td>25<td>910<td>6<td>94<td>2<td>55<td>1</tr>
+                               <tr><td>26<td>916<td>6<td>95<td>1<td>56<td>1</tr>
+                               <tr><td>27<td>921<td>5<td>96<td>1<td>56<td>0</tr>
+                               <tr><td>28<td>927<td>6<td>97<td>1<td>57<td>1</tr>
+                               <tr><td>29<td>932<td>5<td>98<td>1<td>57<td>0</tr>
+                               <tr><td>30<td>938<td>6<td>99<td>1<td>58<td>1</tr>
+                               <tr><td>31<td>944<td>6<td>100<td>1<td>59<td>1</tr>
+                               <tr><td>32<td>949<td>5<td>101<td>1<td>59<td>0</tr>
+                               <tr><td>33<td>955<td>6<td>102<td>1<td>60<td>1</tr>
+                               <tr><td>34<td>960<td>5<td>103<td>1<td>60<td>0</tr>
+                               <tr><td>35<td>966<td>6<td>105<td>2<td>61<td>1</tr>
+                               <tr><td>36<td>972<td>6<td>106<td>1<td>62<td>1</tr>
+                               <tr><td>37<td>977<td>5<td>107<td>1<td>62<td>0</tr>
+                               <tr><td>38<td>983<td>6<td>108<td>1<td>63<td>1</tr>
+                               <tr><td>39<td>988<td>5<td>109<td>1<td>63<td>0</tr>
+                               <tr><td>40<td>994<td>6<td>110<td>1<td>64<td>1</tr>
+                               <tr><td>41<td>1000<td>6<td>111<td>1<td>65<td>1</tr>
+                               <tr><td>42<td>1005<td>5<td>112<td>1<td>65<td>0</tr>
+                               <tr><td>43<td>1011<td>6<td>113<td>1<td>66<td>1</tr>
+                               <tr><td>44<td>1016<td>5<td>114<td>1<td>66<td>0</tr>
+                               <tr><td>45<td>1022<td>6<td>116<td>2<td>67<td>1</tr>
+                               <tr><td>46<td>1028<td>6<td>117<td>1<td>68<td>1</tr>
+                               <tr><td>47<td>1033<td>5<td>118<td>1<td>68<td>0</tr>
+                               <tr><td>48<td>1039<td>6<td>119<td>1<td>69<td>1</tr>
+                               <tr><td>49<td>1044<td>5<td>120<td>1<td>69<td>0</tr>
+                               <tr><td>50<td>1050<td>6<td>121<td>1<td>70<td>1</tr>
+                             </table>
+                           </div>
+            <br>
+            　　　　　　当たり前といえば当たり前ですが計算対象及び計算結果が多いとちょっと重いです<br>
+            　　　　　　適度にフィルタを使って範囲を絞ることをお勧めします<br>
+            <br>
+            　　　　　　<font color=red>【重要】</font><br>
+            　　　　　　　中の人は基本らんらんなため難しいことは出来ず<br>
+            　　　　　　　おまけに途中から余所見、寝落ち、動作確認省略等<br>
+            　　　　　　　作成が雑になっていったため細かいところで必ず何かやらかしています<br>
+            　　　　　　　特にせっかくだからとオンリーの日に公開しようと色々突貫で作成して省略をしまくりました<br>
+            <br>
+            　　　　　　　ここがおかしい、この機能をつけろ等あれば本スレに書き捨てて置いてください<br>
+            　　　　　　　運良く気付けて対応可能そうであれば前向きに善処することを検討したいと思うことが無いこともないかもしれません<br>
+            <br>
+            今後の妄想：・公開場所に選んだもののよくわかってないGitHubを少しは理解する<br>
+            　　　　　　・編成バフOFFでも所持者に対して適用させるどうこうの検討<br>
+            　　　　　　・アンナさんによる王子のモードチェンジを検討<br>
+            　　　　　　・全部ぶっちぎって失踪<br>
+        </div>
+            <br>
+            <br>
+            　　公開日：2015/11/07(土)　見切り発車<br>
+       &nbsp;ｽﾃｰﾀｽ情報：2015/11/06(金)<br>
+        <br>
+        <br>
+        <br>
+        Copyright<br>
+        　<a href="http://www.dmm.com/netgame_s/aigisc/">千年戦争アイギス©株式会社DMM.comラボ</a><br>
+        <br>
+        ｽﾍﾟｼｬﾙｻﾝｸｽ(敬称略)<br>
+        　<a href="http://aigis.gcwiki.info/" target="_blank">千年戦争アイギスWiki</a><br>
+        　<a href="https://jquery.com/" target="_blank">jQuery</a><br>
+        　<a href="http://neue.cc/" target="_blank">neue cc(linq.js)</a><br>
+        　<a href="http://mottie.github.io/tablesorter/docs/" target="_blank">tablesorter uo fork</a><br>
+        　その他様々な情報サイト様
+    </div>
+</div>
+
+<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="js/jquery.tablesorter.js"></script>
+<script type="text/javascript" src="js/linq.min.js"></script>
+<script type="text/javascript" src="js/jquery.linq.min.js"></script>
+<script type="text/javascript" src="js/submit.js"></script>
+<script type="text/javascript" src="js/events.js"></script>
+<script type="text/javascript" src="js/result.js"></script>
+<script type="text/javascript" src="js/init.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>

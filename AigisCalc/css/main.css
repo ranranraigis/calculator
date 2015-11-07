@@ -1,0 +1,148 @@
+.num3{ width: 36px; }
+.num4{ width: 45px; }
+.num5{ width: 54px; }
+.num6{ width: 70px; }
+html{
+    font-size:12px;
+    font-family: "ＭＳ ゴシック","osaka",sans-serif;
+    
+    margin: 0px;
+    padding: 0px;
+}
+#contents{
+    width: 1021px;
+}
+#main{
+    width: 480px;
+    float: left;
+}
+#option{
+    float: right;
+}
+#buff{
+    width: 540px;
+}
+.mainrow{
+    margin-top: 3px;
+}
+.bufrow{
+    margin-top: 6px;
+ }
+.optrow{
+    margin-top: 6px;
+}
+input{
+    margin: 0px;
+    padding: 0px;
+}
+input[type="checkbox"]{
+    margin-right: 3px;
+    vertical-align: -2px;
+}
+input[type="radio"]{
+    margin-right: 3px;
+    vertical-align: -2px;
+}
+.maincap{
+    width: 80px;
+    float: left;
+    margin-top: 4px;
+    text-align: right;
+}
+.optcap{
+    width: 80px;
+    float: left;
+    text-align: right;
+}
+.bufcap{
+    width: 100px;
+    text-align: right;
+    float:left;
+}
+.bufftbl{
+    border-collapse: collapse;
+}
+.tdbufclas{
+    width: 100px;
+    text-align: right;
+}
+.tdbuf{
+    width: 50px;
+    empty-cells: show;
+}
+table{
+    table-layout: fixed
+}
+tr{
+    height: 22px;
+}
+.fildiv{
+    overflow-y:scroll; 
+    width: 130px;
+    height: 111px; 
+}
+.overflow-y{
+    overflow-y: scroll;
+    width: 340px;
+    height: 111px;
+}
+.hiddenrow{
+    height: 111px;
+}
+.skillradio{
+    margin: 0px !important;
+}
+.skillsel{
+    margin: 0px;
+    margin-right: 6px;
+}
+.region_toggle{
+    margin-left: 1px;
+}
+.lvsel{
+    width: 50px;
+}
+.slvsel{
+    width: 40px;
+}
+
+
+#tip_body{ /*�c�[���`�b�v�̃f�U�C��*/
+    display: none;
+    position: absolute;
+    padding: 10px;
+    left: 5px;
+    font-size: 0.8em;
+    background-color: #333;
+    color:#fff;
+    border: 1px solid red;
+    opacity: 0.9 ;
+    filter:progid:DXImageTransform.Microsoft.Alpha(Enabled=1,Style=0,Opacity=90) ;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    z-index: 9999�G
+}
+
+#sample{
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+#sample td{
+    border: 1px solid black;
+    text-align: center;
+}
+#sample tr{
+    height: 15px !important;
+}
+.sampling{
+    background-color: #E2EFDA;
+}
+tr:nth-child(even){
+    background-color: #F6F6F4;
+}
+tr:nth-child(odd){
+    background-color: beige;
+}
+div>table{
+	width: 100%;
+}
