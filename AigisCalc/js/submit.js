@@ -221,7 +221,7 @@ function chkData(){
         enemy.mix = toNum($('input[type="radio"][name="mixLv"]:checked').val());
         enemy.mode = '';
         enemy.time = '';
-        enemy.cnt = toNum($('#mixCnt'));
+        enemy.cnt = 1;
     }
 
     //編成バフ
