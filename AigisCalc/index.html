@@ -31,7 +31,7 @@
                     <option value="1">地上
                     <option value="2">飛行
                     <option value="3">アーマー
-                    <option value="4">アンデッド
+                    <option value="4" selected>アンデッド
                     <option value="5">ドラゴン
                     <option value="6">妖怪
                     <option value="7">デーモン
@@ -40,17 +40,17 @@
             
             <div class="mainrow">
                 <label class="maincap">ＨＰ：</label>
-                <input type="number" id="atkHP" class="num6" min="1" value="614" />
+                <input type="number" id="atkHP" class="num6" min="1" value="90000" />
             </div>
 
             <div class="mainrow">
                 <label class="maincap">防御：</label>
-                <input type="number" id="atkDef" class="num5" min="0" value="0" />
+                <input type="number" id="atkDef" class="num5" min="0" value="600" />
             </div>
 
             <div class="mainrow">
                 <label class="maincap">魔耐：</label>
-                <input type="number" id="atkResi" class="num3" min="0" max="100" value="0" />
+                <input type="number" id="atkResi" class="num3" min="0" max="100" value="50" />
             </div>
 
             <div class="mainrow">
@@ -114,7 +114,7 @@
                     <option value="1">地上
                     <option value="2">飛行
                     <option value="3">アーマー
-                    <option value="4">アンデッド
+                    <option value="4" selected>アンデッド
                     <option value="5">ドラゴン
                     <option value="6">妖怪
                     <option value="7">デーモン
@@ -143,6 +143,11 @@
             <div class="mainrow">
                 <label class="maincap">魔耐：</label>
                 <input type="number" id="mixResi" class="num3" min="0" max="100" value="50" />
+            </div>
+            
+            <div class="mainrow">
+                <label class="maincap">回数：</label>
+                <input type="number" id="mixCnt" class="num3" min="1" value="3" /> 発
             </div>
             
             <div class="mainrow">
@@ -681,8 +686,9 @@
             　確認内容：<b>攻撃</b><br>
             　　　　　　　【回数】ＨＰ○○、防御○○の敵をｎ発で倒したい<br>
             　　　　　　　【時間】ＨＰ○○、防御○○の敵をｎ秒で倒したい(削りたい)<br>
-            　　　　　　　【DPS】防御○○の相手に対してのDPSをざっと見てみたい<br>
+            　　　　　　　【 DPS】防御○○の相手に対してのDPSをざっと見てみたい<br>
             　　　　　　　そんな時に使えるのかもしれません<br>
+            　　　　　　　Dmg列には与ダメ(1回分)が表示されます<br>
             <br>
             　　　　　　　回復系ユニットはＨＰ、回数のみを計算します<br>
             　　　　　　　ＨＰ○○をｎ回で回復したい、そんな時に使えるのかもしれません<br>
@@ -690,6 +696,7 @@
             　　　　　　<b>耐久</b><br>
             　　　　　　　攻撃○○の(物理/魔法)攻撃をｎ発耐えたい、そんな時に使えるのかもしれません<br>
             　　　　　　　避雷針やゴーレム対策の検討なんかに使えるのかもしれません<br>
+            　　　　　　　Dmg列には被ダメ(合計)が表示されます<br>
             　　　　　　　パラディンで複数回耐える場合は一応HP半減時の防御1.5倍が計算されますが<br>
             　　　　　　　ヒールなし前提の計算となるため実際にはヒールが入って逆にｷｬｰする可能性があります<br>
             <br>
@@ -699,11 +706,12 @@
             　　　　　　　※山賊の防御のようにカンストしてもリハビリが完了出来ない場合は最大レベルが表示されるはずです<br>
             <br>
             　　　　　　<b>耐+DPS</b><br>
-            　　　　　　　耐久計算(1発)の結果にDPSがくっついてきます<br>
-            　　　　　　　攻撃○○を1発以上受けられるユニットを検索し、そのユニット群でDPS計算をするらしいです<br>
+            　　　　　　　耐久計算の結果にDPSがくっついてきます<br>
+            　　　　　　　攻撃○○をｎ発以上受けられるユニットを検索し、そのユニット群でDPS計算をするらしいです<br>
             　　　　　　　Lvの選択によって受けられる最低ラインでDPS計算をするか、受けられるユニットの最大レベルでDPS計算をするかが選べるらしいです<br>
             　　　　　　　受けつつダメージも稼げる候補を探す時に使えるのかもしれません<br>
             　　　　　　　入力する情報はLv選択以外は全て敵のステータスとなります<br>
+            　　　　　　　Dmg列には与ダメ(1回分)が表示されます<br>
             <br>
             <br>
             　　ﾌｨﾙﾀ類：<b>行数制限</b><br>
@@ -853,6 +861,7 @@
             今後の妄想：・公開場所に選んだもののよくわかってないGitHubを少しは理解する(理解できるとは言っていない)<br>
             　　　　　　・突貫後付でグチャグチャになってしまったソースコードの整備<br>
             　　　　　　・アンナさんによる王子のモードチェンジを検討<br>
+            　　　　　　・スキル覚醒アリスのような永続効果を持つｓ覚醒ユニットをスキル使用チェック無しでも出せるようにするか考える<br>
             　　　　　　・楽するために使ったtablesorterが思った以上に重い＆遅くてどうしよう<br>
             　　　　　　・全部ぶっちぎって失踪<br>
         </div>
@@ -865,6 +874,7 @@
             　　　　　　2015/12/09(月)：<br>
             　　　　　　　・フィルタ - 行数制限を追加<br>
             　　　　　　　・耐久計算時にパラディンのHP半減防御1.5倍機能を追加、防御の説明文を加筆<br>
+            　　　　　　　・耐+DPS計算に(被弾)回数を追加。耐久計算の存在価値が危ない<br>
             　　　　　　2015/11/08(日)：<br>
             　　　　　　　・魔法剣士の減衰設定を追加<br>
             　　　　　　　・攻撃【時間】についての説明文を追加<br>

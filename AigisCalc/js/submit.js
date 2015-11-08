@@ -221,7 +221,7 @@ function chkData(){
         enemy.mix = toNum($('input[type="radio"][name="mixLv"]:checked').val());
         enemy.mode = '';
         enemy.time = '';
-        enemy.cnt = 1;
+        enemy.cnt = toNum($('#mixCnt').val());
     }
 
     //編成バフ
@@ -503,6 +503,8 @@ function make_bunits(){
                 if(row_hp <= dmgmax * enemy.cnt){
                 	//耐え切れない場合は除外する
                     reqLv = 999;
+                } else {
+                	reqLv = x.lvmax;
                 }
                 
                 if(x.sid === 115 && x.cc >= 2){
@@ -531,7 +533,7 @@ function make_bunits(){
                 	}
                 }
                 
-                if(reqLv !== 999){
+                if(reqLv === x.lvmax){
                 	//二分探索っぽいもので最低レベルを探す
                     var i = Math.ceil(x.lvmax / 2);
                     var imax = x.lvmax;
