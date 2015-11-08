@@ -286,6 +286,12 @@ function load_progress(){
         
         $('input.submit').prop('disabled', false);
         $('input.submit').val('計算してみる');
+
+        skills = null;
+        sskills = null;
+        skilldata = null;
+        classes = null;
+        classdata = null;
     }
 }
 
@@ -311,6 +317,7 @@ function setUnits(){
             skill:x.skill, dataerr:x.dataerr,
             motion:x.motion, wait:x.wait,
             s_motion:x.s_motion, s_wait:x.s_wait,
+            teambuff:x.teambuff,
 
             s_lvmax:x.s_lvmax,
             s_inchp:x.s_inchp, s_inchpmax:x.s_inchpmax,
@@ -355,6 +362,7 @@ function setUnits(){
             skill:x.skill, dataerr:x.dataerr,
             motion:x.motion, wait:x.wait,
             s_motion:x.s_motion, s_wait:x.s_wait,
+            teambuff:x.teambuff,
 
             s_lvmax:x.s_lvmax,
             s_inchp:x.s_inchp, s_inchpmax:x.s_inchpmax,

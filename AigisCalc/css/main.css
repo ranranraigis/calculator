@@ -107,7 +107,7 @@ tr{
 }
 
 
-#tip_body{ /*�c�[���`�b�v�̃f�U�C��*/
+#tip_body{
     display: none;
     position: absolute;
     padding: 10px;
@@ -120,7 +120,7 @@ tr{
     filter:progid:DXImageTransform.Microsoft.Alpha(Enabled=1,Style=0,Opacity=90) ;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
-    z-index: 9999�G
+    z-index: 9999�ｿｽG
 }
 
 #sample{
@@ -145,4 +145,9 @@ tr:nth-child(odd){
 }
 div>table{
 	width: 100%;
+}
+td>label{
+    display: block;
+    width: 100%;
+    height: 100%;
 }

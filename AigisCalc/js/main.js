@@ -1,5 +1,5 @@
 $(document).ready(initialize);
-var mode, gl_enemy = [], otherBuff = [];
+var gl_mode, gl_enemy = [], otherBuff = [];
 
 function toNum(val){
     return (val - 0);
@@ -56,6 +56,7 @@ var unitdata = function unitdata(rows){
     this.s_motion = toNum(rows.gsx$smotion.$t);
     this.wait = toNum(rows.gsx$wait.$t);
     this.s_wait = toNum(rows.gsx$swait.$t);
+    this.teambuff = toNum(rows.gsx$teambuff.$t);
 };
 
 var rar = {1:'鉄', 2:'銅', 3:'銀', 4:'金', 5:'白', 6:'黒', 7:'青'};
@@ -174,4 +175,4 @@ function skillbuff(){
 }
 
 var sptype = {999:'なし', 1:'地上', 2:'飛行', 3:'アーマー', 4:'アンデッド', 5:'ドラゴン', 6:'妖怪', 7:'デーモン'};
-var atkmode = {cnt: '回数', dps:'DPS', time:'時間'}
+var atkmode = {cnt: '回数', dps:'DPS', time:'時間'};

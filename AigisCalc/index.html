@@ -123,7 +123,7 @@
             
             <div class="mainrow">
                 <label class="maincap">攻撃：</label>
-                <input type="number" id="mixAtk" class="num6" min="1" value="2500" />
+                <input type="number" id="mixAtk" class="num6" min="1" value="1200" />
             </div>
             
             <div class="mainrow">
@@ -137,7 +137,7 @@
 
             <div class="mainrow">
                 <label class="maincap">防御：</label>
-                <input type="number" id="mixDef" class="num5" min="0" value="1000" />
+                <input type="number" id="mixDef" class="num5" min="0" value="600" />
             </div>
 
             <div class="mainrow">
@@ -299,7 +299,7 @@
                 <label class="bufcap">近接強化：</label>
                 <label class="tooltip" tooltip="近接の攻撃力＋５％" ><input type="checkbox" id="op_kagura" />カグラ　</label>
                 <label class="tooltip" tooltip="近接のＨＰ,攻撃,防御＋５％" ><input type="checkbox" id="op_matsuri" />マツリ　</label>
-                <label class="tooltip" tooltip="近接の魔法耐性＋１０" ><input type="checkbox" id="op_grace" value="500"/>グレース</label>
+                <label class="tooltip" tooltip="近接の魔法耐性＋１０" ><input type="checkbox" id="op_grace" />グレース</label>
             </div>
 
             <div class="bufrow">
@@ -619,6 +619,12 @@
                 <label><input type="checkbox" id="op_areaDef" class="actchk" ctgt="#areaDef"/>防御</label>
                 <input type="number" id="areaDef" class="num4" min="1" value="100" disabled /> ％　
             </div>
+        
+            <div class="bufrow">
+                <label class="bufcap">魔法剣士減衰：</label>
+                <label><input type="radio" name="op_mahoken" class="skillradio" value="0" style="margin-right: 3px !important;" checked />なし </label>
+                <label><input type="radio" name="op_mahoken" class="skillradio" value="1" style="margin-right: 3px !important;"/>あり</label>
+            </div>
         </div>
         
     </div>
@@ -711,8 +717,7 @@
             　　　　　　　素の値を入れるだけで編成バフやスキルバフによる加算も計算されるといったことはありません<br>
             　　　　　　　マップ効果は王子やスキルによる計算結果を切り捨てたものに乗算されます<br>
             　　　　　　　※リコラの碑石、エターナーの小人で確認<br>
-            　　　　　　　　覚醒クリッサLv99＋大英雄勝利のるーん＋碑石　⇒　2632　(参考：<a href="http://aoi.bbspink.com/test/read.cgi/mobpink/1444280414/790
-                " target="_blank">本スレ4179年目>>790</a>)<br>
+            　　　　　　　　覚醒クリッサLv99＋大英雄勝利のるーん＋碑石　⇒　2632　(参考：<a href="http://aoi.bbspink.com/test/read.cgi/mobpink/1444280414/790" target="_blank">本スレ4179年目>>790</a>)<br>
             　　　　　　　　覚醒ジェロニキLv59＋小人(編成時の攻475→配置後237、大英雄で287)<br>
             <br>
             　　　　　　<b>基本的にwikiの情報を基準に作っています</b><br>
@@ -728,12 +733,21 @@
             　　　　　　　暫定的にシュウカやウズメ、レンのスキルとは重複不可にしています<br>
             　　　　　　　確認したいので誰かこの子か情報をください<br>
             <br>
-            　　　　　　<b>DPSについて</b><br>
+            　　　　　　<b>DPS関連</b><br>
             　　　　　　　wikiのフレーム数を参考に計算しているつもりらしいです<br>
             　　　　　　　大雑把に書くと　Dmg * 30[frm] / 攻撃間隔[frm]　で計算しているらしいです<br>
             　　　　　　　VHや後衛軍師、クアドラ系は撃ち切るまでを一括りにしているため、実測値とは誤差が出ます<br>
             　　　　　　　スキル使用時は着火した瞬間から計測開始としているらしいです<br>
             　　　　　　　攻撃(DPS)及び耐+DPSの検索を行う場合はDPSが高い順で出力されるらしいです<br>
+            <br>
+            　　　　　　<b>攻撃【時間】計算について</b><br>
+            　　　　　　　スキル未使用時は通常攻撃を指定時間分計算します<br>
+            　　　　　　　スキル使用時は着火(スキル攻撃)→CT(通常攻撃)→着火→...という計算を行っているつもりです<br>
+            　　　　　　　ただし、スキル終了時や着火時のモーション(待機含)カットの部分が良くわかっていないため<br>
+            　　　　　　　スキルと非スキルの変化がかかる際は常に通常攻撃時のwaitをかませるようにしています<br>
+            　　　　　　　※一部ユニットに存在するモーション変化リセットが無く<br>
+            　　　　　　　　スキル終了時にスキル中のwaitを9割がた消化していても通常時waitを追加で丸々食うということ<br>
+            　　　　　　　　また、後衛軍師によるCTカットは未実装です<br>
             <br>
             　　　　　　画面サイズ次第では所々で出てくる説明文的なツールチップの表示が残念な事になります<br>
             <br>
@@ -824,15 +838,34 @@
             　　　　　　　運良く気付けて対応可能そうであれば前向きに善処することを検討したいと思うことが無いこともないかもしれません<br>
             <br>
             今後の妄想：・公開場所に選んだもののよくわかってないGitHubを少しは理解する(理解できるとは言っていない)<br>
-            　　　　　　・編成バフOFFでも所持者に対して適用させるどうこうの検討<br>
+            　　　　　　・突貫後付でグチャグチャになってしまったソースコードの整備<br>
             　　　　　　・アンナさんによる王子のモードチェンジを検討<br>
+            　　　　　　・楽するために使ったtablesorterが思った以上に重い＆遅くてどうしよう<br>
             　　　　　　・全部ぶっちぎって失踪<br>
         </div>
             <br>
             <br>
             　　公開日：2015/11/07(土)　見切り発車<br>
        &nbsp;ｽﾃｰﾀｽ情報：2015/11/07(土)<br>
+            　　　更新：<label class="region_toggle" region="update"><label>田</label>　(クリックで開閉)</label></label>
+                        <div id="update" class="region">
+            　　　　　　2015/11/08(日)：<br>
+            　　　　　　　・魔法剣士の減衰設定を追加<br>
+            　　　　　　　・攻撃【時間】についての説明文を追加<br>
+            　　　　　　　・編成バフ所持者に対して自己バフをかけるように修正<br>
+            　　　　　　　・田園で聖霊の護りと暗黒オーラが重複しないことを確認したので計算式を修正<br>
+            　　　　　　　　<s>ゴーレムとかの大きな数字で確認できる根性のある方募集中</s><br>
+            　　　　　　　・コード整理ついでに一部処理の最適(?)化(早くなったかはちゃんと確認していない)<br>
+                        </div>
         <br>
+        <br>
+            情報募集中：<label class="region_toggle" region="need"><label>田</label>　(クリックで開閉)</label></label>
+                        <div id="need" class="region">
+            　　　　　　・物理攻撃力減少(聖霊の護りや聖なるオーラ)と攻撃力減少(呪術師や暗黒オーラ)が重ねがけ可能かの追検証情報<br>
+            　　　　　　・ロゼット【ダモクレスの剣】とレンやウズメのバフスキルが重ねがけ可能かの情報<br>
+            　　　　　　・wikiの*印になっているユニットステータスの情報<br>
+            　　　　　　・冴えたやり方<br>
+                        </div>
         <br>
         <br>
         Copyright<br>
