@@ -46,22 +46,21 @@ function submit_Click(){
         .ToArray();
     }
     
-    var take = toNum($('#take_cnt').val());
-    if(take === 0){ take = que.length; }
-    
     que = Enumerable.From(que)
     .OrderBy('$.sid')
     .ThenBy('$.rare')
     .ThenBy('$.uid')
     .ThenBy('$.cc')
-    .Take(take)
     .ToArray();
-
+    
     if((gl_enemy.mode === 'dps' && gl_mode === 'atk') || gl_mode === 'mix'){
         que = Enumerable.From(que)
             .OrderByDescending('$.dps')
             .ToArray();
     }
+
+    var take = toNum($('#take_cnt').val());
+    if(take !== 0){ que = Enumerable.From(que).Take(take).ToArray(); }
     
     bunits = que;
     
