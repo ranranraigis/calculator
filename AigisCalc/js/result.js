@@ -202,6 +202,8 @@ function setQue(que, useSkill){
     
     $('#result').html(result);
     $('#outputTable').append(trs);
+    
+    trs = null;
 }
 
 function makeNumSelect(min, max, id, reqlv){

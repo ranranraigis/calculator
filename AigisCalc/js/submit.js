@@ -46,11 +46,15 @@ function submit_Click(){
         .ToArray();
     }
     
+    var take = toNum($('#take_cnt').val());
+    if(take === 0){ take = que.length; }
+    
     que = Enumerable.From(que)
     .OrderBy('$.sid')
     .ThenBy('$.rare')
     .ThenBy('$.uid')
     .ThenBy('$.cc')
+    .Take(take)
     .ToArray();
 
     if((gl_enemy.mode === 'dps' && gl_mode === 'atk') || gl_mode === 'mix'){

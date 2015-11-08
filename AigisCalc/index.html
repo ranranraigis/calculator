@@ -163,6 +163,16 @@
         <div id="filter">
             <div class="optrow">
                 <label class="optcap">ﾌｨﾙﾀ類：</label>
+                　
+            </div>
+            
+            <div class="optrow">
+                <label class="optcap tooltip" tooltip="検索結果の数を制限します<br>0を設定すると無制限となります" style="margin-top: 3px;">行数制限：</label>
+                <input type="number" id="take_cnt" class="num4" min="0" value="100" /> 行　
+            </div>
+            
+            <div class="optrow">
+                <label class="optcap">スキル：</label>
                 <label><input type="checkbox" id="use_skill" />スキル使用</label>
             </div>
 
@@ -694,7 +704,11 @@
             　　　　　　　入力する情報はLv選択以外は全て敵のステータスとなります<br>
             <br>
             <br>
-            　　ﾌｨﾙﾀ類：<b>スキル使用</b><br>
+            　　ﾌｨﾙﾀ類：<b>行数制限</b><br>
+            　　　　　　　見たままですが「0」を指定すると無制限になるらしいです<br>
+            　　　　　　　tablesorterが重いので実装。何かいい案が出来たら消えるかも<br>
+            <br>
+            　　　　　　<b>スキル使用</b><br>
             　　　　　　　スキル使用前提(スキルマ)で計算をするらしいです<br>
             <br>
             　　　　　　<b>CC</b><br>
@@ -849,6 +863,8 @@
        &nbsp;ｽﾃｰﾀｽ情報：2015/11/07(土)<br>
             　　　更新：<label class="region_toggle" region="update"><label>田</label>　(クリックで開閉)</label></label>
                         <div id="update" class="region">
+            　　　　　　2015/12/09(月)：<br>
+            　　　　　　　・フィルタ - 行数制限を追加<br>
             　　　　　　2015/11/08(日)：<br>
             　　　　　　　・魔法剣士の減衰設定を追加<br>
             　　　　　　　・攻撃【時間】についての説明文を追加<br>
