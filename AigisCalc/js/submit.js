@@ -221,7 +221,7 @@ function chkData(){
         enemy.mix = toNum($('input[type="radio"][name="mixLv"]:checked').val());
         enemy.mode = '';
         enemy.time = '';
-        enemy.cnt = 1;
+        enemy.cnt = toNum($('#mixCnt'));
     }
 
     //編成バフ
@@ -459,7 +459,7 @@ function make_bunits(){
     var row_defAtk;
     var divhp, divatk, divdef;
     var motion, wait;
-    var temp;
+    var temp, temphp, tempdef;
     
     var debmat, debmag;
     var dmglimit, dmgmax;
@@ -485,6 +485,7 @@ function make_bunits(){
 
                 row_def = Math.floor((x.defmax + row.bonusdef) * row.bufdef);
                 row_def = Math.floor(row_def * pripro * row.incdef * skill.incdef);
+                tempdef = row_def * 2;
                 row_def = Math.floor(row_def * oBuf.areadef);
                 row_def += oBuf.dancedef;
 
@@ -502,7 +503,35 @@ function make_bunits(){
                 if(row_hp <= dmgmax * enemy.cnt){
                 	//耐え切れない場合は除外する
                     reqLv = 999;
-                } else {
+                }
+                
+                if(x.sid === 115 && x.cc >= 2){
+                	temp = Math.floor(row_hp / 2);
+                	temphp = row_hp - dmgmax;
+                	tempdef = Math.floor(tempdef * oBuf.areadef);
+                	tempdef += oBuf.dancedef;
+
+                	var i = enemy.cnt;
+                	while(i > 0){
+                		if(temphp <= temp){
+                            dmgmax = Math.ceil((row_defAtk - tempdef) * row.cutmat * skill.cutmat);
+                            dmgmax = (dmgmax <= dmglimit)? dmglimit : dmgmax;
+                			
+                            temphp -= dmgmax;
+                		} else {
+                            dmgmax = Math.ceil((row_defAtk - row_def) * row.cutmat * skill.cutmat);
+                            dmgmax = (dmgmax <= dmglimit)? dmglimit : dmgmax;
+                			
+                            temphp -= dmgmax;
+                		}
+                		i -= 1;
+                	}
+                	if(temphp > 0){
+                		reqLv = x.lvmax;
+                	}
+                }
+                
+                if(reqLv !== 999){
                 	//二分探索っぽいもので最低レベルを探す
                     var i = Math.ceil(x.lvmax / 2);
                     var imax = x.lvmax;
@@ -522,6 +551,7 @@ function make_bunits(){
                         row_def = x.def + row.bonusdef + Math.floor(divdef * (i - 1));
                         row_def = Math.floor(row_def * row.bufdef);
                         row_def = Math.floor(row_def * pripro * row.incdef * skill.incdef);
+                        tempdef = row_def * 1.5;
                         row_def = Math.floor(row_def * oBuf.areadef);
                         row_def += oBuf.dancedef;
                         
@@ -530,7 +560,32 @@ function make_bunits(){
                         dmgmax = (dmgmax <= dmglimit)? dmglimit : dmgmax;
 
                         //耐久チェック
-                        result = row_hp - dmgmax * enemy.cnt;
+                        if(x.sid === 115 && x.cc === 2){
+                        	temp = Math.floor(row_hp / 2);
+                        	temphp = row_hp - dmgmax;
+                            tempdef = Math.floor(row_def * oBuf.areadef);
+                            tempdef += oBuf.dancedef;
+                        	
+                            var j = enemy.cnt;
+                        	while(j > 0){
+                        		j -= 1;
+                        		if(temphp <= temp){
+                                    dmgmax = Math.ceil((row_defAtk - tempdef) * row.cutmat * skill.cutmat);
+                                    dmgmax = (dmgmax <= dmglimit)? dmglimit : dmgmax;
+                        			
+                                    temphp -= dmgmax * j;
+                                    j -= j;
+                        		} else {
+                                    dmgmax = Math.ceil((row_defAtk - row_def) * row.cutmat * skill.cutmat);
+                                    dmgmax = (dmgmax <= dmglimit)? dmglimit : dmgmax;
+                        			
+                                    temphp -= dmgmax;
+                        		}
+                        	}
+                        	result = temphp;
+                        } else {
+                            result = row_hp - dmgmax * enemy.cnt;
+                        }
 
                         //負なら最低ラインに+1、正なら最高ラインに設定
                         if(result <= 0)
@@ -541,7 +596,9 @@ function make_bunits(){
                         cnt += 1;
                     }
 
-                    if(cnt >= 20){ console.log('何かがおかしいっぽいので抜けました'); }
+                    if(cnt >= 20){
+                    	console.log('何かがおかしいっぽいので抜けました');
+                    }
 
                     reqLv = imax;
                 }

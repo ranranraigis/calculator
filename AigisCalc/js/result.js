@@ -23,6 +23,7 @@ function changeLv(id){
     var row = [];
     var skill = [];
     
+    var temp, dkhp, dkdef, dkdmg, dmglimit;
     
     var lv = toNum($('#lv_' + id).val());
     var slv = toNum($('#slv_' + id).val());
@@ -56,6 +57,7 @@ function changeLv(id){
         var pripro = Math.max(row.prince, row.incpro, skill.incpro);
         def = Math.floor(def * row.bufdef);
         def = Math.floor(def * row.incdef * skill.incdef * pripro);
+        dkdef = def * 1.5;
         def = Math.floor(def * oBuf.areadef);
         def += oBuf.dancedef;
 
@@ -112,15 +114,38 @@ function changeLv(id){
             if(enemy.type === 1){
             	var debmat = Math.min(row.debatk, skill.debatk, row.debmat, skill.debmat);
             	emyatk_row = Math.ceil(enemy.atk * debmat);
-            	
                 dmg = emyatk_row - def;
-                if(dmg <= (emyatk_row/10)){ dmg = Math.floor(emyatk_row/10); }
-                dmg = Math.ceil(dmg * row.cutmat * skill.cutmat);
+                dmglimit = Math.ceil(Math.ceil(emyatk_row / 10) * row.cutmat * skill.cutmat);
+            	dmg = (dmg <= dmglimit)? dmglimit: dmg;
+                
+            	if(x.sid === 115 && x.cc >= 2){
+                	temp = Math.floor(hp / 2);
+            		dkhp = hp - dmg;
+                    dkdef = Math.floor(dkdef * oBuf.areadef);
+                    dkdef += oBuf.dancedef;
+                    dkdmg = Math.ceil((emyatk_row - dkdef) * row.cutmat * skill.cutmat);
+            		dkdmg = (dkdmg <= dmglimit)? dmglimit: dkdmg;
+                    
+                    var i = enemy.cnt;
+                    while(i > 0){
+                    	i -= 1;
+                    	if(dkhp <= temp){
+                    		dkhp = dkhp - dkdmg * i;
+                    		i -= i;
+                    	} else {
+                    		dkhp = dkhp - dmg;
+                    	}
+                    }
+                    dmg = hp - dkhp;
+            	} else{
+                    dmg *= enemy.cnt;
+            	}
             } else {
             	emyatk_row = Math.ceil(enemy.atk * row.debatk * skill.debatk);
                 dmg = Math.ceil(emyatk_row * (1 - resi/100));
                 if(dmg === 0){ dmg = 1; }
                 dmg = Math.ceil(dmg * row.cutmag * skill.cutmag);
+                dmg *= enemy.cnt;
             }
         }
     })
