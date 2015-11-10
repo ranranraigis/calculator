@@ -5,18 +5,18 @@ function submit_Click(){
     chkData();
 
     var useSkill = $('#use_skill').prop('checked');
-    var que, que1, que2;
+    var que, que1;
     
     var whr_class = makeQuery_Class();
     var whr_cc = makeQuery_CC();
-    var whr_matmag = makeQuery_MatMag(useSkill);
+    var whr_atktype = makeQuery_atkType(useSkill);
     var whr_melran = makeQuery_MelRan();
     var whr_rare = makeQuery_Rare();
 
     fil_units = Enumerable.From(units)
         .Where(whr_class)
         .Where(whr_cc)
-        .Where(whr_matmag)
+        .Where(whr_atktype)
         .Where(whr_melran)
         .Where(whr_rare)
         .ToArray();    
@@ -29,9 +29,12 @@ function submit_Click(){
         
     make_bunits();
     
+    bunits = Enumerable.From(bunits)
+    .Where('$.reqlv <= $.lvmax')
+    .ToArray();
+
     if(gl_mode === 'atk' || gl_mode === 'def' || gl_mode === 'mix'){
         que = Enumerable.From(bunits)
-        .Where('$.reqlv <= $.lvmax')
         .ToArray();
     } else if(gl_mode === 'reha'){
         que1 = Enumerable.From(bunits)
@@ -41,7 +44,6 @@ function submit_Click(){
         que = Enumerable.From(bunits)
         .Join(que1, '$.sid + "_" + $.uid', '$.sid + "_" + $.uid')
         .Where('$.cc <= 2')
-        .Where('$.reqlv <= $.lvmax')
         .Distinct('$.sid + "_" + $.cc + "_" + $.uid')
         .ToArray();
     }
@@ -68,9 +70,7 @@ function submit_Click(){
     setLv(bunits);
 
     $('#outputTable').trigger('update');
-
 }
-
 
 function makeQuery_CC(){
     var checked = $('input[id^="cc_"][type="checkbox"]:checked');
@@ -100,40 +100,38 @@ function makeQuery_Rare(){
     }
     return rare;
 }
-function makeQuery_MatMag(useSkill){
-    var matmag = '';
-    var mat = $('#atkmat').prop('checked');
-    var mag = $('#atkmag').prop('checked');
-    var heal = $('#atkheal').prop('checked');
-    var neet = $('#atkneet').prop('checked');
-    var reha = (gl_mode === 'reha');
-    
-    if(!reha){
-        if(mat){
-            if(useSkill){ matmag = '$.s_atktype == 1 || ($.atktype == 1 && $.s_atktype == 0)';}
-            else { matmag = '$.atktype == 1'; }
-        }
+function makeQuery_atkType(useSkill){
+    var atktype = '';
+    var all = $('#typeall').prop('checked');
+    var mat = $('#atktype_mat').prop('checked');
+    var mag = $('#atktype_mag').prop('checked');
+    var heal = $('#atktype_heal').prop('checked');
+    var neet = $('#atktype_neet').prop('checked');
 
-        if(mag){
-            if(matmag.length > 0){ matmag += ' || '; }
-            if(useSkill){ matmag += '$.s_atktype == 2 || ($.atktype == 2 && $.s_atktype == 0)'; }
-            else { matmag += '$.atktype == 2'; }
-        }
+    if(mat){
+        if(useSkill){ atktype = '$.s_atktype == 1 || ($.atktype == 1 && $.s_atktype == 0)';}
+        else { atktype = '$.atktype == 1'; }
+    }
 
-        if(heal){
-            if(matmag.length > 0){ matmag += ' || '; }
-            if(useSkill){ matmag += '$.s_atktype == 3 || ($.atktype == 3 && $.s_atktype == 0)'; }
-            else { matmag += '$.atktype == 3'; }
-        }
-        
-        if(neet){
-            if(matmag.length > 0){ matmag += ' || '; }
-            if(useSkill){ matmag += '$.s_atktype == 4 || ($.atktype == 4 && $.s_atktype == 0)'; }
-            else { matmag += '$.atktype == 4'; }
-        }
+    if(mag){
+        if(atktype.length > 0){ atktype += ' || '; }
+        if(useSkill){ atktype += '$.s_atktype == 2 || ($.atktype == 2 && $.s_atktype == 0)'; }
+        else { atktype += '$.atktype == 2'; }
+    }
+
+    if(heal){
+        if(atktype.length > 0){ atktype += ' || '; }
+        if(useSkill){ atktype += '$.s_atktype == 3 || ($.atktype == 3 && $.s_atktype == 0)'; }
+        else { atktype += '$.atktype == 3'; }
     }
     
-    return matmag;
+    if(neet){
+        if(atktype.length > 0){ atktype += ' || '; }
+        if(useSkill){ atktype += '$.s_atktype == 4 || ($.atktype == 4 && $.s_atktype == 0)'; }
+        else { atktype += '$.atktype == 4'; }
+    }
+    
+    return atktype;
 }
 function makeQuery_MelRan(){
     var melran = '';
@@ -168,14 +166,14 @@ function makeQuery_Class(){
 function clearbefore(){
     bUnits = null;
     clearbClass();
-    
-    //$('#outputTable').trigger('sortReset');
-
     rowclear();
-
+    $('#outputTable').trigger('update');
+    $('#outputTable').trigger('sortReset');
 }
+
 function clearbClass(){
-    bclass.forEach(function(rows){
+	var bcls = bclass;
+    bcls.forEach(function(rows){
         rows.bufhp = 0;
         rows.bufatk = 0;
         rows.bufdef = 0;
@@ -238,10 +236,10 @@ function chkData(){
     chkBuff_other();
 }
 
-function incBuffHp(sid, val){ bclass[sid].bufhp += val; }
-function incBuffAtk(sid, val){ bclass[sid].bufatk += val; }
-function incBuffDef(sid, val){ bclass[sid].bufdef += val; }
-function incBuffResi(sid, val){ bclass[sid].bufresi += val; }
+function incBuffHp(sid, val){ var bcls = bclass; bcls[sid].bufhp += val; }
+function incBuffAtk(sid, val){ var bcls = bclass; bcls[sid].bufatk += val; }
+function incBuffDef(sid, val){ var bcls = bclass; bcls[sid].bufdef += val; }
+function incBuffResi(sid, val){ var bcls = bclass; bcls[sid].bufresi += val; }
 
 function chkBuff_other(){
 	var oBuf = otherBuff;
@@ -285,7 +283,8 @@ function chkBuff_team_Base(){
     def += $('#op_def3').prop('checked') * $('#op_def3').val();
     def += $('#op_louise').prop('checked') * $('#op_louise').val();
 
-    bclass.forEach(function(rows){
+    var bcls = bclass;
+    bcls.forEach(function(rows){
         rows.bufhp += hp;
         rows.bufatk += atk;
         rows.bufdef += def;
@@ -303,12 +302,13 @@ function chkBuff_team_Ex(){
     //sid=100
 
     //エキドナ(竜、ドラゴンライダーのHPと防御5%)
-    //sid=109,110,111,126 or type=1
+    //sid=109,110,111,126,206 or type=1
     if($('#op_ekidona').prop('checked')){
         incbuf['hp'](109, 0.05); incbuf['def'](109, 0.05);
         incbuf['hp'](110, 0.05); incbuf['def'](110, 0.05);
         incbuf['hp'](111, 0.05); incbuf['def'](111, 0.05);
         incbuf['hp'](126, 0.05); incbuf['def'](126, 0.05);
+        incbuf['hp'](206, 0.05); incbuf['def'](206, 0.05);
     }
 
     //エステル(魔法剣士、メイジアーマー、メイジ、ビショップの攻撃力+5%)
@@ -326,19 +326,20 @@ function chkBuff_team_Ex(){
 
     //シェリー(金以下のHP、攻撃、防御5%)
     //rare<=4
-    //bUnitsを作るところで再確認);
+    //bUnitsを作るところで再確認;
 
     //ヒカゲ(カグヤの攻撃、防御10%)
     //id=105171,105271
     //bUnitsを作るところで再確認
 
     //ルビナス(竜、ドラゴンライダーの攻撃7%)
-    //sid=109,110,111,126 or type=1
+    //sid=109,110,111,126,206 or type=1
     if($('#op_lubinus').prop('checked')){
         incbuf['atk'](109, 0.07);
         incbuf['atk'](110, 0.07);
         incbuf['atk'](111, 0.07);
         incbuf['atk'](126, 0.07);
+        incbuf['atk'](206, 0.07);
     }
 }
 
@@ -367,11 +368,12 @@ function chkBuff_team_Melee(){
     .Select('$.sid')
     .ToArray();
     
+    var bcls = bclass;
     que.forEach(function(sid){
-        bclass[sid].bufhp += hp;
-        bclass[sid].bufatk += atk;
-        bclass[sid].bufdef += def;
-        bclass[sid].bufresi += resi;
+        bcls[sid].bufhp += hp;
+        bcls[sid].bufatk += atk;
+        bcls[sid].bufdef += def;
+        bcls[sid].bufresi += resi;
     });
 }
 
@@ -379,7 +381,7 @@ function chkBuff_team_Class(){
     var sid = "";
     var pat = /hp$|atk$|def$|resi$/;
     var typ = "";
-    var incbuf = [];
+    var incbuf = {};
     var val = "";
 
     incbuf['hp'] = incBuffHp;
@@ -387,7 +389,8 @@ function chkBuff_team_Class(){
     incbuf['def'] = incBuffDef;
     incbuf['resi'] = incBuffResi;
 
-    actbuff.forEach(function(id){
+    var act = actbuff;
+    act.forEach(function(id){
         sid = toNum(id.substr(1,3));
         typ = id.match(pat);
         val = $(id).prop('checked') * $(id).val();
@@ -397,8 +400,6 @@ function chkBuff_team_Class(){
 }
 
 function chkBuff_skill_Increase(){
-	var sBuf = skillbuffs;
-	
     var prince = toNum($('input[name="op_prince"][type="radio"]:checked').val());
 
     var inchp = 1;
@@ -413,6 +414,7 @@ function chkBuff_skill_Increase(){
 
     var incrosette = toNum($('#inc_rosette').val());
 
+	var sBuf = skillbuffs;
     sBuf.prince = prince;
     sBuf.inchp = inchp;
     sBuf.incatk = incatk;
@@ -426,13 +428,12 @@ function chkBuff_skill_Increase(){
 }
 
 function chkBuff_skill_EnemyDecrease(){
-	var sBuf = skillbuffs;
-	
     var emydebatk = toNum($('#emy_debatk').html());
     var emydebmat = toNum($('#emy_debmat').html());
     var emydebdef = toNum($('#emy_debdef').html());
     var emydebresi = toNum($('#emy_debresi').html());
 
+	var sBuf = skillbuffs;
     sBuf.emydebatk = emydebatk;
     sBuf.emydebmat = emydebmat;
     sBuf.emydebdef = emydebdef;
@@ -444,7 +445,6 @@ function make_bunits(){
     var mode = gl_mode;
     var enemy = gl_enemy;
     var oBuf = otherBuff;
-    var sBuf = skillbuffs;
 
     var useSkill = $('#use_skill').prop('checked');
     
@@ -464,7 +464,9 @@ function make_bunits(){
     var debmat, debmag;
     var dmglimit, dmgmax;
 
-    bunits = Enumerable.From(fil_units).Select(function(x){
+    var bunit = bunits;
+    bunit = Enumerable.From(fil_units)
+    .Select(function(x){
     	setRowBuffs(x, row, skill, useSkill, x.s_lvmax);
     	
     	divhp = (x.hpmax - x.hp) / (x.lvmax - 1);
@@ -755,56 +757,58 @@ function make_bunits(){
             if(cc === 0 && noncc === 0){ reqLv = 999; }
         }
 
-        return {
-             sid:x.sid, id:x.id, uid:x.uid, clas:x.clas, name:x.name
-            ,rare:x.rare, cc:x.cc, noncc:x.noncc, lv:x.lv, lvmax:x.lvmax
-            ,hp:x.hp, hpmax:x.hpmax, atk:x.atk, atkmax:x.atkmax
-            ,def:x.def, defmax:x.defmax, resi:x.resi
-            ,block:x.block, range:x.range, costmax:x.costmax, costmin:x.costmin
-            ,bonushp:x.bonushp, bonusatk:x.bonusatk, bonusdef:x.bonusdef
-            ,bonusresi:x.bonusresi, bonusblock:x.bonusblock
-            ,bonusrange:x.bonusrange
-            ,specialatk:x.specialatk, specialatk2:x.specialatk2
-            ,incatksp:x.incatksp
-            ,quadra:x.quadra, atktype:x.atktype, type:x.type
-            ,skill:x.skill, dataerr:x.dataerr
-            ,motion:x.motion, wait:x.wait
-            ,s_motion:x.s_motion, s_wait:x.s_wait
-            ,teambuff:x.teambuff
-            
-            ,s_lvmax:x.s_lvmax
-            ,s_inchp:x.s_inchp, s_inchpmax:x.s_inchpmax
-            ,s_incatk:x.s_incatk, s_incatkmax:x.s_incatkmax
-            ,s_incdef:x.s_incdef, s_incdefmax:x.s_incdefmax
-            ,s_incpro:x.s_incpro, s_incpromax:x.s_incpromax
-            ,s_incresi:x.s_incresi, s_incresimax:x.s_incresimax
-            ,s_addresi:x.s_addresi, s_addresimax:x.s_addresimax
-            ,s_incrange:x.s_incrange, s_incrangemax:x.s_incrangemax 
-            ,s_incblock:x.s_incblock, s_incblockmax:x.s_incblockmax 
-            ,s_dmgcut:x.s_dmgcut, s_dmgcutmax:x.s_dmgcutmax
-            ,s_dmgcutmat:x.s_dmgcutmat, s_dmgcutmatmax:x.s_dmgcutmatmax 
-            ,s_dmgcutmag:x.s_dmgcutmag, s_dmgcutmagmax:x.s_dmgcutmagmax
-            ,s_enemyatkmax:x.s_enemyatkmax, s_enemyatkmin:x.s_enemyatkmin
-            ,s_enemymatmax:x.s_enemymatmax, s_enemymatmin:x.s_enemymatmin
-            ,s_enemydefmax:x.s_enemydefmax, s_enemydefmin:x.s_enemydefmin
-            ,s_enemyresimax:x.s_enemyresimax, s_enemyresimin:x.s_enemyresimin 
-            ,s_specialatk:x.s_specialatk, s_incatksp:x.s_incatksp 
-            ,s_quadra:x.s_quadra, s_atktype:x.s_atktype
-            ,s_timemin:x.s_timemin, s_timemax:x.s_timemax
-            ,s_ctmin:x.s_ctmin, s_ctmax:x.ctmax
+            return {
+                sid:x.sid, id:x.id, uid:x.uid, clas:x.clas, name:x.name
+               ,rare:x.rare, cc:x.cc, noncc:x.noncc, lv:x.lv, lvmax:x.lvmax
+               ,hp:x.hp, hpmax:x.hpmax, atk:x.atk, atkmax:x.atkmax
+               ,def:x.def, defmax:x.defmax, resi:x.resi
+               ,block:x.block, range:x.range, costmax:x.costmax, costmin:x.costmin
+               ,bonushp:x.bonushp, bonusatk:x.bonusatk, bonusdef:x.bonusdef
+               ,bonusresi:x.bonusresi, bonusblock:x.bonusblock
+               ,bonusrange:x.bonusrange
+               ,specialatk:x.specialatk, specialatk2:x.specialatk2
+               ,incatksp:x.incatksp
+               ,quadra:x.quadra, atktype:x.atktype, type:x.type
+               ,skill:x.skill, dataerr:x.dataerr
+               ,motion:x.motion, wait:x.wait
+               ,s_motion:x.s_motion, s_wait:x.s_wait
+               ,teambuff:x.teambuff
+               
+               ,s_lvmax:x.s_lvmax
+               ,s_inchp:x.s_inchp, s_inchpmax:x.s_inchpmax
+               ,s_incatk:x.s_incatk, s_incatkmax:x.s_incatkmax
+               ,s_incdef:x.s_incdef, s_incdefmax:x.s_incdefmax
+               ,s_incpro:x.s_incpro, s_incpromax:x.s_incpromax
+               ,s_incresi:x.s_incresi, s_incresimax:x.s_incresimax
+               ,s_addresi:x.s_addresi, s_addresimax:x.s_addresimax
+               ,s_incrange:x.s_incrange, s_incrangemax:x.s_incrangemax 
+               ,s_incblock:x.s_incblock, s_incblockmax:x.s_incblockmax 
+               ,s_dmgcut:x.s_dmgcut, s_dmgcutmax:x.s_dmgcutmax
+               ,s_dmgcutmat:x.s_dmgcutmat, s_dmgcutmatmax:x.s_dmgcutmatmax 
+               ,s_dmgcutmag:x.s_dmgcutmag, s_dmgcutmagmax:x.s_dmgcutmagmax
+               ,s_enemyatkmax:x.s_enemyatkmax, s_enemyatkmin:x.s_enemyatkmin
+               ,s_enemymatmax:x.s_enemymatmax, s_enemymatmin:x.s_enemymatmin
+               ,s_enemydefmax:x.s_enemydefmax, s_enemydefmin:x.s_enemydefmin
+               ,s_enemyresimax:x.s_enemyresimax, s_enemyresimin:x.s_enemyresimin 
+               ,s_specialatk:x.s_specialatk, s_incatksp:x.s_incatksp 
+               ,s_quadra:x.s_quadra, s_atktype:x.s_atktype
+               ,s_timemin:x.s_timemin, s_timemax:x.s_timemax
+               ,s_ctmin:x.s_ctmin, s_ctmax:x.ctmax
 
-            /*
-            ,prince:sBuf.prince
-            ,bufhp:row.bufhp, bufatk:row.bufatk, bufdef:row.bufdef, bufresi:row.bufresi
-            ,inchp:sBuf.inchp, incatk:sBuf.incatk, incdef:sBuf.incdef, incpro:sBuf.incpro,  incresi:sBuf.incresi
-            ,dmgcutmat:sBuf.cutmat, dmgcutmag:sBuf.cutmag, incrosette:sBuf.incrosette
-            ,emydebatk:sBuf.emydebatk, emydebdef:sBuf.emydebdef, emydebresi:sBuf.emydebresi
-            ,emydebmat:sBuf.emydebmat
-            */
-            ,reqlv:reqLv, dps:dps
-        };
+               /*
+               ,prince:sBuf.prince
+               ,bufhp:row.bufhp, bufatk:row.bufatk, bufdef:row.bufdef, bufresi:row.bufresi
+               ,inchp:sBuf.inchp, incatk:sBuf.incatk, incdef:sBuf.incdef, incpro:sBuf.incpro,  incresi:sBuf.incresi
+               ,dmgcutmat:sBuf.cutmat, dmgcutmag:sBuf.cutmag, incrosette:sBuf.incrosette
+               ,emydebatk:sBuf.emydebatk, emydebdef:sBuf.emydebdef, emydebresi:sBuf.emydebresi
+               ,emydebmat:sBuf.emydebmat
+               */
+               ,reqlv:reqLv, dps:dps
+           };
     })
-        .ToArray();
+    .ToArray();
+    
+    bunits = bunit;
 }
 
 function dmgcalc(unit, row, lv, slv){

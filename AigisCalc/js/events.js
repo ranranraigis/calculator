@@ -11,6 +11,9 @@ $('input[id^="cc_"][type="checkbox"]').change(filterGroup_Change);
 $('#rareall').change(filterGroupTop_Change);
 $('input[id^="rare_"][type="checkbox"]').change(filterGroup_Change);
 
+$('#typeall').change(filterGroupTop_Change);
+$('input[id^="atktype_"][type="checkbox"]').change(filterGroup_Change);
+
 $('.filter_melran').change(filterMelRan_Change);
 $('#clsmel, #clsran').change(filterClassTop_Change);
 $('body').on('change', 'input[id^="cls_"][type="checkbox"]', filterClass_Change);
@@ -25,10 +28,8 @@ $('#inc_rosette').change(inc_rosette_Change);
 
 $('.actchk').change(activateFromCheckbox);
 
-$('#sortReset').click(function(){$('#outputTable').trigger('sortReset'); thead_Click();});
-$('#outputTable').tablesorter({ sortList: [[0,0], [1,0]] });
-$('#outputTable').bind('sortEnd', thead_Click);
-
+$('#sortReset').click(function(){$('#outputTable').trigger('sortReset');});
+$('#outputHead').click(function(){$('#outputTable').trigger('update');});
 
 function regionToggle(){
     var t = $(this);
@@ -78,7 +79,12 @@ function filterGroupTop_Change(){
     if(t.prop('checked')){
         $('input[id^="' + t.attr('group') + '"][type="checkbox"]').prop('checked', false);
     } else {
-        $('input[id^="' + t.attr('group') + '"][type="checkbox"]').prop('checked', true);
+        if(t.attr('id') === 'typeall'){
+        	$('#atktype_mat').prop('checked', true);
+        	$('#atktype_mag').prop('checked', true);
+        } else {
+            $('input[id^="' + t.attr('group') + '"][type="checkbox"]').prop('checked', true);
+        }
     }
 }
 
@@ -133,10 +139,9 @@ function filterClass_Change(){
     if(t.prop('checked')){
         $('#' + t.attr('grouptop')).prop('checked', false); 
         stat = true;
-    }
-    else {
-        var stat = false;
-        $('input[id^="' + t.attr('group') + '"][type="checkbox"]').each(function(){
+    } else {
+    	var dom = $('input[id^="' + t.attr('group') + '"][type="checkbox"]');
+        dom.each(function(){
             stat = stat || $(this).prop('checked');
         });
     }
@@ -168,7 +173,6 @@ function buffSel_Change(){
 
 function skill_rosette_Change(){
     var t = $('#skill_rosette');
-    var name = t.attr('btgt');
     var val = (toNum(t.attr('bmax')) - toNum(t.attr('bmin'))) / (toNum(t.attr('bslv')) - 1);
     val = toNum(t.attr('bmin')) + val * toNum(t.val());
     val = rounds(val, 2);
@@ -191,17 +195,12 @@ function activateFromCheckbox(){
     $(tgt).prop('disabled', chk);
 }
 
-function thead_Click(){
-    $('#outputTable tr:even').css('background-color', '#F6F6F4');
-    $('#outputTable tr:odd').css('background-color', 'beige');
-}
-
 function tooltip(index, elem){
     //ツールチップの出る場所
     var dom = $(elem);
     var pos = dom.position();
 
-    var xOffset = -10;
+    //var xOffset = -10;
     var yOffset = 20;
 
     var top = 0;

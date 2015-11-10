@@ -155,7 +155,20 @@ var buffdata = function buffdata(rows){
     this.balresi = rows.gsx$balresi.$t;
 };
 
-var scc = {0:'未', 1:'CC', 2:'覚', 3:'Ｓ'};
+//var scc = {0:'未', 1:'CC', 2:'覚', 3:'Ｓ'};
+var scc = [];
+var ccs = [];
+var cc = function cc(rows){
+	this.id = toNum(rows.gsx$id.$t);
+	this.sname = rows.gsx$sname.$t;
+};
+
+var rar = [];
+var rars = [];
+var rarity = function rarity(rows){
+	this.id = toNum(rows.gsx$id.$t);
+	this.sname = rows.gsx$sname.$t;
+};
 
 var skillbuffs = new skillbuff();
 function skillbuff(){
@@ -174,5 +187,13 @@ function skillbuff(){
     this.emydebresi = 1;
 }
 
+var updates = [];
+function update(rows){
+	this.ymd = rows.gsx$ymd.$t;
+	this.summary = rows.gsx$summary.$t;
+}
+
 var sptype = {999:'なし', 1:'地上', 2:'飛行', 3:'アーマー', 4:'アンデッド', 5:'ドラゴン', 6:'妖怪', 7:'デーモン'};
 var atkmode = {cnt: '回数', dps:'DPS', time:'時間'};
+
+var parse = [];

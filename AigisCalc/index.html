@@ -193,25 +193,26 @@
             <div class="optrow">
                 <label class="optcap">レア：</label>
                 <label><input type="checkbox" id="rareall" group="rare_" checked />全</label>
-                <label><input type="checkbox" id="rare_1" group="rare_" grouptop="rareall" value="1" />鉄</label>
-                <label><input type="checkbox" id="rare_2" group="rare_" grouptop="rareall" value="2" />銅</label>
-                <label><input type="checkbox" id="rare_3" group="rare_" grouptop="rareall" value="3" />銀</label>
+                <label><input type="checkbox" id="rare_1" group="rare_" grouptop="rareall" value="1" />鉄 </label>
+                <label><input type="checkbox" id="rare_2" group="rare_" grouptop="rareall" value="2" />銅 </label>
+                <label><input type="checkbox" id="rare_3" group="rare_" grouptop="rareall" value="3" />銀&nbsp;</label>
             </div>
 
             <div class="optrow">
                 <label class="optcap">　</label>
-                <label><input type="checkbox" id="rare_4" group="rare_" grouptop="rareall"  value="4" />金</label>
-                <label><input type="checkbox" id="rare_5" group="rare_" grouptop="rareall"  value="5" />白</label>
-                <label><input type="checkbox" id="rare_6" group="rare_" grouptop="rareall"  value="6" />黒</label>
-                <label><input type="checkbox" id="rare_7" group="rare_" grouptop="rareall"  value="7" />青</label>
+                <label class="gold"><input type="checkbox" id="rare_4" group="rare_" grouptop="rareall"  value="4" />金 </label>
+                <label><input type="checkbox" id="rare_5" group="rare_" grouptop="rareall"  value="5" />白 </label>
+                <label><input type="checkbox" id="rare_6" group="rare_" grouptop="rareall"  value="6" />黒 </label>
+                <label><input type="checkbox" id="rare_7" group="rare_" grouptop="rareall"  value="7" />青&nbsp;</label>
             </div>
 
             <div class="optrow">
                 <label class="optcap">属性：</label>
-                <label class="tooltip" tooltip="物理" ><input type="checkbox" id="atkmat"checked />物</label>
-                <label class="tooltip" tooltip="魔法"><input type="checkbox" id="atkmag" checked />魔</label>
-                <label class="tooltip" tooltip="回復"><input type="checkbox" id="atkheal" />回</label>
-                <label class="tooltip" tooltip="ニート"><input type="checkbox" id="atkneet" />NEET</label>
+                <label><input type="checkbox" id="typeall" group="atktype_" />全</label>
+                <label class="tooltip" tooltip="物理" ><input type="checkbox" id="atktype_mat" group="atktype_" grouptop="typeall" checked />物</label>
+                <label class="tooltip" tooltip="魔法"><input type="checkbox" id="atktype_mag" group="atktype_" grouptop="typeall"  checked />魔</label>
+                <label class="tooltip" tooltip="回復"><input type="checkbox" id="atktype_heal" group="atktype_" grouptop="typeall" />回</label>
+                <label class="tooltip" tooltip="ニート"><input type="checkbox" id="atktype_neet" group="atktype_" grouptop="typeall" />NEET</label>
             </div>
 
             <div class="optrow">
@@ -656,7 +657,7 @@
 	            <th width="127">ｸﾗｽ
 	            <th width="26">ﾚｱ
 	            <th width="26">CC
-	            <th width="35" data-sorter="false">Lv
+	            <th width="35">Lv
 	            <th width="26">HP
 	            <th width="26">攻撃
 	            <th width="26">防御
@@ -665,7 +666,7 @@
 	            <th width="37">DPS
 	            <th width="47" id="head_sdmg">ｽｷﾙ計
 	            <th width="127">ｽｷﾙ
-	            <th width="26" data-sorter="false">sLv
+	            <th width="26" class="sorter-false parser-false">sLv
 	        </tr>
         </thead>
         <tbody></tbody>
@@ -677,8 +678,14 @@
         　　　　　　出力されるテーブルはヘッダをクリックすると任意ソートが可能らしいです<br>
         　　　　　　　また、Shiftを押しながらクリックしていくと押した順の優先度でソートされていくらしいです<br>
         　　　　　　　テーブルの上に配置されている<b>[ソート解除]</b>ボタンで出力時の状態に戻るらしいです<br>
-        　　　　　　　※ソートは数値順、あるいは文字順にソートされます<br>
-        　　　　　　　　wikiやゲーム内の順にソートさせるとかは現状では出来ません<br>
+        　　　　　　　※<s>ソートは数値順、あるいは文字順にソートされます</s><br>
+        　　　　　　　　<s>wikiやゲーム内の順にソートさせるとかは現状では出来ません</s><br>
+        　　　　　　　　色々いじってみた結果できるようになりました<br>
+        　　　　　　　　名前：※wikiの遠近一覧でのクラス毎での記載順<br>
+        　　　　　　　　 ｸﾗｽ：wikiの遠近一覧でのクラス順<br>
+        　　　　　　　　　ﾚｱ：鉄→黒→青<br>
+        　　　　　　　　　CC：未→Ｓ<br>
+        　　　　　　　　　他：数値順あるいは文字順(スキルのみ)<br>
         <br>
         雑な説明類：<label class="region_toggle" region="notes"><label>田</label>　(クリックで開閉)</label>
         <div id="notes" class="region">
@@ -716,7 +723,7 @@
             <br>
             　　ﾌｨﾙﾀ類：<b>行数制限</b><br>
             　　　　　　　見たままですが「0」を指定すると無制限になるらしいです<br>
-            　　　　　　　tablesorterが重いので実装。何かいい案が出来たら消えるかも<br>
+            　　　　　　　検索結果が多い際にtablesorterの影響でかなり重くなるので実装。何かいい案が出来たら消えるかも<br>
             <br>
             　　　　　　<b>スキル使用</b><br>
             　　　　　　　スキル使用前提(スキルマ)で計算をするらしいです<br>
@@ -871,20 +878,7 @@
        &nbsp;ｽﾃｰﾀｽ情報：2015/11/07(土)<br>
             　　　更新：<label class="region_toggle" region="update"><label>田</label>　(クリックで開閉)</label></label>
                         <div id="update" class="region">
-            　　　　　　2015/12/10(火)：<br>
-            　　　　　　　・カースボイスの最低値を0.16→0.15へ変更<br>
-            　　　　　　　・コード整理時にシェリーバフが事故ってたので対応<br>
-            　　　　　　2015/12/09(月)：<br>
-            　　　　　　　・フィルタ - 行数制限を追加<br>
-            　　　　　　　・耐久計算時にパラディンのHP半減防御1.5倍機能を追加、防御の説明文を加筆<br>
-            　　　　　　　・耐+DPS計算に(被弾)回数を追加。耐久計算の存在価値が危ない<br>
-            　　　　　　2015/11/08(日)：<br>
-            　　　　　　　・魔法剣士の減衰設定を追加<br>
-            　　　　　　　・攻撃【時間】についての説明文を追加<br>
-            　　　　　　　・編成バフ所持者に対して自己バフをかけるように修正<br>
-            　　　　　　　・田園で聖霊の護りと暗黒オーラが重複しないことを確認したので計算式を修正<br>
-            　　　　　　　　<s>ゴーレムとかの大きな数字で確認できる根性のある方募集中</s><br>
-            　　　　　　　・コード整理ついでに一部処理の最適(?)化(早くなったかはちゃんと確認していない)<br>
+
                         </div>
         <br>
         <br>
@@ -908,14 +902,16 @@
     </div>
 </div>
 
-<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
-<script type="text/javascript" src="js/jquery.tablesorter.js"></script>
-<script type="text/javascript" src="js/linq.min.js"></script>
-<script type="text/javascript" src="js/jquery.linq.min.js"></script>
-<script type="text/javascript" src="js/submit.js"></script>
-<script type="text/javascript" src="js/events.js"></script>
-<script type="text/javascript" src="js/result.js"></script>
-<script type="text/javascript" src="js/init.js"></script>
-<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="./js/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="./js/jquery.tablesorter.js"></script>
+<script type="text/javascript" src="./js/jquery.tablesorter.widgets.js"></script>
+<script type="text/javascript" src="./js/parser-input-select.js"></script>
+<script type="text/javascript" src="./js/linq.min.js"></script>
+<script type="text/javascript" src="./js/jquery.linq.min.js"></script>
+<script type="text/javascript" src="./js/submit.js"></script>
+<script type="text/javascript" src="./js/events.js"></script>
+<script type="text/javascript" src="./js/result.js"></script>
+<script type="text/javascript" src="./js/init.js"></script>
+<script type="text/javascript" src="./js/main.js"></script>
 </body>
 </html>

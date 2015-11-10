@@ -151,3 +151,31 @@ td>label{
     width: 100%;
     height: 100%;
 }
+.iron{
+	background-color: gray;
+	color: white;
+}
+.copper{
+	background-color: brown;
+    color: white;
+}
+.silver{
+    background-color: silver;
+    color: black;
+}
+.gold{
+    background-color: gold;
+    color: black;
+}
+.platinum{
+	background-color: white;
+    color: black;
+}
+.black{
+	background-color: black;
+    color: white;
+}
+.blue{
+	background-color: blue;
+    color: white;
+}

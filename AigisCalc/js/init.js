@@ -8,6 +8,9 @@ function initialize(){
     loadsSkill();
     loadClass();
     loadBuff();
+    loadCC();
+    loadRare();
+    loadUpdate();
 
     $('#outputTable').trigger('sortReset');
 
@@ -25,6 +28,7 @@ function load_error(){
     Skill	:opo02ju
     sSkill	:omg5gm7
     Buff	:ook351m
+    UPDATE	:ot7d01q
 */
 
 function loadUnit(){
@@ -44,9 +48,10 @@ function loadUnit(){
     });
 }
 function getUnit(sheetsEntry){
+	var u = units;
     sheetsEntry.forEach(function(rows){
         var temp = new unitdata(rows);
-        units.push(temp);
+        u.push(temp);
     });
     load_progress();
 }
@@ -68,9 +73,10 @@ function loadSkill(){
     });
 }
 function getSkill(sheetsEntry){
+	var s = skills;
     sheetsEntry.forEach(function(rows){
         var temp = new skilldata(rows);
-        skills.push(temp);
+        s.push(temp);
     });
     
     load_progress();
@@ -93,9 +99,10 @@ function loadsSkill(){
     });
 }
 function getsSkill(sheetsEntry){
+	var ss = sskills;
     sheetsEntry.forEach(function(rows){
         var temp = new skilldata(rows);
-        sskills.push(temp);
+        ss.push(temp);
     });
     
     load_progress();
@@ -118,9 +125,10 @@ function loadClass(){
     });
 }
 function getClass(sheetsEntry){
+	var cls = classes;
     sheetsEntry.forEach(function(rows){
         var temp = new classdata(rows);
-        classes.push(temp);
+        cls.push(temp);
     });
 
     setbClass();
@@ -133,14 +141,11 @@ function setbClass(){
     .Distinct('$.sid')
     .ToArray();
 
+    var bcls = bclass;
     que.forEach(function(rows){
         var temp = new classdata(null);
         temp.sid = rows.sid;
-        temp.bufhp = 0;
-        temp.bufatk = 0;
-        temp.bufdef = 0;
-        temp.bufresi = 0;
-        bclass[rows.sid] = temp;
+        bcls[rows.sid] = temp;
     });
 }
 function setFilterClass(){
@@ -184,10 +189,10 @@ function loadBuff(){
     });
 }
 function getBuff(sheetsEntry){
+	var b = buffs;
     sheetsEntry.forEach(function(rows){
-        temp = new buffdata(rows);
-
-        buffs.push(temp);
+        var temp = new buffdata(rows);
+        b.push(temp);
     });
 
     setBuff('melee');
@@ -200,6 +205,8 @@ function getBuff(sheetsEntry){
     $('.tooltip').each(tooltip);
     $('.hiddenrow').hide();
     $('.region').hide();
+    
+    load_progress();
 }
 function setBuff(type){
     var sid, tbl;
@@ -277,11 +284,110 @@ function setBuff(type){
     tbl.append(trs);
 }
 
+function loadCC(){
+    $.ajax({
+        type: 'GET',
+        url: 'https://spreadsheets.google.com/feeds/list/1GO0fzdzow6HXWfqUGDokR_k4993hjN_GJp6qgGc2XZ0/ova6i1y/public/values?alt=json',
+        dataType: 'jsonp',
+        cache: false,
+        success: function(data){ // 通信が成功した時
+            var sheetsEntry = data.feed.entry; // 実データ部分を取得
+            tmp = getCC(sheetsEntry); // データを整形
+        },
+        error: function(){ // 通信が失敗した時
+            load_error();
+            console.log('loadBuff error');
+        }
+    });
+	
+}
+function getCC(sheetsEntry){
+	var sc = scc;
+	var cs = ccs;
+	sheetsEntry.forEach(function(rows){
+		var temp = new cc(rows);
+		cs.push(temp);
+
+		sc[temp.id] = temp.sname;
+	});
+
+	load_progress();
+}
+
+function loadRare(){
+    $.ajax({
+        type: 'GET',
+        url: 'https://spreadsheets.google.com/feeds/list/1GO0fzdzow6HXWfqUGDokR_k4993hjN_GJp6qgGc2XZ0/ofp6zpp/public/values?alt=json',
+        dataType: 'jsonp',
+        cache: false,
+        success: function(data){ // 通信が成功した時
+            var sheetsEntry = data.feed.entry; // 実データ部分を取得
+            tmp = getRare(sheetsEntry); // データを整形
+        },
+        error: function(){ // 通信が失敗した時
+            load_error();
+            console.log('loadBuff error');
+        }
+    });
+}
+function getRare(sheetsEntry){
+	var r = rar;
+	var rs = rars;
+	sheetsEntry.forEach(function(rows){
+		var temp = new rarity(rows);
+		rs.push(temp);
+		
+		r[temp.id] = temp.sname;
+	});
+
+	load_progress();
+}
+
+function loadUpdate(){
+    $.ajax({
+        type: 'GET',
+        url: 'https://spreadsheets.google.com/feeds/list/1GO0fzdzow6HXWfqUGDokR_k4993hjN_GJp6qgGc2XZ0/ot7d01q/public/values?alt=json',
+        dataType: 'jsonp',
+        cache: false,
+        success: function(data){ // 通信が成功した時
+            var sheetsEntry = data.feed.entry; // 実データ部分を取得
+            tmp = getUpdate(sheetsEntry); // データを整形
+        },
+        error: function(){ // 通信が失敗した時
+            load_error();
+            console.log('loadUpdate error');
+        }
+    });
+}
+function getUpdate(sheetsEntry){
+	var u = updates;
+    sheetsEntry.forEach(function(rows){
+        var temp = new update(rows);
+        u.push(temp);
+    });
+
+    setUpdate();
+    load_progress();
+}
+function setUpdate(){
+	var que = Enumerable.From(updates).ToArray();
+	
+	var str = '';
+	que.forEach(function(rows){
+		str += '　　　　　　' + rows.ymd;
+		str += '　' + rows.summary;
+		str += '<br>';
+	});
+
+	$('#update').append(str);
+}
+
 var prog = 0;
 function load_progress(){
     prog += 1;
     
-    if(prog === 4){
+    if(prog === 8){
+        setParse();
         setUnits();
         
         $('input.submit').prop('disabled', false);
@@ -292,6 +398,7 @@ function load_progress(){
         skilldata = null;
         classes = null;
         classdata = null;
+        updates = null;
     }
 }
 
@@ -393,6 +500,70 @@ function setUnits(){
     .OrderBy('$.id')
     .ToArray();
 }
+
+
+function setParse(){
+	var prs = parse;
+	var name = [];
+	var cls = [];
+	var rare = [];
+	var cc = [];
+	
+	var que;
+	que = Enumerable.From(units)
+	.Distinct('$.name')
+	.Select(function(x){ name[x.name] = x.id; }).ToArray();
+	
+	que = Enumerable.From(classes)
+	.Select(function(x){ cls.push(x.name); }).ToArray();
+
+	que = Enumerable.From(rars)
+	.Select(function(x){ rare.push(x.sname); }).ToArray();
+	
+	que = Enumerable.From(ccs)
+	.Select(function(x){ cc.push(x.sname); }).ToArray();
+	
+	prs.name = name;
+	prs.cls = cls;
+	prs.rare = rare;
+	prs.cc = cc;
+
+	$.tablesorter.addParser({
+		id: 'name',
+		is: function(s){ return false; },
+		format: function(s){ var prs = parse; return prs.name[s]; },
+		type: 'numeric'
+	});
+	$.tablesorter.addParser({
+		id: 'cls',
+		is: function(s){ return false; },
+		format: function(s){ var prs = parse; return $.inArray(s, prs.cls); },
+		type: 'numeric'
+	});
+	$.tablesorter.addParser({
+		id: 'rare',
+		is: function(s){ return false; },
+		format: function(s){ var prs = parse; return $.inArray(s, prs.rare); },
+		type: 'numeric'
+	});
+	$.tablesorter.addParser({
+		id: 'cc',
+		is: function(s){ return false; },
+		format: function(s){ var prs = parse; return $.inArray(s, prs.cc); },
+		type: 'numeric'
+	});
+	
+	$('#outputTable').tablesorter({
+		headers: {
+			0: { sorter: 'name'},
+			1: { sorter: 'cls'},
+			2: { sorter: 'rare'},
+			3: { sorter: 'cc'},
+			4: { sorter: 'select'}
+		}
+	});
+}
+
 
 function linkCheckbox(target,status){
     $(target).prop('checked',status);

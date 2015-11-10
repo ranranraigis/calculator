@@ -1,22 +1,109 @@
-
-$('body').on('change', 'select[id*=lv_]', lv_Change);
+$('body').on('change', 'select[id*=lv_]', true, lv_Change);
 
 function setLv(que){
     que.forEach(function(rows){
-        changeLv(rows.id);
+        changeLv(rows.id, false);
     });
 }
 
-function lv_Change(){
+function lv_Change(updCell){
     var id = $(this).attr('id');
     id = id.substr(-6);
-    changeLv(id);
+    changeLv(id, updCell);
+    this.focus();
 }
 
-function changeLv(id){
+function makeNumSelect(min, max, id, reqlv){
+    var sel = '<select id="' + id + '" class="lvsel" >';
+    for(var i=min; i<=max; i++){
+        if(i !== reqlv){
+            sel += '<option value="' + i + '">' + i + '</option>';
+        } else {
+            sel += '<option value="' + i + '" selected >' + i + '</option>';
+        }
+    }
+    sel += '</select>';
+    return sel;
+}
+
+function makeSkillSel(max, id, useSkill){
+    var sel = '<select id="' + id + '" class="slvsel">';
+    for(var i=0; i<=max; i++){
+        if(i === max && useSkill){
+            sel += '<option value="' + i + '" selected >' + i + '</option>';
+        } else {
+            sel += '<option value="' + i + '" >' + i + '</option>';
+        }
+    }
+    sel += '</select>';
+    return sel;
+}
+
+function setQue(que, useSkill){
+	var enemy = gl_enemy;
+    var trs, tr;
+    
+    que.forEach(function(rows){
+        var id = rows.id;
+        tr = '<tr id="row_' + rows.id + '" align="center">';
+        
+        if(rows.dataerr.trim() !== ''){
+            tr += '<td style="color: red;">' + rows.name + '</td>';
+            tr += '<td style="color: red;">' + rows.clas + '</td>';
+        } else {
+            tr += '<td>' + rows.name + '</td>';
+            tr += '<td>' + rows.clas + '</td>';
+        }
+        tr += '<td>' + rar[rows.rare] + '</td>';
+        tr += '<td>' + scc[rows.cc] + '</td>';
+        tr += '<td>' + makeNumSelect(rows.lv, rows.lvmax, 'lv_' + id, rows.reqlv) + '</td>';
+        tr += '<td id="hp_' + id + '"/>' + '</td>';
+        tr += '<td id="atk_' + id + '"/>' + '</td>';
+        tr += '<td id="def_' + id + '"/>' + '</td>';
+        tr += '<td id="resi_' + id + '"/>' + '</td>';
+        tr += '<td id="dmg_' + id + '"/>' + '</td>';
+        tr += '<td id="dps_' + id + '"/>' + '</td>';
+        tr += '<td id="s_dmg_' + id + '"/>' + '</td>';
+        tr += '<td>' + rows.skill + '</td>';
+        if(rows.skill.trim() !== ''){ 
+            tr += '<td>' + makeSkillSel(rows.s_lvmax, 'slv_' + id, useSkill) + '</td>';   
+        } else {
+            tr += '<td><input type="hidden" id="slv_' + id + '" value="0" /></td>';
+        }
+        tr += '</tr>';
+
+        trs += tr;
+    });
+
+    var result = que.length + 'ユニットが見つかりました 確認内容:' + $('#chkMode option:selected').text().trim();
+    if(gl_mode === 'atk'){
+    	result += '(' + atkmode[enemy.mode] + ')';
+        result += '　特攻:' + sptype[enemy.sp] + '　ＨＰ:' + enemy.hp + '　防御:' + enemy.def + '　魔耐:' + enemy.resi;
+        if(otherBuff.enchant){
+            result += '　マジックウェポン:ON';
+        } else {
+            result += '　マジックウェポン:OFF';
+        }
+    } else if(gl_mode === 'def'){
+        result += '　攻撃:' + enemy.atk + '　属性:' + $('#defType option:selected').text();
+    } else if(gl_mode === 'mix'){
+        result += '　特攻:' + sptype[enemy.sp] + '　攻撃:' + enemy.atk + '　属性:' + $('#mixType option:selected').text() + '　防御:' + enemy.def + '　魔耐:' + enemy.resi;
+    } else if(gl_mode === 'reha'){
+    	result += '(' + $('#rehaMode option:selected').text().trim() + ')';
+    }
+    if(enemy.mode === 'time' && gl_mode === 'atk'){
+    	$('#head_sdmg').text('時間計');
+    } else {
+    	$('#head_sdmg').text('ｽｷﾙ計');
+    }
+    
+    $('#result').html(result);
+    $('#outputTable').append(trs);
+}
+
+function changeLv(id, updCell){
     var emyatk_row, emydef_row, emyresi_row;
     var hp, atk, def, resi, dmg, dps, s_dmg;
-    var motion, wait;
     
     var enemy = gl_enemy;
     var oBuf = otherBuff;
@@ -28,8 +115,6 @@ function changeLv(id){
     var lv = toNum($('#lv_' + id).val());
     var slv = toNum($('#slv_' + id).val());
     if(isNaN(slv)){ slv = 0; }
-
-    var pat = /猛将の鼓舞|烈火の陣|猛火の陣|鉄壁の陣|金城の陣|プロテクション|聖女の結界|聖なるオーラ|聖霊の護り|マジックバリア|暗黒オーラ|軟化の秘術|レヴァンテイン|ダモクレスの剣/;
 
     var que = Enumerable.From(bunits)
     .Where('$.id == ' + id)
@@ -156,103 +241,25 @@ function changeLv(id){
     	dps = '';
     	s_dmg = '';
     }
+
+    var dom = {};
+    dom.hp = $('#hp_' + id);
+    dom.atk = $('#atk_' + id);
+    dom.def = $('#def_' + id);
+    dom.resi = $('#resi_' + id);
+    dom.dmg = $('#dmg_' + id);
+    dom.dps = $('#dps_' + id);
+    dom.s_dmg = $('#s_dmg_' + id);
     
-    $('#hp_' + id).html(hp);
-    $('#atk_' + id).html(atk);
-    $('#def_' + id).html(def);
-    $('#resi_' + id).html(resi);
-    $('#dmg_' + id).html(dmg);
-    $('#dps_' + id).html(dps);
-    $('#s_dmg_' + id).html(s_dmg);
-}
-
-function setQue(que, useSkill){
-	var enemy = gl_enemy;
-    var rowMax = que.length;
-    var trs, tr;
+    dom.hp.html(hp);
+    dom.atk.html(atk);
+    dom.def.html(def);
+    dom.resi.html(resi);
+    dom.dmg.html(dmg);
+    dom.dps.html(dps);
+    dom.s_dmg.html(s_dmg);
     
-    que.forEach(function(rows){
-        var id = rows.id;
-        tr = '<tr id="row_' + rows.id + '" align="center">';
-        
-        if(rows.dataerr.trim() !== ''){
-            tr += '<td style="color: red;">' + rows.name + '</td>';
-            tr += '<td style="color: red;">' + rows.clas + '</td>';
-        } else {
-            tr += '<td>' + rows.name + '</td>';
-            tr += '<td>' + rows.clas + '</td>';
-        }
-        tr += '<td>' + rar[rows.rare] + '</td>';
-        tr += '<td>' + scc[rows.cc] + '</td>';
-        tr += '<td>' + makeNumSelect(rows.lv, rows.lvmax, 'lv_' + id, rows.reqlv) + '</td>';
-        tr += '<td id="hp_' + id + '"/>' + '</td>';
-        tr += '<td id="atk_' + id + '"/>' + '</td>';
-        tr += '<td id="def_' + id + '"/>' + '</td>';
-        tr += '<td id="resi_' + id + '"/>' + '</td>';
-        tr += '<td id="dmg_' + id + '"/>' + '</td>';
-        tr += '<td id="dps_' + id + '"/>' + '</td>';
-        tr += '<td id="s_dmg_' + id + '"/>' + '</td>';
-        tr += '<td>' + rows.skill + '</td>';
-        if(rows.skill.trim() !== ''){ 
-            tr += '<td>' + makeSkillSel(rows.s_lvmax, 'slv_' + id, useSkill) + '</td>';   
-        } else {
-            tr += '<td><input type="hidden" value="0" /></td>';
-        }
-        tr += '</tr>';
-
-        trs += tr;
-    });
-
-    var result = que.length + 'ユニットが見つかりました 確認内容:' + $('#chkMode option:selected').text().trim();
-    if(gl_mode === 'atk'){
-    	result += '(' + atkmode[enemy.mode] + ')';
-        result += '　特攻:' + sptype[enemy.sp] + '　ＨＰ:' + enemy.hp + '　防御:' + enemy.def + '　魔耐:' + enemy.resi;
-        if(otherBuff.enchant){
-            result += '　マジックウェポン:ON';
-        } else {
-            result += '　マジックウェポン:OFF';
-        }
-    } else if(gl_mode === 'def'){
-        result += '　攻撃:' + enemy.atk + '　属性:' + $('#defType option:selected').text();
-    } else if(gl_mode === 'mix'){
-        result += '　特攻:' + sptype[enemy.sp] + '　攻撃:' + enemy.atk + '　属性:' + $('#mixType option:selected').text() + '　防御:' + enemy.def + '　魔耐:' + enemy.resi;
-    } else if(gl_mode === 'reha'){
-    	result += '(' + $('#rehaMode option:selected').text().trim() + ')';
+    if(updCell){
+    	
     }
-    if(enemy.mode === 'time' && gl_mode === 'atk'){
-    	$('#head_sdmg').text('時間計');
-    } else {
-    	$('#head_sdmg').text('ｽｷﾙ計');
-    }
-    
-    $('#result').html(result);
-    $('#outputTable').append(trs);
-    
-    trs = null;
-}
-
-function makeNumSelect(min, max, id, reqlv){
-    var sel = '<select id="' + id + '" class="lvsel" >';
-    for(i=min; i<=max; i++){
-        if(i !== reqlv){
-            sel += '<option value="' + i + '">' + i + '</option>';
-        } else {
-            sel += '<option value="' + i + '" selected >' + i + '</option>';
-        }
-    }
-    sel += '</select>';
-    return sel;
-}
-
-function makeSkillSel(max, id, useSkill){
-    var sel = '<select id="' + id + '" class="slvsel">';
-    for(i=0; i<=max; i++){
-        if(i === max && useSkill){
-            sel += '<option value="' + i + '" selected >' + i + '</option>';
-        } else {
-            sel += '<option value="' + i + '" >' + i + '</option>';
-        }
-    }
-    sel += '</select>';
-    return sel;
 }
