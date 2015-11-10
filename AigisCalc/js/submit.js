@@ -1259,7 +1259,7 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
     
     //特殊バフ(エキドナ、エステル、ルビナスは実質的に職バフ)
     if(oBuf.olivie && ((unit.type === 2) || (unit.type === 3))){ row.bufhp += 0.15; }
-    if(oBuf.sherry && (unit.rare <= 4)){ row.bufhp += 0.05; bufatk += 0.05; row.bufdef += 0.05; }
+    if(oBuf.sherry && (unit.rare <= 4)){ row.bufhp += 0.05; row.bufatk += 0.05; row.bufdef += 0.05; }
     if(oBuf.hikage && ((unit.id === 105171) || (unit.id === 105271))){ row.bufatk += 0.1; row.bufdef +=0.1;}
 
     //暫定。ロゼットは全体バフと重複不可とする。重複可能の場合は後の計算にincrosetteを追加する
