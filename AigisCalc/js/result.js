@@ -123,7 +123,7 @@ function changeLv(id, updCell){
     .Where('$.id == ' + id)
     .Select(function(x){
     	setRowBuffs(x, row, skill, (slv > 0), slv);
-        
+
         if(lv === x.lvmax){
             hp = x.hpmax + row.bonushp;
             atk = x.atkmax + row.bonusatk;
@@ -178,7 +178,7 @@ function changeLv(id, updCell){
             }
             
             if(enemy.mode === 'time'){
-            	var data = dmgcalc(x, row, lv, slv);
+            	var data = dmgcalc(x, row, skill, lv, slv);
         		dps = data.time + '秒';
                 s_dmg = data.dmg;
             } else {

@@ -178,6 +178,7 @@ function clearbClass(){
         rows.bufatk = 0;
         rows.bufdef = 0;
         rows.bufresi = 0;
+        rows.buftime = 0;
     });
 }
 
@@ -240,6 +241,7 @@ function incBuffHp(sid, val){ var bcls = bclass; bcls[sid].bufhp += val; }
 function incBuffAtk(sid, val){ var bcls = bclass; bcls[sid].bufatk += val; }
 function incBuffDef(sid, val){ var bcls = bclass; bcls[sid].bufdef += val; }
 function incBuffResi(sid, val){ var bcls = bclass; bcls[sid].bufresi += val; }
+function incBuffTime(sid, val){ var bcls = bclass; bcls[sid].buftime += val; }
 
 function chkBuff_other(){
 	var oBuf = otherBuff;
@@ -314,6 +316,7 @@ function chkBuff_team_Ex(){
     
     //エキドナ(竜、ドラゴンライダーのHPと防御5%)
     //sid=109,110,111,126,206 or type=1
+    //実質職バフ
     oBuf.ekidona = $('#op_ekidona').prop('checked');
     if(oBuf.ekidona){
         incbuf['hp'](109, 0.05); incbuf['def'](109, 0.05);
@@ -345,7 +348,7 @@ function chkBuff_team_Ex(){
 
     //シャーリー(メイジのスキル時間+30%、ビショップの攻撃+7%、サモナーのコスト-4)
     //メイジ202、ビショップ209、サモナー212
-    //ビショップの方は職バフで対応
+    //メイジ、ビショップは職バフで対応
     oBuf.shirley = $('#op_shirley').prop('checked');
     
     //ヒカゲ(カグヤの攻撃、防御10%)
@@ -410,7 +413,7 @@ function chkBuff_team_Melee(){
 
 function chkBuff_team_Class(){    
     var sid = "";
-    var pat = /hp$|atk$|def$|resi$/;
+    var pat = /hp$|atk$|def$|resi$|time$/;
     var typ = "";
     var incbuf = {};
     var val = "";
@@ -419,6 +422,7 @@ function chkBuff_team_Class(){
     incbuf['atk'] = incBuffAtk;
     incbuf['def'] = incBuffDef;
     incbuf['resi'] = incBuffResi;
+    incbuf['time'] = incBuffTime;
 
     var act = actbuff;
     act.forEach(function(id){
@@ -745,7 +749,7 @@ function make_bunits(){
                 dps = row_atk * row.quadra * 30 / (motion + wait);
                 
                 if(mode === 'atk' && enemy.mode === 'time'){
-                    data = dmgcalc(x, row, x.lvmax, (useSkill)? x.s_lvmax: 0);
+                    data = dmgcalc(x, row, skill, x.lvmax, (useSkill)? x.s_lvmax: 0);
                     reqLv = data.reqlv;
                 }
             }
@@ -845,79 +849,23 @@ function make_bunits(){
     bunits = bunit;
 }
 
-function dmgcalc(unit, row, lv, slv){
+function dmgcalc(unit, row, skill, lv, slv){
 	var enemy = gl_enemy;
 	var oBuf = otherBuff;
 	var sBuf = skillbuffs;
-	var skill = [];
 
 	var incatksp, s_incatksp;
 	
-	if(isNaN(slv)){ slv = 0; }
-	var slvmax = unit.s_lvmax;
-	
-    //スキルの内容を取得
-    if(slv === unit.s_lvmax || unit.s_lvmax === 1){
-        skill.inchp = unit.s_inchpmax;
-        skill.incatk = unit.s_incatkmax;
-        skill.incdef = unit.s_incdefmax;
-        skill.incpro = unit.s_incpromax;
-        skill.incresi = unit.s_incresimax;
-        skill.addresi = unit.s_addresimax;
-        skill.dmgcut = unit.s_dmgcutmax;
-        skill.cutmat = unit.s_dmgcutmatmax;
-        skill.cutmag = unit.s_dmgcutmagmax;
-        skill.debatk = unit.s_enemyatkmin;
-        skill.debmat = unit.s_enemymatmin;
-        skill.debdef = unit.s_enemydefmin;
-        skill.debresi = unit.s_enemyresimin;
-        skill.time = unit.s_timemax;
-        skill.ct = unit.s_ctmin;
-    } else {
-    	skill.inchp = unit.s_inchp + (unit.s_inchpmax - unit.s_inchp) / (slvmax - 1) * (slv - 1);
-        skill.incatk = unit.s_incatk + (unit.s_incatkmax - unit.s_incatk) / (slvmax - 1) * (slv - 1);
-        skill.incdef = unit.s_incdef + (unit.s_incdefmax - unit.s_incdef) / (slvmax - 1) * (slv - 1);
-        skill.incpro = unit.s_incpro + (unit.s_incpromax - unit.s_incpro) / (slvmax - 1) * (slv - 1);
-        skill.incresi = unit.s_incresi + (unit.s_incresimax - unit.s_incresi) / (slvmax - 1) * (slv - 1);
-        skill.addresi = unit.s_addresi + (unit.s_addresimax - unit.s_addresi) / (slvmax - 1) * (slv - 1);
-        skill.dmgcut = unit.s_dmgcutmax - (unit.s_dmgcut - unit.s_dmgcutmax) / (slvmax - 1) * (slv - 1);
-        skill.cutmat = unit.s_dmgcutmat - (unit.s_dmgcutmat - unit.s_dmgcutmatmax) / (slvmax - 1) * (slv - 1);
-        skill.cutmag = unit.s_dmgcutmag - (unit.s_dmgcutmag - unit.s_dmgcutmagmax) / (slvmax - 1) * (slv - 1);
-        skill.debatk = unit.s_enemyatkmax - (unit.s_enemyatkmax - unit.s_enemyatkmin) / (slvmax - 1) * (slv - 1);
-        skill.debmat = unit.s_enemymatmax - (unit.s_enemymatmax - unit.s_enemymatmin) / (slvmax - 1) * (slv - 1);
-        skill.debdef = unit.s_enemydefmax - (unit.s_enemydefmax - unit.s_enemydefmin) / (slvmax - 1) * (slv - 1);
-        skill.debresi = unit.s_enemyresimax - (unit.s_enemyresimax - unit.s_enemyresimin) / (slvmax - 1) * (slv - 1);
-        skill.time = unit.s_timemin + (unit.s_timemax - unit.s_timemin) / (slvmax - 1) * (slv - 1);
-        skill.ct = unit.s_ctmax - (unit.s_ctmax - unit.s_ctmin) / (slvmax - 1) * (slv - 1);
-    }
-    skill.quadra = unit.s_quadra;
-    skill.spatk = unit.s_specialatk;
-    skill.incatksp = unit.s_incatksp;
-    skill.atktype = unit.s_atktype;
-    
-    //特攻の整理
+	//特攻の整理
     incatksp = $.inArray(enemy.sp, [unit.specialatk, unit.specialatk2]);
     if(incatksp !== -1){ incatksp = unit.incatksp; }
     else {incatksp = 1; }
     s_incatksp = (enemy.sp === unit.s_specialatk)? unit.s_incatksp: 1;
     if(incatksp > 1 && s_incatksp === 1){ s_incatksp = incatksp; }
 
-    //CTカット
-	var ctcut = oBuf.ctcut;
-    if(unit.sid === 211){ //後衛軍師
-    	if(unit.cc === 0){
-    		if(ctcut > 0.9){ ctcut = 0.9; }
-    	} else if(unit.cc === 1){
-    		if(ctcut > 0.8){ ctcut = 0.8; }
-    	} else if(unit.cc >= 2){
-    		if(ctcut > 0.7){ ctcut = 0.7; }
-    	}
-    }
-    skill.ct = rounds(skill.ct * ctcut, 3);
-    
-	var pat = /猛将の鼓舞|烈火の陣|猛火の陣|鉄壁の陣|金城の陣|プロテクション|聖女の結界|聖なるオーラ|聖霊の護り|マジックバリア|暗黒オーラ|軟化の秘術|レヴァンテイン|ダモクレスの剣/;
+	var pat = /猛将の鼓舞|烈火の陣|猛火の陣|レヴァンテイン|ダモクレスの剣/;
     var mat = unit.skill.match(pat);
-    if(mat !== null){
+    if(mat){
         switch(mat[0]){
             case '猛将の鼓舞':
             case '烈火の陣':
@@ -973,7 +921,7 @@ function dmgcalc(unit, row, lv, slv){
 		if(dmg < Math.floor(s_atk/10)){ s_dmg = Math.floor(s_atk/10); }
 		else { s_dmg = dmg; }
 	} else if(unit.s_atktype === 2 || (unit.atktype === 2 && unit.s_atktype === 0) || oBuf.enchant){
-		row_resi = 1 - Math.ceil(enemy.resi * sBuf.emydebresi * skill.debresi) / 100;
+		row_resi = 1 - (enemy.resi * sBuf.emydebresi * skill.debresi) / 100;
 		s_dmg = Math.floor(s_atk * row_resi);
 	} else if(unit.s_atktype === 4){
 		s_dmg = 0;
@@ -1136,22 +1084,21 @@ function dmgcalc_common(sub, data){
 	cnt = Math.floor(time / (sub.motion + sub.wait));
 	time -= (cnt * sub.frm);
 	if(time >= sub.motion){
+		//追加で1回攻撃できる
 		cnt += 1;
-		time = (cnt - 1) * sub.frm + sub.motion + data.wait;
-	} else {
-		if(time < data.wait && time > 0){
-			//※計算時間100frm、モーション15frm、待機20frmとした場合
-			//　2セット(70frm)＋1回攻撃(15frm)で残15frmとなる
-			//　このまま次の状態に移られると待機モーションキャンセルが発生してしまうため
-			//　綺麗に使い切った場合でなければ十分なwait(通常待機1回分)を挟む
-			//　（time >= sub.motionの方でも同様）
+		if(time < data.wait){
+			//残り時間が通常時waitより短い場合、置き換える
 			time = data.wait;
 		}
+		time += (cnt - 1) * sub.frm + sub.motion;
+	} else {
+		//追加で1回攻撃できない
 		time += cnt * sub.frm;
 	}
 
 	dmg = cnt * sub.dmg;
 	if(dmg > (data.reqhp - data.dmg)){
+		//オーバーキルしていた場合、計算しなおす
 		cnt = Math.ceil((data.reqhp - data.dmg) / sub.dmg);
 		time = (cnt - 1) * sub.frm + sub.motion;
 		dmg = cnt * sub.dmg;
@@ -1241,6 +1188,7 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
     row.bufatk = 1;
     row.bufdef = 1;
     row.bufresi = 0;
+    row.buftime = 1;
     row.incatksp = 1;
     row.atktype = 1;
     row.motion = unit.motion;
@@ -1313,7 +1261,7 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
         row.wait = unit.s_wait;
         
         mat = unit.skill.match(pat);
-        if(mat !== null){
+        if(mat){
             switch(mat[0]){
                 case '猛将の鼓舞':
                 case '烈火の陣':
@@ -1380,6 +1328,21 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
     	row.bonusresi = unit.bonusresi;
     }
 
+    //CTカット
+	var ctcut = oBuf.ctcut;
+    if(unit.sid === 211){ //後衛軍師
+    	if(unit.cc === 0){
+    		if(ctcut > 0.9){ ctcut = 0.9; }
+    	} else if(unit.cc === 1){
+    		if(ctcut > 0.8){ ctcut = 0.8; }
+    	} else if(unit.cc >= 2){
+    		if(ctcut > 0.7){ ctcut = 0.7; }
+    	}
+    }
+    if(skill.ct !== 99999){
+        skill.ct = skill.ct * ctcut;
+    }
+    
     //攻撃回数
     if(skill.quadra !== 0){ row.quadra = skill.quadra; }
     else { row.quadra = unit.quadra; }
@@ -1408,6 +1371,7 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
     row.bufatk += bcls[unit.sid].bufatk;
     row.bufdef += bcls[unit.sid].bufdef;
     row.bufresi += bcls[unit.sid].bufresi;
+    row.buftime += bcls[unit.sid].buftime;
     
     //特殊バフ(エキドナ、エステル、ルビナスは実質的に職バフ)
     if(oBuf.olivie && ((unit.type === 2) || (unit.type === 3))){ row.bufhp += 0.15; }
@@ -1433,10 +1397,19 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
     }
     
     //編成バフ持ち自身に対する適用
-    var name = /伏龍の軍師アイシャ|魔女アデル|姫海賊アネリア|副官アリア|光の守護者アルティア|帝国天馬騎士イザベル|姫山賊イメリア|聖女イリス|地の軍師ウズメ|竜巫女エキドナ|魔法皇女エステル|オリヴィエ|弓騎兵カティナ|神秘の探求者ガラニア|黒紫の巫女キキョウ|魔導鎧姫グレース|戦術教官ケイティ|侍剣士コジュウロウ|山賊王コンラッド|宮廷剣士サビーネ|姫侍シズカ|妖精郷の射手スピカ|黒槍騎士ダリア|風水士ピピン|白き魔女ベリンダ|大盾の乙女ベルニス|朱鎧の智将マツリ|聖鎚闘士ミランダ|背反の癒し手ユーノ|武闘家リン|ルイーズ|竜巫女ルビナス|天の軍師レン/;
+    var name = "伏龍の軍師アイシャ|魔女アデル|姫海賊アネリア|副官アリア" +
+    		"|光の守護者アルティア|帝国天馬騎士イザベル|姫山賊イメリア" +
+    		"|聖女イリス|地の軍師ウズメ|竜巫女エキドナ|天馬騎士団長エスタ" +
+    		"|魔法皇女エステル|オリヴィエ|弓騎兵カティナ|神秘の探求者ガラニア" +
+    		"|黒紫の巫女キキョウ|魔導鎧姫グレース|戦術教官ケイティ|侍剣士コジュウロウ" +
+    		"|山賊王コンラッド|宮廷剣士サビーネ|姫侍シズカ" +
+    		"|妖精郷の射手スピカ|黒槍騎士ダリア|風水士ピピン|白き魔女ベリンダ" +
+    		"|大盾の乙女ベルニス|朱鎧の智将マツリ|聖鎚闘士ミランダ|背反の癒し手ユーノ" +
+    		"|提督リーンベル|武闘家リン|ルイーズ|竜巫女ルビナス|天の軍師レン";
+    name = new RegExp(name);
+    mat = unit.name.match(name);
     
-    if(unit.teambuff === 1){
-        mat = unit.name.match(name);
+    if(unit.teambuff === 1 && mat){
         
         //編成バフ
     	switch(mat[0]){
@@ -1454,11 +1427,8 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
 	    		break;
 	    	case '光の守護者アルティア':
 	    		if(!act['101hp']){
-	    			if(unit.cc < 2){
-		    			row.bufhp += 0.1;
-	    			} else {
-		    			row.bufhp += toNum($('#101hp').val());
-	    			}
+	    			if(unit.cc < 2){ row.bufhp += 0.1; }
+	    			else { row.bufhp += toNum($('#101hp').val()); }
 	    		}
 	    		break;
 	    	case '帝国天馬騎士イザベル':
@@ -1478,6 +1448,15 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
 	    			row.bufhp += 0.05;
 	    			row.bufdef += 0.05;
     			}
+	    		break;
+	    	case '天馬騎士団長エスタ':
+	    		if(!act['114time']){
+	    			if(unit.cc < 2){
+	    				row.buftime += 0.3;
+	    			} else {
+	    				row.buftime += toNum($('#114time').val());
+	    			}
+	    		}
 	    		break;
 	    	case '魔法皇女エステル':
 	    		if(!oBuf.ester){ row.bufatk += 0.05; }
@@ -1540,6 +1519,9 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
 	    	case '背反の癒し手ユーノ':
 	    		if(!act['203atk']){ row.bufatk += toNum($('#203atk').val()); }
 	    		break;
+	    	case '提督リーンベル':
+	    		if(!act['122time']){ row.buftime += toNum($('#122time').val()); }
+	    		break;
 	    	case '武闘家リン':
 	    		if(!act['117atk']){ row.bufatk += toNum($('#117atk').val()); }
 	    		break;
@@ -1554,4 +1536,7 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
 	    		break;
     	}
     }
+    
+    //スキル効果時間
+    skill.time *= row.buftime;
 }

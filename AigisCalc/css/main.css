@@ -13,14 +13,14 @@ html{
     width: 1021px;
 }
 #main{
-    width: 480px;
+    width: 430px;
     float: left;
 }
 #option{
     float: right;
 }
 #buff{
-    width: 540px;
+    width: 590px;
 }
 .mainrow{
     margin-top: 3px;
@@ -83,7 +83,7 @@ tr{
 }
 .overflow-y{
     overflow-y: scroll;
-    width: 340px;
+    width: 390px;
     height: 111px;
 }
 .hiddenrow{

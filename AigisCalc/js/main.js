@@ -150,10 +150,12 @@ var buffdata = function buffdata(rows){
     this.bufatk = toNum(rows.gsx$bufatk.$t);
     this.bufdef = toNum(rows.gsx$bufdef.$t);
     this.bufresi = toNum(rows.gsx$bufresi.$t);
+    this.buftime = toNum(rows.gsx$buftime.$t);
     this.balhp = rows.gsx$balhp.$t;
     this.balatk = rows.gsx$balatk.$t;
     this.baldef = rows.gsx$baldef.$t;
     this.balresi = rows.gsx$balresi.$t;
+    this.baltime = rows.gsx$baltime.$t;
 };
 
 //var scc = {0:'未', 1:'CC', 2:'覚', 3:'Ｓ'};

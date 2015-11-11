@@ -215,6 +215,10 @@ function getBuff(sheetsEntry){
     
     //エステルも入れたいけどシャーリーと被ってるので無しで
     
+    //カティナ(ボウライダー127のATKとスキル時間)
+    $('#127atk').attr('class', 'link').attr('link', 'catina');
+    $('#127time').attr('class', 'link').attr('link', 'catina');
+    
     //シズカ(侍112,忍者113のATK)
     $('#112atk').attr('class', 'link').attr('link', 'sizuka');
     $('#113atk').attr('class', 'link').attr('link', 'sizuka');
@@ -222,7 +226,13 @@ function getBuff(sheetsEntry){
     //シャーリー(メイジ202のスキル時間、【ビショップ209のATK】、サモナー212のコスト)
     //増分7%なので一応保持
     $('#op_shirley').attr('class', 'link').attr('link', 'shirley');
+    $('#202time').attr('class', 'link').attr('link', 'shirley');
     $('#209atk').attr('class', 'link').attr('link', 'shirley');
+    
+    //ピピン(風水213のATKとスキル時間)
+    $('#213atk').attr('class', 'link').attr('link', 'pipin');
+    $('#213time').attr('class', 'link').attr('link', 'pipin');
+    
     
     //ルビナス(竜：sid=109,110,111,126,206のATK)
     /*
@@ -262,8 +272,9 @@ function setBuff(type){
         var ratk = rows.bufatk;
         var rdef = rows.bufdef;
         var rresi = rows.bufresi;
+        var rtime = rows.buftime;
 
-        if ((rhp + ratk + rdef + rresi) === 0) {
+        if ((rhp + ratk + rdef + rresi + rtime) === 0) {
 
         } else {
             tr = '<tr>';
@@ -306,6 +317,16 @@ function setBuff(type){
 
                 actbuff.push('#' + rsid + 'resi');
             }
+
+            if(rtime === 0){
+                tr += '<td class="tdbuf">';
+            } else {
+                tr += '<td class="tdbuf tooltip" tooltip="' + rows.baltime + '">'
+                    + '<label><input type="checkbox" id="' + rsid + 'time" value="' + (rtime / 100) + '" />S時間</label>';
+
+                actbuff.push('#' + rsid + 'time');
+            }
+            
             tr += '</td>'
                 + '</tr>';
 
