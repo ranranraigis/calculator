@@ -28,8 +28,26 @@ $('#inc_rosette').change(inc_rosette_Change);
 
 $('.actchk').change(activateFromCheckbox);
 
-$('#sortReset').click(function(){$('#outputTable').trigger('sortReset');});
+$('#sortReset').click(sortReset_Click);
 $('#outputHead').click(function(){$('#outputTable').trigger('update');});
+
+$('body').on('change', 'input[class="link"][type="checkbox"]', linkCheckbox);
+
+function sortReset_Click(){
+	if(tableclone !== undefined){
+		rowclear();
+	    $('#outputTable').trigger('update');
+	    $('#outputTable').trigger('sortReset');
+		
+		var t = $('#outputTable');
+		t.append(tableclone);
+
+	    setLv(bunits);
+	    $('#outputTable').trigger('update');
+	} else {
+		$('#result').html('(´・ω・｀)だめよ');
+	}
+}
 
 function regionToggle(){
     var t = $(this);

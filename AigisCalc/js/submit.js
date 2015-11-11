@@ -255,33 +255,39 @@ function chkBuff_other(){
 
     if(oBuf.areaatk === 0){ oBuf.areaatk = 1; }
     if(oBuf.areadef === 0){ oBuf.areadef = 1; }
-
-    oBuf.olivie = $('#op_olivie').prop('checked');
-    oBuf.sherry = $('#op_sherry').prop('checked');
-    oBuf.hikage = $('#op_hikage').prop('checked');
-    oBuf.rosette = $('#inc_rosette').prop('checked');
 }
 
 function chkBuff_team_Base(){
-    var hp = 0;
-    var atk = 0;
-    var def = 0;
-
+	var oBuf = otherBuff;
+	var bcls = bclass;
+	var hp, atk, def;
+    
     //HP
-    hp += $('#op_hp1').prop('checked') * $('#op_hp1').val();
-    hp += $('#op_hp2').prop('checked') * $('#op_hp2').val();
-    hp += $('#op_hp3').prop('checked') * $('#op_hp3').val();
+    oBuf.hp1 = $('#op_hp1').prop('checked');
+    oBuf.hp2 = $('#op_hp2').prop('checked');
+    oBuf.hp3 = $('#op_hp3').prop('checked');
+    hp = oBuf.hp1 * $('#op_hp1').val()
+       + oBuf.hp2 * $('#op_hp2').val()
+       + oBuf.hp3 * $('#op_hp3').val();
 
     //攻撃
-    atk += $('#op_atk1').prop('checked') * $('#op_atk1').val();
-    atk += $('#op_atk2').prop('checked') * $('#op_atk2').val();
-    atk += $('#op_atk3').prop('checked') * $('#op_atk3').val();
+    oBuf.atk1 = $('#op_atk1').prop('checked');
+    oBuf.atk2 = $('#op_atk2').prop('checked');
+    oBuf.atk3 = $('#op_atk3').prop('checked');
+    atk = oBuf.atk1 * $('#op_atk1').val()
+        + oBuf.atk2 * $('#op_atk2').val()
+        + oBuf.atk3 * $('#op_atk3').val();
 
     //防御
-    def += $('#op_def1').prop('checked') * $('#op_def1').val();
-    def += $('#op_def2').prop('checked') * $('#op_def2').val();
-    def += $('#op_def3').prop('checked') * $('#op_def3').val();
-    def += $('#op_louise').prop('checked') * $('#op_louise').val();
+    oBuf.def1 = $('#op_def1').prop('checked');
+    oBuf.def2 = $('#op_def2').prop('checked');
+    oBuf.def3 = $('#op_def3').prop('checked');
+    //ルイーズ、全体コスト+2
+    oBuf.louise = $('#op_louise').prop('checked');
+    def = oBuf.def1 * $('#op_def1').val()
+        + oBuf.def2 * $('#op_def2').val()
+        + oBuf.def3 * $('#op_def3').val()
+        + oBuf.louise * $('#op_louise').val();
 
     var bcls = bclass;
     bcls.forEach(function(rows){
@@ -292,49 +298,70 @@ function chkBuff_team_Base(){
 }
 
 function chkBuff_team_Ex(){
+	var oBuf = otherBuff;
     var incbuf = {};
     incbuf['hp'] = incBuffHp;
     incbuf['atk'] = incBuffAtk;
     incbuf['def'] = incBuffDef;
     incbuf['resi'] = incBuffResi;
-
+    
+    //後衛軍師
+    oBuf.ctcut = toNum($('input[name="op_ctcut"][type="radio"]:checked').val());
+    
     //アンナ(未実装)
     //sid=100
-
+    oBuf.anna = $('#op_anna').prop('checked');
+    
     //エキドナ(竜、ドラゴンライダーのHPと防御5%)
     //sid=109,110,111,126,206 or type=1
-    if($('#op_ekidona').prop('checked')){
+    oBuf.ekidona = $('#op_ekidona').prop('checked');
+    if(oBuf.ekidona){
         incbuf['hp'](109, 0.05); incbuf['def'](109, 0.05);
         incbuf['hp'](110, 0.05); incbuf['def'](110, 0.05);
         incbuf['hp'](111, 0.05); incbuf['def'](111, 0.05);
         incbuf['hp'](126, 0.05); incbuf['def'](126, 0.05);
         incbuf['hp'](206, 0.05); incbuf['def'](206, 0.05);
     }
-
+    
     //エステル(魔法剣士、メイジアーマー、メイジ、ビショップの攻撃力+5%)
     //sid=119,125,202,209
-    if($('#op_ester').prop('checked')){
+    oBuf.ester = $('#op_ester').prop('checked');
+    if(oBuf.ester){
         incbuf['atk'](119, 0.05);
         incbuf['atk'](125, 0.05);
         incbuf['atk'](202, 0.05);
         incbuf['atk'](209, 0.05);
     }
-
-    //オリヴィエ(エルフ(ハーフ,ダーク込)、ドワーフのHP15%)
+    
+    //オリヴィエ(エルフ(ハーフ,ダーク込)、ドワーフのHP15%、コスト-1)
     //type=2,3
-    //bUnitsを作るところで再確認
-
+    //やりようがないためbUnitsを作るところで再確認
+    oBuf.olivie = $('#op_olivie').prop('checked');
+    
     //シェリー(金以下のHP、攻撃、防御5%)
     //rare<=4
-    //bUnitsを作るところで再確認;
+    //やりようがないためbUnitsを作るところで再確認;
+    oBuf.sherry = $('#op_sherry').prop('checked');
 
+    //シャーリー(メイジのスキル時間+30%、ビショップの攻撃+7%、サモナーのコスト-4)
+    //メイジ202、ビショップ209、サモナー212
+    //ビショップの方は職バフで対応
+    oBuf.shirley = $('#op_shirley').prop('checked');
+    
     //ヒカゲ(カグヤの攻撃、防御10%)
     //id=105171,105271
-    //bUnitsを作るところで再確認
+    //やりようがないためbUnitsを作るところで再確認
+    oBuf.hikage = $('#op_hikage').prop('checked');
 
+    //ルイーズ、全体コスト+2
+    //編成バフでpropは取得済
+    //if(oBuf.louise)
+    
     //ルビナス(竜、ドラゴンライダーの攻撃7%)
+    //実質職バフ
     //sid=109,110,111,126,206 or type=1
-    if($('#op_lubinus').prop('checked')){
+    oBuf.lubinus = $('#op_lubinus').prop('checked');
+    if(oBuf.lubinus){
         incbuf['atk'](109, 0.07);
         incbuf['atk'](110, 0.07);
         incbuf['atk'](111, 0.07);
@@ -344,23 +371,27 @@ function chkBuff_team_Ex(){
 }
 
 function chkBuff_team_Melee(){
+	var oBuf = otherBuff;
     var hp = 0;
     var atk = 0;
     var def = 0;
     var resi = 0;
 
     //カグラ(近接の攻撃5%)
-    if($('#op_kagura').prop('checked')){ atk += 0.05; }
+    oBuf.kagura = $('#op_kagura').prop('checked'); 
+    if(oBuf.kagura){ atk += 0.05; }
 
     //マツリ(近接のHP,攻撃,防御5%)
-    if($('#op_matsuri').prop('checked')){
+    oBuf.matsuri = $('#op_matsuri').prop('checked');
+    if(oBuf.matsuri){
         hp += 0.05;
         atk += 0.05;
         def += 0.05;
     }
 
     //グレース(近接の魔耐+10)
-    if($('#op_grace').prop('checked')){ resi += 10; }
+    oBuf.grace = $('#op_grace').prop('checked'); 
+    if(oBuf.grace){ resi += 10; }
 
     var que = Enumerable.From(classes)
     .Distinct('$.sid')
@@ -396,10 +427,12 @@ function chkBuff_team_Class(){
         val = $(id).prop('checked') * $(id).val();
 
         incbuf[typ](sid,val);
+        act[sid + typ] = $(id).prop('checked');
     });
 }
 
 function chkBuff_skill_Increase(){
+	var oBuf = otherBuff;
     var prince = toNum($('input[name="op_prince"][type="radio"]:checked').val());
 
     var inchp = 1;
@@ -413,6 +446,7 @@ function chkBuff_skill_Increase(){
     var dmgcutmag = toNum($('#dmgcut_mag').html());
 
     var incrosette = toNum($('#inc_rosette').val());
+    oBuf.rosette = $('#inc_rosette').prop('checked');
 
 	var sBuf = skillbuffs;
     sBuf.prince = prince;
@@ -793,7 +827,7 @@ function make_bunits(){
                ,s_specialatk:x.s_specialatk, s_incatksp:x.s_incatksp 
                ,s_quadra:x.s_quadra, s_atktype:x.s_atktype
                ,s_timemin:x.s_timemin, s_timemax:x.s_timemax
-               ,s_ctmin:x.s_ctmin, s_ctmax:x.ctmax
+               ,s_ctmin:x.s_ctmin, s_ctmax:x.s_ctmax
 
                /*
                ,prince:sBuf.prince
@@ -837,6 +871,8 @@ function dmgcalc(unit, row, lv, slv){
         skill.debmat = unit.s_enemymatmin;
         skill.debdef = unit.s_enemydefmin;
         skill.debresi = unit.s_enemyresimin;
+        skill.time = unit.s_timemax;
+        skill.ct = unit.s_ctmin;
     } else {
     	skill.inchp = unit.s_inchp + (unit.s_inchpmax - unit.s_inchp) / (slvmax - 1) * (slv - 1);
         skill.incatk = unit.s_incatk + (unit.s_incatkmax - unit.s_incatk) / (slvmax - 1) * (slv - 1);
@@ -851,6 +887,8 @@ function dmgcalc(unit, row, lv, slv){
         skill.debmat = unit.s_enemymatmax - (unit.s_enemymatmax - unit.s_enemymatmin) / (slvmax - 1) * (slv - 1);
         skill.debdef = unit.s_enemydefmax - (unit.s_enemydefmax - unit.s_enemydefmin) / (slvmax - 1) * (slv - 1);
         skill.debresi = unit.s_enemyresimax - (unit.s_enemyresimax - unit.s_enemyresimin) / (slvmax - 1) * (slv - 1);
+        skill.time = unit.s_timemin + (unit.s_timemax - unit.s_timemin) / (slvmax - 1) * (slv - 1);
+        skill.ct = unit.s_ctmax - (unit.s_ctmax - unit.s_ctmin) / (slvmax - 1) * (slv - 1);
     }
     skill.quadra = unit.s_quadra;
     skill.spatk = unit.s_specialatk;
@@ -862,6 +900,20 @@ function dmgcalc(unit, row, lv, slv){
     if(incatksp !== -1){ incatksp = unit.incatksp; }
     else {incatksp = 1; }
     s_incatksp = (enemy.sp === unit.s_specialatk)? unit.s_incatksp: 1;
+    if(incatksp > 1 && s_incatksp === 1){ s_incatksp = incatksp; }
+
+    //CTカット
+	var ctcut = oBuf.ctcut;
+    if(unit.sid === 211){ //後衛軍師
+    	if(unit.cc === 0){
+    		if(ctcut > 0.9){ ctcut = 0.9; }
+    	} else if(unit.cc === 1){
+    		if(ctcut > 0.8){ ctcut = 0.8; }
+    	} else if(unit.cc >= 2){
+    		if(ctcut > 0.7){ ctcut = 0.7; }
+    	}
+    }
+    skill.ct = rounds(skill.ct * ctcut, 3);
     
 	var pat = /猛将の鼓舞|烈火の陣|猛火の陣|鉄壁の陣|金城の陣|プロテクション|聖女の結界|聖なるオーラ|聖霊の護り|マジックバリア|暗黒オーラ|軟化の秘術|レヴァンテイン|ダモクレスの剣/;
     var mat = unit.skill.match(pat);
@@ -893,7 +945,6 @@ function dmgcalc(unit, row, lv, slv){
 		n_atk = unit.atk + row.bonusatk;
 		n_atk = n_atk + Math.floor((unit.atkmax - unit.atk) / (unit.lvmax - 1) * (lv - 1));
 	}
-	
 	n_atk = Math.floor(n_atk * row.bufatk);
 	s_atk = Math.floor(n_atk * sBuf.prince * sBuf.incatk * skill.incatk * s_incatksp);
 	s_atk = Math.floor(s_atk * oBuf.areaatk);
@@ -929,29 +980,51 @@ function dmgcalc(unit, row, lv, slv){
 	}
 	if(unit.s_quadra !== 0){ s_dmg *= unit.s_quadra; }
 	else { s_dmg *= unit.quadra; }
-	
+
     var data = {
-		reqhp:enemy.hp, reqlv: 999,
-		dmg:0, n_dmg:n_dmg, s_dmg:s_dmg,
-        time:enemy.time * 30, s_time:unit.s_timemax * 30, ct:unit.s_ctmin * 30,
-        motion:unit.motion, wait:unit.wait,
-        s_motion:unit.s_motion, s_wait:unit.s_wait
+		reqhp:enemy.hp, reqlv: 999
+		,dmg:0, n_dmg:n_dmg, s_dmg:s_dmg
+        ,time:0, reqtime:enemy.time * 30, remtime:enemy.time * 30
+        ,s_time:skill.time * 30, ct:skill.ct * 30
+        ,motion:unit.motion, wait:unit.wait
+        ,s_motion:unit.s_motion, s_wait:unit.s_wait
         ,s_atk:s_atk,n_atk:n_atk
     };
-    
-    if(slv > 0){
-        while(data.time > data.s_motion){
-            dmgcalc_skill(data);
-            dmgcalc_noskill(data, true);
+
+    if(data.reqtime > 0){
+        if(slv > 0){
+            while(data.remtime >= data.s_motion){
+                dmgcalc_skill(data, (data.reqtime > 0));
+                if(data.remtime >= data.motion){
+                    dmgcalc_noskill(data, (slv > 0), (data.reqtime > 0));
+                }
+            }
+        } else {
+            while(data.remtime >= data.motion){
+                dmgcalc_noskill(data, (slv > 0), (data.reqtime > 0));
+            }
+        }
+        if(data.time > data.reqtime){
+        	data.dmg = 0;
         }
     } else {
-        while(data.time > data.motion){
-            dmgcalc_noskill(data, false);
-        }
+    	if(slv > 0){
+    		while(data.dmg < data.reqhp){
+                dmgcalc_skill(data, (data.reqtime > 0));
+                if(data.dmg < data.reqhp){
+                    dmgcalc_noskill(data, (slv > 0), (data.reqtime > 0));
+                }
+    		}
+    	} else {
+    		while(data.dmg < data.reqhp){
+                dmgcalc_noskill(data, (slv > 0), (data.reqtime > 0));
+    		}
+    	}
     }
     
     if(data.dmg >= data.reqhp){
     	data.reqlv = unit.lvmax;
+    	data.time = rounds(data.time / 30, 2);
     } else {
     	data.reqlv = 999;
     }
@@ -959,110 +1032,180 @@ function dmgcalc(unit, row, lv, slv){
     return data;
 }
 
-function dmgcalc_skill(data){
-    var dmg = 0;
-    var cnt = 0;
+function dmgcalc_skill(data, timeatk){
     var time = 0;
+    var frm = data.s_motion + data.s_wait;
+    var sub = {};
 
-    if(data.time > data.s_time){
-        time = data.s_time;
+    if(timeatk){
+    	//時間制限あり
+        if(data.remtime > data.s_time){
+            time = data.s_time;
+        } else {
+            time = data.remtime;
+        }
     } else {
-        time = data.time;
+    	//時間制限なし
+    	time = data.s_time;
     }
-    data.time -= time;
-    
-    cnt = Math.floor(time / (data.s_motion + data.s_wait));
-    time -= (cnt * (data.s_motion + data.s_wait));
-    if(time >= data.s_motion){
-        cnt += 1;
-        time -= (data.s_motion + data.wait);
-    }
-    
-    dmg = cnt * data.s_dmg;
-    data.dmg += dmg;
 
-    if(data.time < data.motion){
-    	data.time = 0;
+    sub.time = time;
+    sub.dmg = data.s_dmg;
+    sub.motion = data.s_motion;
+    sub.wait = data.s_wait;
+    sub.frm = frm;
+    dmgcalc_common(sub, data);
+    
+    data.dmg += sub.dmg;
+    data.time += sub.time;
+    if(data.dmg >= data.reqhp){
+    	data.remtime = 0;
     } else {
-        data.time += time;
+        data.remtime -= time;
     }
 }
 
-function dmgcalc_noskill(data, useSkill){
+function dmgcalc_noskill(data, useSkill, timeatk){
     var dmg = 0;
     var cnt = 0;
     var time = 0;
+    var frm = data.motion + data.wait;
+    var sub = {};
+    sub.dmg = data.n_dmg;
+    sub.motion = data.motion;
+    sub.wait = data.wait;
+    sub.frm = frm;
     
-    if(data.time > data.s_ctmin && useSkill){
-    	time = data.s_ctmin;
+    if(timeatk){
+    	//時間制限あり
+        if(!useSkill || data.ct >= 99999){
+        	//スキル未使用もしくは使い切り
+        	cnt = Math.ceil((data.reqhp - data.dmg) / data.n_dmg);
+        	dmg = cnt * data.n_dmg;
+        	time = (cnt - 1) * frm + data.motion;
+        	data.dmg += dmg;
+        	data.time += time;
+        	data.remtime = 0;
+        	//クリッサ - 240秒で殺したいけど
+        	//現状の計算だと正負で矛盾計算になる
+        } else {
+        	//CTがあるk
+            if(useSkill && (data.remtime > data.ct)){
+            	time = data.ct;
+            } else {
+            	time = data.remtime;
+            }
+            
+            sub.time = time;
+            dmgcalc_common(sub, data);
+            
+            data.dmg += sub.dmg;
+            data.time += sub.time;
+        }
     } else {
-    	time = data.time;
-    }
-    data.time -= time;
-    
-    cnt = Math.floor(time / (data.motion + data.wait));
-    time -= (cnt * (data.motion + data.wait));
-    
-    if(time >= data.motion){
-    	cnt += 1;
-    	time -= (data.motion + data.wait);
+    	//時間制限なし
+        if(!useSkill || data.ct >= 99999){
+        	//スキル未使用もしくは使い切り
+	    	cnt = Math.ceil((data.reqhp - data.dmg) / data.n_dmg);
+			time = (cnt - 1) * frm + data.motion;
+			
+			data.dmg += cnt * data.n_dmg;
+			data.time += time;
+        } else {
+        	//CTがある
+            sub.time = data.ct;
+            dmgcalc_common(sub, data);
+            
+            data.dmg += sub.dmg;
+            data.time += sub.time;
+        }
     }
 
-    dmg = cnt * data.n_dmg;
-    data.dmg += dmg;
-    
-    if((useSkill && data.time < data.s_motion) || (!useSkill && data.time < data.motion)){
-    	data.time = 0;
+    if(data.dmg >= data.reqhp){
+    	data.remtime = 0;
     } else {
-    	data.time += time;
+        data.remtime -= time;
     }
+}
+
+function dmgcalc_common(sub, data){
+	var time = sub.time;
+	var cnt = 0;
+	var dmg = 0;
+	
+	cnt = Math.floor(time / (sub.motion + sub.wait));
+	time -= (cnt * sub.frm);
+	if(time >= sub.motion){
+		cnt += 1;
+		time = (cnt - 1) * sub.frm + sub.motion + data.wait;
+	} else {
+		if(time < data.wait && time > 0){
+			//※計算時間100frm、モーション15frm、待機20frmとした場合
+			//　2セット(70frm)＋1回攻撃(15frm)で残15frmとなる
+			//　このまま次の状態に移られると待機モーションキャンセルが発生してしまうため
+			//　綺麗に使い切った場合でなければ十分なwait(通常待機1回分)を挟む
+			//　（time >= sub.motionの方でも同様）
+			time = data.wait;
+		}
+		time += cnt * sub.frm;
+	}
+
+	dmg = cnt * sub.dmg;
+	if(dmg > (data.reqhp - data.dmg)){
+		cnt = Math.ceil((data.reqhp - data.dmg) / sub.dmg);
+		time = (cnt - 1) * sub.frm + sub.motion;
+		dmg = cnt * sub.dmg;
+	}
+	
+	sub.time = time;
+	sub.dmg = dmg;
 }
 
 function make_bunitsjoin(){
-    var str = '';
-    str += '{ ';
+    var str;
+    str = '{'
     //unit
-    str += 'sid:$.sid, id:$.id, uid:$.uid';
-    str += ', clas:$.clas, name:$.name, rare:$.rare, cc:$.cc, noncc:$.noncc';
-    str += ', lv:$.lv, lvmax:$.lvmax';
-    str += ', hp:$.hp, hpmax:$.hpmax, bonushp:$.bonushp';
-    str += ', atk:$.atk, atkmax:$.atkmax, bonusatk:$.bonusatk';
-    str += ', def:$.def, defmax:$.defmax, bonusdef:$.bonusdef';
-    str += ', resi:$.resi, bonusresi:$.bonusresi';
-    str += ', block:$.block, bonusblock:$.bonusblock';
-    str += ', range:$.range, bonusrange:$.bonusrange';
-    str += ', costmax:$.costmax, costmin:$.costmin';
-    str += ', quadra:$.quadra';
-    str += ', specialatk:$.specialatk, specialatk2:$.specialatk2';
-    str += ', incatksp:$.incatksp';
-    str += ', skill:$.skill, atktype:$.atktype, type:$.type, dataerr:$.dataerr';
-    str += ', motion:$.motion, wait:$.wait';
-    str += ', s_motion:$.s_motion, s_wait:$.s_wait';
-    str += ', teambuff:$.teambuff';
+    	+ '  sid:$.sid, id:$.id, uid:$.uid'
+		+ ', clas:$.clas, name:$.name, rare:$.rare, cc:$.cc, noncc:$.noncc'
+		+ ', lv:$.lv, lvmax:$.lvmax'
+	    + ', hp:$.hp, hpmax:$.hpmax, bonushp:$.bonushp'
+	    + ', atk:$.atk, atkmax:$.atkmax, bonusatk:$.bonusatk'
+	    + ', def:$.def, defmax:$.defmax, bonusdef:$.bonusdef'
+	    + ', resi:$.resi, bonusresi:$.bonusresi'
+	    + ', block:$.block, bonusblock:$.bonusblock'
+	    + ', range:$.range, bonusrange:$.bonusrange'
+	    + ', costmax:$.costmax, costmin:$.costmin'
+	    + ', quadra:$.quadra'
+	    + ', specialatk:$.specialatk, specialatk2:$.specialatk2'
+	    + ', incatksp:$.incatksp'
+	    + ', skill:$.skill, atktype:$.atktype, type:$.type, dataerr:$.dataerr'
+	    + ', motion:$.motion, wait:$.wait'
+	    + ', s_motion:$.s_motion, s_wait:$.s_wait'
+	    + ', teambuff:$.teambuff'
     //skill
-    str += ', s_lvmax:$$.lvmax';
-    str += ', s_inchp:$$.inchp, s_inchpmax:$$.inchpmax';
-    str += ', s_incatk:$$.incatk, s_incatkmax:$$.incatkmax';
-    str += ', s_incdef:$$.incdef, s_incdefmax:$$.incdefmax';
-    str += ', s_incpro:$$.incpro, s_incpromax:$$.incpromax';
-    str += ', s_incresi:$$.incresi, s_incresimax:$$.incresimax';
-    str += ', s_addresi:$$.addresi, s_addresimax:$$.addresimax';
-    str += ', s_incrange:$$.incrange, s_incrangemax:$$.incrangemax';
-    str += ', s_incblock:$$.incblock, s_incblockmax:$$.incblockmax';
-    str += ', s_dmgcut:$$.dmgcut, s_dmgcutmax:$$.dmgcutmax';
-    str += ', s_dmgcutmat:$$.dmgcutmat, s_dmgcutmatmax:$$.dmgcutmatmax';
-    str += ', s_dmgcutmag:$$.dmgcutmag, s_dmgcutmagmax:$$.dmgcutmagmax';
-    str += ', s_enemyatkmax:$$.enemyatkmax, s_enemyatkmin:$$.enemyatkmin';
-    str += ', s_enemymatmax:$$.enemymatmax, s_enemymatmin:$$.enemymatmin';
-    str += ', s_enemydefmax:$$.enemydefmax, s_enemydefmin:$$.enemydefmin';
-    str += ', s_enemyresimax:$$.enemyresimax, s_enemyresimin:$$.enemyresimin';
-    str += ', s_quadra:$$.quadra';
-    str += ', s_specialatk:$$.specialatk, s_incatksp:$$.incatksp';
-    str += ', s_atktype:$$.atktype';
-    str += ', s_timemin:$$.timemin, s_timemax:$$.timemax';
-    str += ', s_ctmin:$$.ctmin, s_ctmax:$$.ctmax';
-
-    str += ' }';
+	    + ', s_lvmax:$$.lvmax'
+	    + ', s_inchp:$$.inchp, s_inchpmax:$$.inchpmax'
+	    + ', s_incatk:$$.incatk, s_incatkmax:$$.incatkmax'
+	    + ', s_incdef:$$.incdef, s_incdefmax:$$.incdefmax'
+	    + ', s_incpro:$$.incpro, s_incpromax:$$.incpromax'
+	    + ', s_incresi:$$.incresi, s_incresimax:$$.incresimax'
+	    + ', s_addresi:$$.addresi, s_addresimax:$$.addresimax'
+	    + ', s_incrange:$$.incrange, s_incrangemax:$$.incrangemax'
+	    + ', s_incblock:$$.incblock, s_incblockmax:$$.incblockmax'
+	    + ', s_dmgcut:$$.dmgcut, s_dmgcutmax:$$.dmgcutmax'
+	    + ', s_dmgcutmat:$$.dmgcutmat, s_dmgcutmatmax:$$.dmgcutmatmax'
+	    + ', s_dmgcutmag:$$.dmgcutmag, s_dmgcutmagmax:$$.dmgcutmagmax'
+	    + ', s_enemyatkmax:$$.enemyatkmax, s_enemyatkmin:$$.enemyatkmin'
+	    + ', s_enemymatmax:$$.enemymatmax, s_enemymatmin:$$.enemymatmin'
+	    + ', s_enemydefmax:$$.enemydefmax, s_enemydefmin:$$.enemydefmin'
+	    + ', s_enemyresimax:$$.enemyresimax, s_enemyresimin:$$.enemyresimin'
+	    + ', s_quadra:$$.quadra'
+	    + ', s_specialatk:$$.specialatk, s_incatksp:$$.incatksp'
+	    + ', s_atktype:$$.atktype'
+	    + ', s_timemin:$$.timemin, s_timemax:$$.timemax'
+	    + ', s_ctmin:$$.ctmin, s_ctmax:$$.ctmax'
+	
+	    + ' }';
     return str;
 }
 
@@ -1072,6 +1215,8 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
     var enemy = gl_enemy;
     var sBuf = skillbuffs;
     var oBuf = otherBuff;
+    var act = actbuff;
+    var bcls = bclass;
     var mat;
     
     //各行毎の補正値等
@@ -1120,6 +1265,7 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
     skill.incatksp = 1;
     skill.atktype = 0;
     skill.time = 0;
+    skill.ct = 99999;
 
     if(useSkill){
     	//スキル分類ごとに分けるため、正規表現でパターン化
@@ -1141,21 +1287,23 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
             skill.debdef = unit.s_enemydefmin;
             skill.debresi = unit.s_enemyresimin;
             skill.time = unit.s_timemax;
+            skill.ct = unit.s_ctmin;
         } else {
         	skill.inchp = unit.s_inchp + (unit.s_inchpmax - unit.s_inchp) / (unit.s_lvmax - 1) * (slv - 1);
             skill.incatk = unit.s_incatk + (unit.s_incatkmax - unit.s_incatk) / (unit.s_lvmax - 1) * (slv - 1);
-            skill.incdef = unit.s_incdef + (unit.s_incdefmax - unit.s_incdef) / (unit.s_lvmax - 1) * (slv - 1);;
-            skill.incpro = unit.s_incpro + (unit.s_incpromax - unit.s_incpro) / (unit.s_lvmax - 1) * (slv - 1);;
-            skill.incresi = unit.s_incresi + (unit.s_incresimax - unit.s_incresi) / (unit.s_lvmax - 1) * (slv - 1);;
-            skill.addresi = unit.s_addresi + (unit.s_addresimax - unit.s_addresi) / (unit.s_lvmax - 1) * (slv - 1);;
-            skill.dmgcut = unit.s_dmgcutmax - (unit.s_dmgcut - unit.s_dmgcutmax) / (unit.s_lvmax - 1) * (slv - 1);;
-            skill.cutmat = unit.s_dmgcutmat - (unit.s_dmgcutmat - unit.s_dmgcutmatmax) / (unit.s_lvmax - 1) * (slv - 1);;
-            skill.cutmag = unit.s_dmgcutmag - (unit.s_dmgcutmag - unit.s_dmgcutmagmax) / (unit.s_lvmax - 1) * (slv - 1);;
-            skill.debatk = unit.s_enemyatkmax - (unit.s_enemyatkmax - unit.s_enemyatkmin) / (unit.s_lvmax - 1) * (slv - 1);;
-            skill.debmat = unit.s_enemymatmax - (unit.s_enemymatmax - unit.s_enemymatmin) / (unit.s_lvmax - 1) * (slv - 1);;
-            skill.debdef = unit.s_enemydefmax - (unit.s_enemydefmax - unit.s_enemydefmin) / (unit.s_lvmax - 1) * (slv - 1);;
-            skill.debresi = unit.s_enemyresimax - (unit.s_enemyresimax - unit.s_enemyresimin) / (unit.s_lvmax - 1) * (slv - 1);;
+            skill.incdef = unit.s_incdef + (unit.s_incdefmax - unit.s_incdef) / (unit.s_lvmax - 1) * (slv - 1);
+            skill.incpro = unit.s_incpro + (unit.s_incpromax - unit.s_incpro) / (unit.s_lvmax - 1) * (slv - 1);
+            skill.incresi = unit.s_incresi + (unit.s_incresimax - unit.s_incresi) / (unit.s_lvmax - 1) * (slv - 1);
+            skill.addresi = unit.s_addresi + (unit.s_addresimax - unit.s_addresi) / (unit.s_lvmax - 1) * (slv - 1);
+            skill.dmgcut = unit.s_dmgcutmax - (unit.s_dmgcut - unit.s_dmgcutmax) / (unit.s_lvmax - 1) * (slv - 1);
+            skill.cutmat = unit.s_dmgcutmat - (unit.s_dmgcutmat - unit.s_dmgcutmatmax) / (unit.s_lvmax - 1) * (slv - 1);
+            skill.cutmag = unit.s_dmgcutmag - (unit.s_dmgcutmag - unit.s_dmgcutmagmax) / (unit.s_lvmax - 1) * (slv - 1);
+            skill.debatk = unit.s_enemyatkmax - (unit.s_enemyatkmax - unit.s_enemyatkmin) / (unit.s_lvmax - 1) * (slv - 1);
+            skill.debmat = unit.s_enemymatmax - (unit.s_enemymatmax - unit.s_enemymatmin) / (unit.s_lvmax - 1) * (slv - 1);
+            skill.debdef = unit.s_enemydefmax - (unit.s_enemydefmax - unit.s_enemydefmin) / (unit.s_lvmax - 1) * (slv - 1);
+            skill.debresi = unit.s_enemyresimax - (unit.s_enemyresimax - unit.s_enemyresimin) / (unit.s_lvmax - 1) * (slv - 1);
             skill.time = unit.s_timemin + (unit.s_timemax - unit.s_timemin) / (unit.s_lvmax - 1) * (slv - 1);
+            skill.ct = unit.s_ctmax - (unit.s_ctmax - unit.s_ctmin) / (unit.s_lvmax - 1) * (slv - 1);
         }
         skill.quadra = unit.s_quadra;
         skill.spatk = unit.s_specialatk;
@@ -1256,16 +1404,16 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
     }
 	
     //編成バフの整理
-    row.bufhp += bclass[unit.sid].bufhp;
-    row.bufatk += bclass[unit.sid].bufatk;
-    row.bufdef += bclass[unit.sid].bufdef;
-    row.bufresi += bclass[unit.sid].bufresi;
+    row.bufhp += bcls[unit.sid].bufhp;
+    row.bufatk += bcls[unit.sid].bufatk;
+    row.bufdef += bcls[unit.sid].bufdef;
+    row.bufresi += bcls[unit.sid].bufresi;
     
     //特殊バフ(エキドナ、エステル、ルビナスは実質的に職バフ)
     if(oBuf.olivie && ((unit.type === 2) || (unit.type === 3))){ row.bufhp += 0.15; }
     if(oBuf.sherry && (unit.rare <= 4)){ row.bufhp += 0.05; row.bufatk += 0.05; row.bufdef += 0.05; }
     if(oBuf.hikage && ((unit.id === 105171) || (unit.id === 105271))){ row.bufatk += 0.1; row.bufdef +=0.1;}
-
+    
     //暫定。ロゼットは全体バフと重複不可とする。重複可能の場合は後の計算にincrosetteを追加する
     if(unit.rare === 3){
     	if(oBuf.rosette){
@@ -1285,149 +1433,124 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
     }
     
     //編成バフ持ち自身に対する適用
-    var name = /アイシャ|アデル|アネリア|アリア|アルティア|イザベル|イメリア|イリス|ウズメ|エキドナ|エステル|オリヴィエ|カティナ|ガラニア|キキョウ|グレース|ケイティ|コジュウロウ|コンラッド|サビーネ|シズカ|スピカ|ダリア|ピピン|ベリンダ|ベルニス|マツリ|ミランダ|ユーノ|リン|ルイーズ|ルビナス|レン/;
-
+    var name = /伏龍の軍師アイシャ|魔女アデル|姫海賊アネリア|副官アリア|光の守護者アルティア|帝国天馬騎士イザベル|姫山賊イメリア|聖女イリス|地の軍師ウズメ|竜巫女エキドナ|魔法皇女エステル|オリヴィエ|弓騎兵カティナ|神秘の探求者ガラニア|黒紫の巫女キキョウ|魔導鎧姫グレース|戦術教官ケイティ|侍剣士コジュウロウ|山賊王コンラッド|宮廷剣士サビーネ|姫侍シズカ|妖精郷の射手スピカ|黒槍騎士ダリア|風水士ピピン|白き魔女ベリンダ|大盾の乙女ベルニス|朱鎧の智将マツリ|聖鎚闘士ミランダ|背反の癒し手ユーノ|武闘家リン|ルイーズ|竜巫女ルビナス|天の軍師レン/;
+    
     if(unit.teambuff === 1){
         mat = unit.name.match(name);
+        
+        //編成バフ
     	switch(mat[0]){
-	    	case 'アイシャ':
-	    		temp = $('#op_hp3');
-	    		if(!temp.prop('checked')){ row.bufhp += toNum(temp.val()); }
+	    	case '伏龍の軍師アイシャ':
+	    		if(!oBuf.hp3){ row.bufhp += toNum($('#op_hp3').val()); }
 	    		break;
-	    	case 'アデル':
-	    		temp = $('#op_hp2');
-	    		if(!temp.prop('checked')){ row.bufhp += toNum(temp.val()); }
+	    	case '魔女アデル':
+	    		if(!oBuf.hp2){ row.bufhp += toNum($('#op_hp2').val()); }
 	    		break;
-	    	case 'アネリア':
-	    		temp = $('#205atk');
-	    		if(!temp.prop('checked')){ row.bufatk += toNum(temp.val()); }
+	    	case '姫海賊アネリア':
+	    		if(!act['205atk']){ row.bufatk += toNum($('#205atk').val()); }
 	    		break;
-	    	case 'アリア':
-	    		temp = $('#op_atk1');
-	    		if(!temp.prop('checked')){ row.bufatk += toNum(temp.val()); }
+	    	case '副官アリア':
+	    		if(!oBuf.atk1){ row.bufatk += toNum($('#op_atk1').val()); }
 	    		break;
-	    	case 'アルティア':
-	    		temp = $('#101hp');
-	    		if(!temp.prop('checked')){ row.bufhp += toNum(temp.val()); }
+	    	case '光の守護者アルティア':
+	    		if(!act['101hp']){
+	    			if(unit.cc < 2){
+		    			row.bufhp += 0.1;
+	    			} else {
+		    			row.bufhp += toNum($('#101hp').val());
+	    			}
+	    		}
 	    		break;
-	    	case 'イザベル':
-	    		temp = $('#114atk');
-	    		if(!temp.prop('checked')){ row.bufatk += toNum(temp.val()); }
+	    	case '帝国天馬騎士イザベル':
+	    		if(!act['114atk']){ row.bufatk += toNum($('#114atk').val()); }
 	    		break;
-	    	case 'イメリア':
-	    		temp = $('#108hp');
-	    		if(!temp.prop('checked')){ row.bufhp += toNum(temp.val()); }
+	    	case '姫山賊イメリア':
+	    		if(!act['108hp']){ row.bufhp += toNum($('#108hp').val()); }
 	    		break;
-	    	case 'イリス':
-	    		temp = $('#op_def3');
-	    		if(!temp.prop('checked')){ row.bufdef += toNum(temp.val()); }
+	    	case '聖女イリス':
+	    		if(!oBuf.def3){ row.bufdef += toNum($('#op_def3').val()); }
 	    		break;
-	    	case 'ウズメ':
-	    		temp = $('#op_atk2');
-	    		if(!temp.prop('checked')){ row.bufatk += toNum(temp.val()); }
+	    	case '地の軍師ウズメ':
+	    		if(!oBuf.atk2){ row.bufatk += toNum($('#op_atk2').val()); }
 	    		break;
-	    	case 'エキドナ':
-	    		temp = $('#op_ekidona');
-	    		if(!temp.prop('checked')){
+	    	case '竜巫女エキドナ':
+	    		if(!oBuf.ekidona){
 	    			row.bufhp += 0.05;
 	    			row.bufdef += 0.05;
     			}
 	    		break;
-	    	case 'エステル':
-	    		temp = $('#op_ester');
-	    		if(!temp.prop('checked')){ row.bufatk += 0.05; }
+	    	case '魔法皇女エステル':
+	    		if(!oBuf.ester){ row.bufatk += 0.05; }
 	    		break;
 	    	case 'オリヴィエ':
-	    		temp = $('#op_olivie');
-	    		if(!temp.prop('checked')){ row.bufhp += 0.15; }
+	    		if(!oBuf.olivie){ row.bufhp += 0.15; }
 	    		break;
-	    	case 'カティナ':
-	    		temp = $('#127atk');
-	    		if(!temp.prop('checked')){ row.bufatk += toNum(temp.val()); }
+	    	case '弓騎兵カティナ':
+	    		if(!act['127atk']){ row.bufatk += toNum($('#127atk').val()); }
 	    		break;
-	    	case 'ガラニア':
-	    		temp = $('#202atk');
-	    		if(!temp.prop('checked')){ row.bufatk += toNum(temp.val()); }
+	    	case '神秘の探求者ガラニア':
+	    		if(!act['202atk']){ row.bufatk += toNum($('#202atk').val()); }
 	    		break;
-	    	case 'キキョウ':
-	    		temp = $('#op_atk3');
-	    		if(!temp.prop('checked')){ row.bufatk += toNum(temp.val()); }
+	    	case '黒紫の巫女キキョウ':
+	    		if(!oBuf.atk3){ row.bufatk += toNum($('#op_atk3').val()); }
 	    		break;
-	    	case 'グレース':
-	    		temp = $('#op_grace');
-	    		if(!temp.prop('checked')){ row.bufresi += 10; }
+	    	case '魔導鎧姫グレース':
+	    		if(!oBuf.grace){ row.bufresi += 10; }
 	    		break;
-	    	case 'ケイティ':
-	    		temp = $('#op_def1');
-	    		if(!temp.prop('checked')){ row.bufdef += toNum(temp.val()); }
+	    	case '戦術教官ケイティ':
+	    		if(!oBuf.def1){ row.bufdef += toNum($('#op_def1').val()); }
 	    		break;
-	    	case 'コジュウロウ':
-	    		temp = $('#112def');
-	    		if(!temp.prop('checked')){ row.bufdef += toNum(temp.val()); }
+	    	case '侍剣士コジュウロウ':
+	    		if(!act['112def']){ row.bufdef += toNum($('#112def').val()); }
 	    		break;
-	    	case 'コンラッド':
-	    		temp = $('#108atk');
-	    		if(!temp.prop('checked')){ row.bufatk += toNum(temp.val()); }
+	    	case '山賊王コンラッド':
+	    		if(!act['108atk']){ row.bufatk += toNum($('#108atk').val()); }
 	    		break;
-	    	case 'サビーネ':
-	    		temp = $('#119atk');
-	    		if(!temp.prop('checked')){ row.bufatk += toNum(temp.val()); }
+	    	case '宮廷剣士サビーネ':
+	    		if(!act['119atk']){ row.bufatk += toNum($('#119atk').val()); }
 	    		break;
-	    	case 'シズカ':
-	    		temp = $('#112atk');
-	    		if(!temp.prop('checked')){ row.bufatk += toNum(temp.val()); }
+	    	case '姫侍シズカ':
+	    		if(!act['112atk']){ row.bufatk += toNum($('#112atk').val()); }
 	    		break;
-	    	case 'スピカ':
-	    		temp = $('#201atk');
-	    		if(!temp.prop('checked')){ row.bufatk += toNum(temp.val()); }
+	    	case '妖精郷の射手スピカ':
+	    		if(!act['201atk']){ row.bufatk += toNum($('#201atk').val()); }
 	    		break;
-	    	case 'ダリア':
-	    		temp = $('#103atk');
-	    		if(!temp.prop('checked')){ row.bufatk += toNum(temp.val()); }
+	    	case '黒槍騎士ダリア':
+	    		if(!act['103atk']){ row.bufatk += toNum($('#103atk').val()); }
 	    		break;
-	    	case 'ピピン':
-	    		temp = $('#213atk');
-	    		if(!temp.prop('checked')){ row.bufatk += toNum(temp.val()); }
+	    	case '風水士ピピン':
+	    		if(!act['213atk']){ row.bufatk += toNum($('#213atk').val()); }
 	    		break;
-	    	case 'ベリンダ':
-	    		temp = $('#204atk');
-	    		if(!temp.prop('checked')){ row.bufatk += toNum(temp.val()); }
+	    	case '白き魔女ベリンダ':
+	    		if(!act['204atk']){ row.bufatk += toNum($('#204atk').val()); }
 	    		break;
-	    	case 'ベルニス':
-	    		temp = $('#102def');
-	    		if(!temp.prop('checked')){ row.bufdef += toNum(temp.val()); }
+	    	case '大盾の乙女ベルニス':
+	    		if(!act['102def']){ row.bufdef += toNum($('#102def').val()); }
 	    		break;
-	    	case 'マツリ':
-	    		temp = $('#op_matsuri');
-	    		if(!temp.prop('checked')){
+	    	case '朱鎧の智将マツリ':
+	    		if(!oBuf.matsuri){
 	    			row.bufhp += 0.05;
 	    			row.bufatk += 0.05;
 	    			row.bufdef += 0.05;
     			}
 	    		break;
-	    	case 'ミランダ':
-	    		temp = $('#102atk');
-	    		if(!temp.prop('checked')){ row.bufatk += toNum(temp.val()); }
+	    	case '聖鎚闘士ミランダ':
+	    		if(!act['102atk']){ row.bufatk += toNum($('#102atk').val()); }
 	    		break;
-	    	case 'ユーノ':
-	    		temp = $('#203atk');
-	    		if(!temp.prop('checked')){ row.bufatk += toNum(temp.val()); }
+	    	case '背反の癒し手ユーノ':
+	    		if(!act['203atk']){ row.bufatk += toNum($('#203atk').val()); }
 	    		break;
-	    	case 'リン':
-	    		temp = $('#117atk');
-	    		if(!temp.prop('checked')){ row.bufatk += toNum(temp.val()); }
+	    	case '武闘家リン':
+	    		if(!act['117atk']){ row.bufatk += toNum($('#117atk').val()); }
 	    		break;
 	    	case 'ルイーズ':
-	    		temp = $('#op_louise');
-	    		if(!temp.prop('checked')){ row.bufdef += toNum(temp.val()); }
+	    		if(!oBuf.louise){ row.bufdef += toNum($('#op_louise').val()); }
 	    		break;
-	    	case 'ルビナス':
-	    		temp = $('#op_lubinus');
-	    		if(!temp.prop('checked')){ row.bufatk += 0.07; }
+	    	case '竜巫女ルビナス':
+	    		if(!oBuf.lubinus){ row.bufatk += 0.07; }
 	    		break;
-	    	case 'レン':
-	    		temp = $('#op_def2');
-	    		if(!temp.prop('checked')){ row.bufdef += toNum(temp.val()); }
+	    	case '天の軍師レン':
+	    		if(!oBuf.def2){ row.bufdef += toNum($('#op_def2').val()); }
 	    		break;
     	}
     }

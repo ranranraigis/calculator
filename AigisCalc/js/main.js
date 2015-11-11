@@ -1,5 +1,6 @@
 $(document).ready(initialize);
 var gl_mode, gl_enemy = [], otherBuff = [];
+var tableclone;
 
 function toNum(val){
     return (val - 0);

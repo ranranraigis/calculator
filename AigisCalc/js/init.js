@@ -156,15 +156,15 @@ function setFilterClass(){
     var mel, ran;
     que.forEach(function(rows){
         if(rows.sid < 200){
-            mel += '<tr>';
-            mel += '<td>';
-            mel += '<label><input type="checkbox" id="cls_mel' + rows.sid + '" class="filclass" value="' + rows.sid + '" group="cls_mel" grouptop="clsmel"/>' + rows.sname + '</label>';
-            mel += '</td></tr>';
+            mel += '<tr>'
+	             + '<td>'
+	             + '<label><input type="checkbox" id="cls_mel' + rows.sid + '" class="filclass" value="' + rows.sid + '" group="cls_mel" grouptop="clsmel"/>' + rows.sname + '</label>'
+	             + '</td></tr>';
         } else {
-            ran += '<tr>';
-            ran += '<td>';
-            ran += '<label><input type="checkbox" id="cls_ran' + rows.sid + '" class="filclass" value="' + rows.sid + '" group="cls_ran" grouptop="clsran"/>' + rows.sname + '</label>';
-            ran += '</td></tr>';
+            ran += '<tr>'
+                 + '<td>'
+                 + '<label><input type="checkbox" id="cls_ran' + rows.sid + '" class="filclass" value="' + rows.sid + '" group="cls_ran" grouptop="clsran"/>' + rows.sname + '</label>'
+                 + '</td></tr>';
         }
     });
     
@@ -198,10 +198,42 @@ function getBuff(sheetsEntry){
     setBuff('melee');
     setBuff('ranged');
 
-    //シズカ(侍112,忍者113のATK)のみ調整。エキドナとかもここに入れるべき？
-    $('#112atk').change(function(){linkCheckbox('#113atk', $(this).prop('checked'));});
-    $('#113atk').change(function(){linkCheckbox('#112atk', $(this).prop('checked'));});
+    //エキドナ(竜：sid=109,110,111,126,206のHP,DEF)
+    /*
+    $('#op_ekidona').attr('class', 'link').attr('link', 'ekidona');
+    $('#109hp').attr('class', 'link').attr('link', 'ekidona');
+    $('#110hp').attr('class', 'link').attr('link', 'ekidona');
+    $('#111hp').attr('class', 'link').attr('link', 'ekidona');
+    $('#126hp').attr('class', 'link').attr('link', 'ekidona');
+    $('#206hp').attr('class', 'link').attr('link', 'ekidona');
+    $('#109def').attr('class', 'link').attr('link', 'ekidona');
+    $('#110def').attr('class', 'link').attr('link', 'ekidona');
+    $('#111def').attr('class', 'link').attr('link', 'ekidona');
+    $('#126def').attr('class', 'link').attr('link', 'ekidona');
+    $('#206def').attr('class', 'link').attr('link', 'ekidona');
+    */
+    
+    //エステルも入れたいけどシャーリーと被ってるので無しで
+    
+    //シズカ(侍112,忍者113のATK)
+    $('#112atk').attr('class', 'link').attr('link', 'sizuka');
+    $('#113atk').attr('class', 'link').attr('link', 'sizuka');
 
+    //シャーリー(メイジ202のスキル時間、【ビショップ209のATK】、サモナー212のコスト)
+    //増分7%なので一応保持
+    $('#op_shirley').attr('class', 'link').attr('link', 'shirley');
+    $('#209atk').attr('class', 'link').attr('link', 'shirley');
+    
+    //ルビナス(竜：sid=109,110,111,126,206のATK)
+    /*
+    $('#op_lubinus').attr('class', 'link').attr('link', 'lubinus');
+    $('#109atk').attr('class', 'link').attr('link', 'lubinus');
+    $('#110atk').attr('class', 'link').attr('link', 'lubinus');
+    $('#111atk').attr('class', 'link').attr('link', 'lubinus');
+    $('#126atk').attr('class', 'link').attr('link', 'lubinus');
+    $('#206atk').attr('class', 'link').attr('link', 'lubinus');
+    */
+    
     $('.tooltip').each(tooltip);
     $('.hiddenrow').hide();
     $('.region').hide();
@@ -239,8 +271,8 @@ function setBuff(type){
             if(rhp === 0){
                 tr += '<td class="tdbuf" />';
             } else {
-                tr += '<td class="tdbuf tooltip" tooltip="' + rows.balhp + '">';
-                tr += '<label><input type="checkbox" id="' + rsid + 'hp" value="' + (rhp / 100) + '" />ＨＰ</label>';
+                tr += '<td class="tdbuf tooltip" tooltip="' + rows.balhp + '">'
+                    + '<label><input type="checkbox" id="' + rsid + 'hp" value="' + (rhp / 100) + '" />ＨＰ</label>';
 
                 actbuff.push('#' + rsid + 'hp');
             }
@@ -249,8 +281,8 @@ function setBuff(type){
             if(ratk === 0){
                 tr += '<td class="tdbuf">';
             } else {
-                tr += '<td class="tdbuf tooltip" tooltip="' + rows.balatk + '">';
-                tr += '<label><input type="checkbox" id="' + rsid + 'atk" value="' + (ratk / 100) + '" />攻撃</label>';
+                tr += '<td class="tdbuf tooltip" tooltip="' + rows.balatk + '">'
+                    + '<label><input type="checkbox" id="' + rsid + 'atk" value="' + (ratk / 100) + '" />攻撃</label>';
 
                 actbuff.push('#' + rsid + 'atk');
             }
@@ -259,8 +291,8 @@ function setBuff(type){
             if(rdef === 0){
                 tr += '<td class="tdbuf">';
             } else {
-                tr += '<td class="tdbuf tooltip" tooltip="' + rows.baldef + '">';
-                tr += '<label><input type="checkbox" id="' + rsid + 'def" value="' + (rdef / 100) + '" />防御</label>';
+                tr += '<td class="tdbuf tooltip" tooltip="' + rows.baldef + '">'
+                    + '<label><input type="checkbox" id="' + rsid + 'def" value="' + (rdef / 100) + '" />防御</label>';
 
                 actbuff.push('#' + rsid + 'def');
             }
@@ -269,13 +301,13 @@ function setBuff(type){
             if(rresi === 0){
                 tr += '<td class="tdbuf">';
             } else {
-                tr += '<td class="tdbuf tooltip" tooltip="' + rows.balresi + '">';
-                tr += '<label><input type="checkbox" id="' + rsid + 'resi" value="' + (rresi / 100) + '" />魔耐</label>';
+                tr += '<td class="tdbuf tooltip" tooltip="' + rows.balresi + '">'
+                    + '<label><input type="checkbox" id="' + rsid + 'resi" value="' + (rresi / 100) + '" />魔耐</label>';
 
                 actbuff.push('#' + rsid + 'resi');
             }
-            tr += '</td>';
-            tr += '</tr>';
+            tr += '</td>'
+                + '</tr>';
 
             trs += tr;
         }
@@ -374,9 +406,9 @@ function setUpdate(){
 	
 	var str = '';
 	que.forEach(function(rows){
-		str += '　　　　　　' + rows.ymd;
-		str += '　' + rows.summary;
-		str += '<br>';
+		str += '　　　　　　' + rows.ymd
+		     + '　' + rows.summary
+		     + '<br>';
 	});
 
 	$('#update').append(str);
@@ -396,7 +428,6 @@ function load_progress(){
         skills = null;
         sskills = null;
         skilldata = null;
-        classes = null;
         classdata = null;
         updates = null;
     }
@@ -565,6 +596,9 @@ function setParse(){
 }
 
 
-function linkCheckbox(target,status){
-    $(target).prop('checked',status);
+function linkCheckbox(){
+	var t = $(this);
+	var link = t.attr('link');
+
+	$('input[type="checkbox"][link="' + link + '"]').prop('checked', t.prop('checked'));
 }

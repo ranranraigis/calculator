@@ -62,7 +62,7 @@
             <div class="mainrow">
                 <label class="maincap">時間：</label>
                 <input type="radio" name="atkMode" value="time" />
-                <input type="number" id="atkTime" class="num3" min="1" value="20" disabled /> 秒以内
+                <input type="number" id="atkTime" class="num3" min="0" value="20" disabled/> 秒以内
             </div>
                         
             <div class="mainrow">
@@ -260,8 +260,8 @@
         <div id="buff">
             <div class="bufrow">
                 <label class="bufcap">好感度：</label>
-                <label><input type="radio" name="bonus" value="0" />なし</label>
-                <label><input type="radio" name="bonus" value="1" checked />あり</label>   
+                <label><input type="radio" name="bonus" value="0" style="margin-right: 3px !important;"/>なし</label>
+                <label><input type="radio" name="bonus" value="1" style="margin: 0px 3px 0px 6px !important;" checked />あり</label>   
             </div>
 
             <div class="bufrow">
@@ -272,6 +272,14 @@
                 <label class="tooltip" tooltip="１．１９倍" ><input type="radio" name="op_prince" class="skillradio" value="1.19" style="margin: 0px 3px 0px 6px !important;" />救世主</label>
                 <label class="tooltip" tooltip="１．２１倍" ><input type="radio" name="op_prince" class="skillradio" value="1.21" style="margin: 0px 3px 0px 6px !important;" checked />大英雄</label>
                 <label class="tooltip" tooltip="１．１２倍" ><input type="radio" name="op_prince" class="skillradio" value="1.12" style="margin: 0px 3px 0px 6px !important;" />その他</label>
+            </div>
+            
+            <div class="bufrow">
+                <label class="bufcap tooltip" tooltip="【時間】計算時のＣＴカット">後衛軍師：</label>
+                <label class="tooltip" tooltip="１倍" ><input type="radio" name="op_ctcut" class="skillradio" value="1" style="margin-right: 3px !important;" checked />なし</label>
+                <label class="tooltip" tooltip="１割カット" ><input type="radio" name="op_ctcut" class="skillradio" value="0.9" style="margin: 0px 3px 0px 6px !important;" />未</label>
+                <label class="tooltip" tooltip="２割カット" ><input type="radio" name="op_ctcut" class="skillradio" value="0.8" style="margin: 0px 3px 0px 6px !important;" />CC</label>
+                <label class="tooltip" tooltip="３割カット" ><input type="radio" name="op_ctcut" class="skillradio" value="0.7" style="margin: 0px 3px 0px 6px !important;" />覚</label>
             </div>
 
             <div class="bufrow">
@@ -298,24 +306,25 @@
 
             <div class="bufrow">
                 <label class="bufcap">特殊強化：</label>
-                <label class="tooltip" tooltip="<s>面倒なので</s>未実装です、王子！" ><input type="checkbox" id="op_anna" class="hage"/>アンナ　</label>
-                <label class="tooltip" tooltip="竜族(ドラゴンライダー系含)のＨＰ,防御＋５％" ><input type="checkbox" id="op_ekidona" />エキドナ</label>
-                <label class="tooltip" tooltip="メイジ、ビショップ、メイジアーマー、魔法剣士の攻撃力＋５％" ><input type="checkbox" id="op_ester" />エステル</label>
+                <label class="tooltip" tooltip="<s>面倒なので</s>未実装です、王子！" ><input type="checkbox" id="op_anna" class="hage"/>アンナ　　</label>
+                <label class="tooltip" tooltip="竜族(ドラゴンライダー系含)のＨＰ,防御＋５％" ><input type="checkbox" id="op_ekidona" />エキドナ　</label>
+                <label class="tooltip" tooltip="メイジ、ビショップ、<br>メイジアーマー、魔法剣士の攻撃力＋５％" ><input type="checkbox" id="op_ester" />エステル　</label>
                 <label class="tooltip" tooltip="エルフとドワーフのＨＰ＋１５％" ><input type="checkbox" id="op_olivie" />オリヴィエ</label>
             </div>
 
             <div class="bufrow">
                 <label class="bufcap">　</label>
-                <label class="tooltip" tooltip="金以下のユニットのＨＰ,攻撃,防御＋５％" ><input type="checkbox" id="op_sherry" />シェリー</label>
-                <label class="tooltip" tooltip="月姫カグヤの攻撃,防御＋１０％" ><input type="checkbox" id="op_hikage" />ヒカゲ　</label>
-                <label class="tooltip" tooltip="竜族(ドラゴンライダー系含)の攻撃力＋７％" ><input type="checkbox" id="op_lubinus" />ルビナス</label>
+                <label class="tooltip" tooltip="金以下のユニットのＨＰ,攻撃,防御＋５％" ><input type="checkbox" id="op_sherry" />シェリー　</label>
+                <label class="tooltip" tooltip="ビショップの攻撃力＋７％"><input type="checkbox" id="op_shirley" />シャーリー</label>
+                <label class="tooltip" tooltip="月姫カグヤの攻撃,防御＋１０％" ><input type="checkbox" id="op_hikage" />ヒカゲ　　</label>
+                <label class="tooltip" tooltip="竜族(ドラゴンライダー系含)の攻撃力＋７％" ><input type="checkbox" id="op_lubinus" />ルビナス　</label>
             </div>
 
             <div class="bufrow">
                 <label class="bufcap">近接強化：</label>
-                <label class="tooltip" tooltip="近接の攻撃力＋５％" ><input type="checkbox" id="op_kagura" />カグラ　</label>
-                <label class="tooltip" tooltip="近接のＨＰ,攻撃,防御＋５％" ><input type="checkbox" id="op_matsuri" />マツリ　</label>
-                <label class="tooltip" tooltip="近接の魔法耐性＋１０" ><input type="checkbox" id="op_grace" />グレース</label>
+                <label class="tooltip" tooltip="近接の攻撃力＋５％" ><input type="checkbox" id="op_kagura" />カグラ　　</label>
+                <label class="tooltip" tooltip="近接のＨＰ,攻撃,防御＋５％" ><input type="checkbox" id="op_matsuri" />マツリ　　</label>
+                <label class="tooltip" tooltip="近接の魔法耐性＋１０" ><input type="checkbox" id="op_grace" />グレース　</label>
             </div>
 
             <div class="bufrow">
@@ -618,8 +627,8 @@
 
             <div class="bufrow">
                 <div id="div_ranged" class="bufrow">
-                    <label class="bufcap" style="margin-top: 4px;">ダンサー：</label>
-                    <label><input type="checkbox" id="op_dance" class="actchk" ctgt=".dance"/>使用</label>　
+                    <label class="bufcap tooltip" tooltip="入力値を単純加算します" style="margin-top: 4px;">ダンサー：</label>
+                    <label class="tooltip" tooltip="入力値を単純加算します"><input type="checkbox" id="op_dance" class="actchk" ctgt=".dance"/>使用</label>　
                     攻：<input type="number" id="dance_atk" class="num4 dance" min="0" value="0" disabled />　
                     防：<input type="number" id="dance_def" class="num4 dance" min="0" value="0" disabled />
                 </div>
@@ -628,18 +637,18 @@
             <div class="bufrow">
                 <label class="bufcap" style="margin-top: 4px;">マップ効果：</label>
                 <label><input type="checkbox" id="op_areaAtk" class="actchk" ctgt="#areaAtk"/>攻撃</label>
-                <input type="number" id="areaAtk" class="num4" min="1" value="100" disabled /> ％　
+                <input type="number" id="areaAtk" class="num4" min="1" value="50" disabled /> ％　
             </div>
             <div class="bufrow">
                 <label class="bufcap" style="margin-top: 4px;">　</label>
                 <label><input type="checkbox" id="op_areaDef" class="actchk" ctgt="#areaDef"/>防御</label>
-                <input type="number" id="areaDef" class="num4" min="1" value="100" disabled /> ％　
+                <input type="number" id="areaDef" class="num4" min="1" value="50" disabled /> ％　
             </div>
         
             <div class="bufrow">
                 <label class="bufcap">魔法剣士減衰：</label>
                 <label><input type="radio" name="op_mahoken" class="skillradio" value="0" style="margin-right: 3px !important;" checked />なし </label>
-                <label><input type="radio" name="op_mahoken" class="skillradio" value="1" style="margin-right: 3px !important;"/>あり</label>
+                <label><input type="radio" name="op_mahoken" class="skillradio" value="1" style="margin: 0px 3px 0px 6px !important;" />あり</label>
             </div>
         </div>
         
@@ -663,7 +672,7 @@
 	            <th width="26">防御
 	            <th width="26">魔耐
 	            <th width="26">Dmg
-	            <th width="37">DPS
+	            <th width="37" id="head_dps">DPS
 	            <th width="47" id="head_sdmg">ｽｷﾙ計
 	            <th width="127">ｽｷﾙ
 	            <th width="26" class="sorter-false parser-false">sLv
@@ -678,11 +687,8 @@
         　　　　　　出力されるテーブルはヘッダをクリックすると任意ソートが可能らしいです<br>
         　　　　　　　また、Shiftを押しながらクリックしていくと押した順の優先度でソートされていくらしいです<br>
         　　　　　　　テーブルの上に配置されている<b>[ソート解除]</b>ボタンで出力時の状態に戻るらしいです<br>
-        　　　　　　　※<s>ソートは数値順、あるいは文字順にソートされます</s><br>
-        　　　　　　　　<s>wikiやゲーム内の順にソートさせるとかは現状では出来ません</s><br>
-        　　　　　　　　色々いじってみた結果できるようになりました<br>
-        　　　　　　　　名前：※wikiの遠近一覧でのクラス毎での記載順<br>
-        　　　　　　　　 ｸﾗｽ：wikiの遠近一覧でのクラス順<br>
+        　　　　　　　　名前：※wiki遠近一覧のクラス内での記載順<br>
+        　　　　　　　　 ｸﾗｽ：wiki遠近一覧のクラス順<br>
         　　　　　　　　　ﾚｱ：鉄→黒→青<br>
         　　　　　　　　　CC：未→Ｓ<br>
         　　　　　　　　　他：数値順あるいは文字順(スキルのみ)<br>
@@ -705,7 +711,7 @@
             　　　　　　　避雷針やゴーレム対策の検討なんかに使えるのかもしれません<br>
             　　　　　　　Dmg列には被ダメ(合計)が表示されます<br>
             　　　　　　　パラディンで複数回耐える場合は一応HP半減時の防御1.5倍が計算されますが<br>
-            　　　　　　　ヒールなし前提の計算となるため実際にはヒールが入って逆にｷｬｰする可能性があります<br>
+            　　　　　　　ヒールなし前提の計算となるため、実際にはヒールが入ってｷｬｰする可能性があります<br>
             <br>
             　　　　　　<b>リハビリ</b><br>
             　　　　　　　覚醒後のリハビリ完了レベルを確認したい、そんな時に使えるのかもしれません<br>
@@ -726,7 +732,7 @@
             　　　　　　　検索結果が多い際にtablesorterの影響でかなり重くなるので実装。何かいい案が出来たら消えるかも<br>
             <br>
             　　　　　　<b>スキル使用</b><br>
-            　　　　　　　スキル使用前提(スキルマ)で計算をするらしいです<br>
+            　　　　　　　チェックを入れた場合、スキル使用前提(スキルマ)で計算をするらしいです<br>
             <br>
             　　　　　　<b>CC</b><br>
             　　　　　　　見たままですが「Ｓ」はスキル覚醒らしいです<br>
@@ -765,20 +771,32 @@
             　　　　　　　確認したいので誰かこの子か情報をください<br>
             <br>
             　　　　　　<b>DPS関連</b><br>
-            　　　　　　　wikiのフレーム数を参考に計算しているつもりらしいです<br>
-            　　　　　　　大雑把に書くと　Dmg * 30[frm] / 攻撃間隔[frm]　で計算しているらしいです<br>
-            　　　　　　　VHや後衛軍師、クアドラ系は撃ち切るまでを一括りにしているため、実測値とは誤差が出ます<br>
-            　　　　　　　スキル使用時は着火した瞬間から計測開始としているらしいです<br>
-            　　　　　　　攻撃(DPS)及び耐+DPSの検索を行う場合はDPSが高い順で出力されるらしいです<br>
+            　　　　　　　wiki記載の攻撃速度(フレーム数)を参考に計算しているつもりらしいです<br>
+            　　　　　　　攻撃【DPS】及び耐+DPSの検索を行う場合はDPSが高い順で出力されるらしいです<br>
+            　　　　　　　大まかな仕様はこんな感じです<br>
+            　　　　　　　・DPS = Dmg * 30[frm] / 攻撃間隔[frm]<br>
             <br>
             　　　　　　<b>攻撃【時間】計算について</b><br>
-            　　　　　　　スキル未使用時は通常攻撃を指定時間分計算します<br>
-            　　　　　　　スキル使用時は着火(スキル攻撃)→CT(通常攻撃)→着火→...という計算を行っているつもりです<br>
-            　　　　　　　ただし、スキル終了時や着火時のモーション(待機含)カットの部分が良くわかっていないため<br>
-            　　　　　　　スキルと非スキルの変化がかかる際は常に通常攻撃時のwaitをかませるようにしています<br>
-            　　　　　　　※一部ユニットに存在するモーション変化リセットが無く<br>
-            　　　　　　　　スキル終了時にスキル中のwaitを9割がた消化していても通常時waitを追加で丸々食うということ<br>
-            　　　　　　　　また、後衛軍師によるCTカットは未実装です<br>
+            　　　　　　　大まかな仕様はこんな感じです<br>
+            　　　　　　　・指定時間が"0"の場合は倒すまでの時間を計算<br>
+            　　　　　　　　"0"でない場合は指定時間内で倒せるユニットを表示<br>
+            　　　　　　　・スキル未使用時は通常攻撃を指定時間分計算<br>
+            　　　　　　　・スキル使用時は着火(スキル攻撃)→CT(通常攻撃)→着火→...で計算します<br>
+            　　　　　　　　ただし、以下の理由により実測値とは誤差が出ます<br>
+            　　　　　　　　・<font color="red">形態変化系スキルは未対応</font>(ファーストショット→クイックショット、スイッチ、攻防変更等)<br>
+            　　　　　　　　　同じスキルを再使用します<br>
+            　　　　　　　　・スキル終了時や着火時のモーションカット(着火した瞬間からのキャンセルや短縮)の辺りが良くわからない<br>
+            　　　　　　　　　<s>攻撃後の待機中に着火しても短縮されないクイック系とか、逆にいつ着火しても加速し始めるクインタナナリーとかのせい</s><br>
+            　　　　　　　　・計算機内ではダメージが発生するまでの時間をモーション、残り攻撃間隔を待機時間としている<br>
+            　　　　　　　　　※重砲弾ならモーションが93→75frm、待機が53→75frm、合計は150frmのまま<br>
+            　　　　　　　　・スキルと非スキルの変化がかかる際は常に通常攻撃時のwaitをかませる<br>
+            　　　　　　　　　（スキル終了時にスキル中のwaitが残り1フレームだとしても通常時のwaitを追加で丸々食う）<br>
+            　　　　　　　　　　※計算時間15frm、モーション14frm、待機44frmといった状況になった場合に待機時間43frmが丸々消滅してしまうため<br>
+            　　　　　　　　・VHや後衛軍師、クアドラ系は撃ち切るまでを一括り<br>
+            　　　　　　　　　VHなら「モーション開始から約13フレーム後より約4フレーム毎に3発の矢を発射」のため<br>
+            　　　　　　　　　13(1発目) +4*2(2,3発目) =21frm をモーションとしている（※この形にしないとバシラのトリプルがwiki記載のモーションより大きくなってしまう)<br>
+            　　　　　　　　　上記の一括りの影響により、VHなら残り計測時間が13frm以上であっても21frm未満ならおまけの1発分が計算されなくなる<br>
+            　　　　　　　・後衛軍師によるCTカットは未実装<br>
             <br>
             　　　　　　画面サイズ次第では所々で出てくる説明文的なツールチップの表示が残念な事になります<br>
             <br>
@@ -862,11 +880,12 @@
             　　　　　　　作成が雑になっていったため細かいところで必ず何かやらかしています<br>
             　　　　　　　特にせっかくだからとオンリーの日に公開しようと色々突貫で作成して省略をしまくりました<br>
             <br>
-            　　　　　　　ここがおかしい、この機能をつけろ等あれば本スレに「豚計算機○○しろ」等書き捨てて置いてください<br>
-            　　　　　　　運良く気付けて対応可能そうであれば前向きに善処することを検討したいと思うことが無いこともないかもしれません<br>
+            　　　　　　　ここがおかしい、この機能をつけろ等あれば本スレに<font color="blue">「豚計算機○○しろ」</font>等書き捨てて置いてください<br>
+            　　　　　　　計算で適当に検索かけているので、運良く気付けて対応可能そうであれば前向きに善処することを検討したいと思うことが無いこともないかもしれません<br>
             <br>
             今後の妄想：・公開場所に選んだもののよくわかってないGitHubを少しは理解する(理解できるとは言っていない)<br>
-            　　　　　　・突貫後付でグチャグチャになってしまったソースコードの整備<br>
+            　　　　　　・せっかく時間計算を作ったんだから特殊強化としてのシャーリーと後衛軍師のCTカットを追加する<br>
+            　　　　　　・コスト帯設定でも追加する？<br>
             　　　　　　・アンナさんによる王子のモードチェンジを検討<br>
             　　　　　　・スキル覚醒アリスのような永続効果を持つｓ覚醒ユニットをスキル使用チェック無しでも出せるようにするか考える<br>
             　　　　　　・楽するために使ったtablesorterが思った以上に重い＆遅くてどうしよう<br>
@@ -909,9 +928,9 @@
 <script type="text/javascript" src="./js/linq.min.js"></script>
 <script type="text/javascript" src="./js/jquery.linq.min.js"></script>
 <script type="text/javascript" src="./js/submit.js"></script>
-<script type="text/javascript" src="./js/events.js"></script>
 <script type="text/javascript" src="./js/result.js"></script>
 <script type="text/javascript" src="./js/init.js"></script>
+<script type="text/javascript" src="./js/events.js"></script>
 <script type="text/javascript" src="./js/main.js"></script>
 </body>
 </html>

@@ -117,10 +117,10 @@ tr{
     color:#fff;
     border: 1px solid red;
     opacity: 0.9 ;
-    filter:progid:DXImageTransform.Microsoft.Alpha(Enabled=1,Style=0,Opacity=90) ;
+    filter:progid:DXImageTransform.Microsoft.Alpha(Enabled=1,Style=0,Opacity=90);
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
-    z-index: 9999�ｿｽG
+    z-index: 9999;
 }
 
 #sample{

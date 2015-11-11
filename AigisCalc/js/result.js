@@ -48,23 +48,23 @@ function setQue(que, useSkill){
         tr = '<tr id="row_' + rows.id + '" align="center">';
         
         if(rows.dataerr.trim() !== ''){
-            tr += '<td style="color: red;">' + rows.name + '</td>';
-            tr += '<td style="color: red;">' + rows.clas + '</td>';
+            tr += '<td style="color: red;">' + rows.name + '</td>'
+                + '<td style="color: red;">' + rows.clas + '</td>';
         } else {
-            tr += '<td>' + rows.name + '</td>';
-            tr += '<td>' + rows.clas + '</td>';
+            tr += '<td>' + rows.name + '</td>'
+                + '<td>' + rows.clas + '</td>';
         }
-        tr += '<td>' + rar[rows.rare] + '</td>';
-        tr += '<td>' + scc[rows.cc] + '</td>';
-        tr += '<td>' + makeNumSelect(rows.lv, rows.lvmax, 'lv_' + id, rows.reqlv) + '</td>';
-        tr += '<td id="hp_' + id + '"/>' + '</td>';
-        tr += '<td id="atk_' + id + '"/>' + '</td>';
-        tr += '<td id="def_' + id + '"/>' + '</td>';
-        tr += '<td id="resi_' + id + '"/>' + '</td>';
-        tr += '<td id="dmg_' + id + '"/>' + '</td>';
-        tr += '<td id="dps_' + id + '"/>' + '</td>';
-        tr += '<td id="s_dmg_' + id + '"/>' + '</td>';
-        tr += '<td>' + rows.skill + '</td>';
+        tr += '<td>' + rar[rows.rare] + '</td>'
+	        + '<td>' + scc[rows.cc] + '</td>'
+	        + '<td>' + makeNumSelect(rows.lv, rows.lvmax, 'lv_' + id, rows.reqlv) + '</td>'
+	        + '<td id="hp_' + id + '"/>' + '</td>'
+	        + '<td id="atk_' + id + '"/>' + '</td>'
+	        + '<td id="def_' + id + '"/>' + '</td>'
+	        + '<td id="resi_' + id + '"/>' + '</td>'
+	        + '<td id="dmg_' + id + '"/>' + '</td>'
+	        + '<td id="dps_' + id + '"/>' + '</td>'
+	        + '<td id="s_dmg_' + id + '"/>' + '</td>'
+	        + '<td>' + rows.skill + '</td>';
         if(rows.skill.trim() !== ''){ 
             tr += '<td>' + makeSkillSel(rows.s_lvmax, 'slv_' + id, useSkill) + '</td>';   
         } else {
@@ -93,12 +93,15 @@ function setQue(que, useSkill){
     }
     if(enemy.mode === 'time' && gl_mode === 'atk'){
     	$('#head_sdmg').text('時間計');
+    	$('#head_dps').text('時間');
     } else {
     	$('#head_sdmg').text('ｽｷﾙ計');
+    	$('#head_dps').text('DPS');
     }
     
     $('#result').html(result);
     $('#outputTable').append(trs);
+    tableclone = trs;
 }
 
 function changeLv(id, updCell){
@@ -176,6 +179,7 @@ function changeLv(id, updCell){
             
             if(enemy.mode === 'time'){
             	var data = dmgcalc(x, row, lv, slv);
+        		dps = data.time + '秒';
                 s_dmg = data.dmg;
             } else {
 	            if(slv > 0){
