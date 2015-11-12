@@ -251,12 +251,16 @@ function chkBuff_other(){
     oBuf.enchant = $('#op_enchant').prop('checked');
     oBuf.danceatk = $('#op_dance').prop('checked') * $('#dance_atk').val();
     oBuf.dancedef = $('#op_dance').prop('checked') * $('#dance_def').val();
-    oBuf.areaatk = $('#op_areaAtk').prop('checked') * $('#areaAtk').val() / 100;
-    oBuf.areadef = $('#op_areaDef').prop('checked') * $('#areaDef').val() / 100;
+    oBuf.areaatk = $('#op_areaAtk').prop('checked')? $('#areaAtk').val() / 100: 1;
+    oBuf.areadef = $('#op_areaDef').prop('checked')? $('#areaDef').val() / 100: 1;
+    
     oBuf.mahoken = toNum($('input[name="op_mahoken"][type="radio"]:checked').val());
+    
+    oBuf.ekidona_s = $('#op_ekidona_s').prop('checked');
+    oBuf.ekidona_sv = (oBuf.ekidona_s)? 1.3: 1;
+    oBuf.lubinus_s = $('#op_lubinus_s').prop('checked');
+    oBuf.lubinus_sv = (oBuf.lubinus_s)? 1.3: 1;
 
-    if(oBuf.areaatk === 0){ oBuf.areaatk = 1; }
-    if(oBuf.areadef === 0){ oBuf.areadef = 1; }
 }
 
 function chkBuff_team_Base(){
@@ -356,6 +360,14 @@ function chkBuff_team_Ex(){
     //やりようがないためbUnitsを作るところで再確認
     oBuf.hikage = $('#op_hikage').prop('checked');
 
+    //リーゼロッテ(ソル101、アーマー102の防御+5%、魔耐+5)
+    oBuf.liselotte = $('#op_liselotte').prop('checked');
+    if(oBuf.liselotte){
+    	incbuf['def'](101, 0.05); incbuf['resi'](101, 5);
+    	incbuf['def'](102, 0.05); incbuf['resi'](102, 5);
+    	
+    }
+    
     //ルイーズ、全体コスト+2
     //編成バフでpropは取得済
     //if(oBuf.louise)
@@ -1217,7 +1229,17 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
 
     if(useSkill){
     	//スキル分類ごとに分けるため、正規表現でパターン化
-        var pat = /猛将の鼓舞|烈火の陣|猛火の陣|鉄壁の陣|金城の陣|プロテクション|聖女の結界|聖なるオーラ|聖霊の護り|マジックバリア|暗黒オーラ|軟化の秘術|レヴァンテイン|ダモクレスの剣/;
+    	var pat = "猛将の鼓舞|烈火の陣|猛火の陣" +
+				"|鉄壁の陣|金城の陣" +
+    			"|プロテクション|聖女の結界" +
+    			"|聖なるオーラ|聖霊の護り" +
+    			"|マジックバリア" +
+    			"|暗黒オーラ" +
+    			"|レヴァンテイン" +
+    			"|ダモクレスの剣" +
+    			"|堅鱗の癒し" +
+    			"|鋭牙の火炎";
+        pat = new RegExp(pat);
         
         //スキルの内容を取得
         if(slv === unit.s_lvmax || unit.s_lvmax === 1){
@@ -1294,10 +1316,6 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
                     if(row.debmat <= skill.debmat){ skill.debmat = 1; }
                     else { row.debmat = 1; }
                     break;
-                case '軟化の秘術':
-                    if(row.debdef <= skill.debdef){ skill.debdef = 1; }
-                    else { row.debdef = 1; }
-                    break;
                 case 'レヴァンテイン':
                     if(row.debresi <= skill.debresi){ skill.debresi = 1; }
                     else { row.debresi = 1; }
@@ -1305,6 +1323,12 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
                 case 'ダモクレスの剣':
                     if(row.incrosette <= skill.incatk){ row.incrosette = skill.incatk; }
                     break;
+                case '堅鱗の癒し':
+                	if(row.incdef <= skill.incdef){ row.incdef = skill.incdef; }
+                	break;
+                case '鋭牙の火炎':
+                	if(row.incatk <= skill.incatk){ row.incatk = skill.incatk; }
+                	break;
                 default:
                     //if(inchp_row < s_inchp){ inchp_row = s_inchp;}
                     //if(incresi_row < s_incresi){ incresi_row = s_incresi; }
@@ -1396,6 +1420,18 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
 		}
     }
     
+    //暫定。ｓエキドナとルビナスは全体バフと重複不可とする。重複可能の場合は後の計算にoBuf.eki/lub_svを追加
+    //sidで列挙するのが面倒なのでtype=1で
+    //実際のところ1.3倍以上のバフは来ていないので、値比較の部分は冗長といえば冗長
+    if(unit.type === 1){
+    	if(oBuf.ekidona_s && (row.incdef < oBuf.ekidona_sv)){
+    		row.incdef = oBuf.ekidona_sv;
+    	}
+    	if(oBuf.lubinus_s && (row.incatk < oBuf.lubinus_sv)){
+    		row.incatk = oBuf.lubinus_sv;
+    	}
+    }
+    
     //編成バフ持ち自身に対する適用
     var name = "伏龍の軍師アイシャ|魔女アデル|姫海賊アネリア|副官アリア" +
     		"|光の守護者アルティア|帝国天馬騎士イザベル|姫山賊イメリア" +
@@ -1405,7 +1441,8 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
     		"|山賊王コンラッド|宮廷剣士サビーネ|姫侍シズカ" +
     		"|妖精郷の射手スピカ|黒槍騎士ダリア|風水士ピピン|白き魔女ベリンダ" +
     		"|大盾の乙女ベルニス|朱鎧の智将マツリ|聖鎚闘士ミランダ|背反の癒し手ユーノ" +
-    		"|提督リーンベル|武闘家リン|ルイーズ|竜巫女ルビナス|天の軍師レン";
+    		"|帝国兵長リーゼロッテ|提督リーンベル|武闘家リン|ルイーズ" +
+    		"|竜巫女ルビナス|天の軍師レン";
     name = new RegExp(name);
     mat = unit.name.match(name);
     
@@ -1519,6 +1556,11 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
 	    	case '背反の癒し手ユーノ':
 	    		if(!act['203atk']){ row.bufatk += toNum($('#203atk').val()); }
 	    		break;
+	    	case '帝国兵長リーゼロッテ':
+	    		if(!oBuf.liselotte){ 
+	    			row.bufdef += 0.05;
+	    			row.bufresi += 5;
+	    		}
 	    	case '提督リーンベル':
 	    		if(!act['122time']){ row.buftime += toNum($('#122time').val()); }
 	    		break;
