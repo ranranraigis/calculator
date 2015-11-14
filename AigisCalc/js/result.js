@@ -8,7 +8,7 @@ function setLv(que){
 
 function lv_Change(){
     var id = $(this).attr('id');
-    id = id.substr(-6);
+    id = id.substr(-7);
     changeLv(id);
     this.focus();
 }

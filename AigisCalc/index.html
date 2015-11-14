@@ -40,12 +40,12 @@
             
             <div class="mainrow">
                 <label class="maincap">ＨＰ：</label>
-                <input type="number" id="atkHP" class="num6" min="1" value="90000" />
+                <input type="number" id="atkHP" class="num6" min="1" max="16777215" value="90000" />
             </div>
 
             <div class="mainrow">
                 <label class="maincap">防御：</label>
-                <input type="number" id="atkDef" class="num5" min="0" value="600" />
+                <input type="number" id="atkDef" class="num5" min="0" max="65535" value="600" />
             </div>
 
             <div class="mainrow">
@@ -56,13 +56,13 @@
             <div class="mainrow">
                 <label class="maincap">回数：</label>
                 <input type="radio" name="atkMode" value="cnt" checked />
-                <input type="number" id="atkCnt" class="num3" min="1" value="1" /> 発以内
+                <input type="number" id="atkCnt" class="num3" min="1" max="65535" value="1" /> 発以内
             </div>
             
             <div class="mainrow">
                 <label class="maincap">時間：</label>
                 <input type="radio" name="atkMode" value="time" />
-                <input type="number" id="atkTime" class="num3" min="0" value="20" disabled/> 秒以内
+                <input type="number" id="atkTime" class="num3" min="0" max="65535" value="20" disabled/> 秒以内
             </div>
                         
             <div class="mainrow">
@@ -75,7 +75,7 @@
         <div id="defField" class="admField" style="display:none;">
             <div class="mainrow">
                 <label class="maincap">攻撃：</label>
-                <input type="number" id="defAtk" class="num5" min="1" value="5200" />
+                <input type="number" id="defAtk" class="num5" min="1" max="65535" value="5200" />
             </div>
 
             <div class="mainrow">
@@ -88,7 +88,7 @@
 
             <div class="mainrow">
                 <label class="maincap">回数：</label>
-                <input type="number" id="defCnt" class="num3" min="1" value="1" /> 発
+                <input type="number" id="defCnt" class="num3" min="1" max="65535" value="1" /> 発
             </div>
         </div>
         
@@ -123,7 +123,7 @@
             
             <div class="mainrow">
                 <label class="maincap">攻撃：</label>
-                <input type="number" id="mixAtk" class="num6" min="1" value="1200" />
+                <input type="number" id="mixAtk" class="num6" min="1" max="65535" value="1200" />
             </div>
             
             <div class="mainrow">
@@ -137,7 +137,7 @@
 
             <div class="mainrow">
                 <label class="maincap">防御：</label>
-                <input type="number" id="mixDef" class="num5" min="0" value="600" />
+                <input type="number" id="mixDef" class="num5" min="0" max="65535" value="600" />
             </div>
 
             <div class="mainrow">
@@ -147,7 +147,7 @@
             
             <div class="mainrow">
                 <label class="maincap">回数：</label>
-                <input type="number" id="mixCnt" class="num3" min="1" value="3" /> 発
+                <input type="number" id="mixCnt" class="num3" min="1" max="65535" value="3" /> 発
             </div>
             
             <div class="mainrow">
@@ -173,7 +173,7 @@
             
             <div class="optrow">
                 <label class="optcap tooltip" tooltip="検索結果の数を制限します<br>0を設定すると無制限となります" style="margin-top: 3px;">行数制限：</label>
-                <input type="number" id="take_cnt" class="num4" min="0" value="100" /> 行　
+                <input type="number" id="take_cnt" class="num4" min="0" max="10000" value="100" /> 行　
             </div>
             
             <div class="optrow">
@@ -567,7 +567,7 @@
                     </label>
 
                     <input type="radio" name="emy_debatk" class="skillradio" value="0.85" btgt="emy_debatk" />
-                    <select class="skillsel" bmin="0.85" bmax="0.8" bslv="5" btgt="emy_debatk">
+                    <select class="skillsel" id="skill_cursevoice" bmin="0.85" bmax="0.8" bslv="5" btgt="emy_debatk">
                         <option value="0">カースボイス
                         <option value="0">Lv1
                         <option value="1">Lv2
@@ -577,7 +577,7 @@
                     </select>
 
                     <input type="radio" name="emy_debatk" class="skillradio" value="0.97" />
-                    <select class="skillsel" bmin="0.97" bmax="0.9" bslv="10" btgt="emy_debatk">
+                    <select class="skillsel" id="skill_yurina" bmin="0.97" bmax="0.9" bslv="10" btgt="emy_debatk">
                         <option value="0">暗黒オーラ
                         <option value="0">Lv1
                         <option value="1">Lv2
@@ -592,7 +592,7 @@
                     </select>
 
                     <input type="radio" name="emy_debatk" class="skillradio" value="0.75" />
-                    <select class="skillsel" bmin="0.75" bmax="0.7" bslv="5" btgt="emy_debatk">
+                    <select class="skillsel" id="skill_cornelia" bmin="0.75" bmax="0.7" bslv="5" btgt="emy_debatk">
                         <option value="0">真・暗黒オーラ
                         <option value="0">Lv1
                         <option value="1">Lv2
@@ -655,20 +655,20 @@
                 <div id="div_ranged" class="bufrow">
                     <label class="bufcap tooltip" tooltip="入力値を単純加算します" style="margin-top: 4px;">ダンサー：</label>
                     <label class="tooltip" tooltip="入力値を単純加算します"><input type="checkbox" id="op_dance" class="actchk" ctgt=".dance"/>使用</label>　
-                    攻：<input type="number" id="dance_atk" class="num4 dance" min="0" value="0" disabled />　
-                    防：<input type="number" id="dance_def" class="num4 dance" min="0" value="0" disabled />
+                    攻：<input type="number" id="dance_atk" class="num4 dance" min="0" max="65535" value="0" disabled />　
+                    防：<input type="number" id="dance_def" class="num4 dance" min="0" max="65535" value="0" disabled />
                 </div>
             </div>
             
             <div class="bufrow">
                 <label class="bufcap" style="margin-top: 4px;">マップ効果：</label>
                 <label><input type="checkbox" id="op_areaAtk" class="actchk" ctgt="#areaAtk"/>攻撃</label>
-                <input type="number" id="areaAtk" class="num4" min="1" value="50" disabled /> ％　
+                <input type="number" id="areaAtk" class="num4" min="1" max="10000" value="50" disabled /> ％　
             </div>
             <div class="bufrow">
                 <label class="bufcap" style="margin-top: 4px;">　</label>
                 <label><input type="checkbox" id="op_areaDef" class="actchk" ctgt="#areaDef"/>防御</label>
-                <input type="number" id="areaDef" class="num4" min="1" value="50" disabled /> ％　
+                <input type="number" id="areaDef" class="num4" min="1" max="10000" value="50" disabled /> ％　
             </div>
         
             <div class="bufrow">
