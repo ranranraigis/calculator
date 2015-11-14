@@ -26,6 +26,7 @@ var unitdata = function unitdata(rows){
     this.rare = toNum(rows.gsx$rare.$t);
     this.cc = toNum(rows.gsx$cc.$t);
     this.noncc = toNum(rows.gsx$noncc.$t);
+    this.event = toNum(rows.gsx$event.$t);
     this.lv = toNum(rows.gsx$lv.$t);
     this.lvmax = toNum(rows.gsx$lvmax.$t);
     this.hp = toNum(rows.gsx$hp.$t);

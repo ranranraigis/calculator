@@ -2,14 +2,14 @@ $('body').on('change', 'select[id*=lv_]', true, lv_Change);
 
 function setLv(que){
     que.forEach(function(rows){
-        changeLv(rows.id, false);
+        changeLv(rows.id);
     });
 }
 
-function lv_Change(updCell){
+function lv_Change(){
     var id = $(this).attr('id');
     id = id.substr(-6);
-    changeLv(id, updCell);
+    changeLv(id);
     this.focus();
 }
 
@@ -41,6 +41,7 @@ function makeSkillSel(max, id, useSkill){
 
 function setQue(que, useSkill){
 	var enemy = gl_enemy;
+	var mode = gl_mode;
     var trs, tr;
     
     que.forEach(function(rows){
@@ -56,22 +57,42 @@ function setQue(que, useSkill){
         }
         tr += '<td>' + rar[rows.rare] + '</td>'
 	        + '<td>' + scc[rows.cc] + '</td>'
-	        + '<td>' + makeNumSelect(rows.lv, rows.lvmax, 'lv_' + id, rows.reqlv) + '</td>'
-	        + '<td id="hp_' + id + '"/>' + '</td>'
-	        + '<td id="atk_' + id + '"/>' + '</td>'
-	        + '<td id="def_' + id + '"/>' + '</td>'
-	        + '<td id="resi_' + id + '"/>' + '</td>'
-	        + '<td id="dmg_' + id + '"/>' + '</td>'
-	        + '<td id="dps_' + id + '"/>' + '</td>'
-	        + '<td id="s_dmg_' + id + '"/>' + '</td>'
-	        + '<td>' + rows.skill + '</td>';
+	        + '<td>' + makeNumSelect(rows.lv, rows.lvmax, 'lv_' + id, rows.reqlv) + '</td>';
+        
+        if(rows.dataerr.match(/hp/)){
+    	    tr += '<td id="hp_' + id + '" style="color: red;"/>' + '</td>';
+        } else {
+    	    tr += '<td id="hp_' + id + '"/>' + '</td>';
+        }
+        if(rows.dataerr.match(/atk/)){
+	        tr += '<td id="atk_' + id + '" style="color: red;"/>' + '</td>';
+        } else {
+	        tr += '<td id="atk_' + id + '"/>' + '</td>';
+        }
+        if(rows.dataerr.match(/def/)){
+	        tr += '<td id="def_' + id + '" style="color: red;"/>' + '</td>';
+        } else {
+	        tr += '<td id="def_' + id + '"/>' + '</td>';
+        }
+
+        tr += '<td id="resi_' + id + '"/>' + '</td>'
+            + '<td id="dmg_' + id + '"/>' + '</td>';
+        
+        if(rows.dataerr.match(/dps/)){
+            tr += '<td id="dps_' + id + '" style="color: red;"/>' + '</td>';
+        } else {
+            tr += '<td id="dps_' + id + '"/>' + '</td>';
+        }
+        
+        tr += '<td id="s_dmg_' + id + '"/>' + '</td>'
+        	+ '<td>' + rows.skill + '</td>';
+        
         if(rows.skill.trim() !== ''){ 
             tr += '<td>' + makeSkillSel(rows.s_lvmax, 'slv_' + id, useSkill) + '</td>';   
         } else {
             tr += '<td><input type="hidden" id="slv_' + id + '" value="0" /></td>';
         }
         tr += '</tr>';
-
         trs += tr;
     });
 
@@ -104,7 +125,7 @@ function setQue(que, useSkill){
     tableclone = trs;
 }
 
-function changeLv(id, updCell){
+function changeLv(id){
     var emyatk_row, emydef_row, emyresi_row;
     var hp, atk, def, resi, dmg, dps, s_dmg;
     
@@ -262,8 +283,4 @@ function changeLv(id, updCell){
     dom.dmg.html(dmg);
     dom.dps.html(dps);
     dom.s_dmg.html(s_dmg);
-    
-    if(updCell){
-    	
-    }
 }

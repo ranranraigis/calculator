@@ -5,14 +5,8 @@ $('#chkMode').change(chkMode_Change);
 $('input[type="number"]').change(number_Change);
 $('input[name="atkMode"]').change(atkMode_Change);
 
-$('#ccall').change(filterGroupTop_Change);
-$('input[id^="cc_"][type="checkbox"]').change(filterGroup_Change);
-
-$('#rareall').change(filterGroupTop_Change);
-$('input[id^="rare_"][type="checkbox"]').change(filterGroup_Change);
-
-$('#typeall').change(filterGroupTop_Change);
-$('input[id^="atktype_"][type="checkbox"]').change(filterGroup_Change);
+$('input[isGrouptop="true"]').change(filterGroupTop_Change);
+$('input[grouptop!=""]').change(filterGroup_Change);
 
 $('.filter_melran').change(filterMelRan_Change);
 $('#clsmel, #clsran').change(filterClassTop_Change);
@@ -20,11 +14,13 @@ $('body').on('change', 'input[id^="cls_"][type="checkbox"]', filterClass_Change)
 
 $('input.submit').click(submit_Click);
 
+$('#buff_all').change(buff_all_Change);
+
 $('select.skillsel').change(buffSel_Change);
 $('input.skillradio[type="radio"]').change(buffRad_Change);
 
-$('#skill_rosette').change(skill_rosette_Change);
 $('#inc_rosette').change(inc_rosette_Change);
+$('body').on('change', 'select[id="skill_rosette"]', skill_rosette_Change);
 
 $('.actchk').change(activateFromCheckbox);
 
@@ -168,6 +164,63 @@ function filterClass_Change(){
     $('#' + mr).prop('checked', stat);
 }
 
+function buff_all_Change(){
+	var t = $(this);
+	var chk = $('#buff').find('input[type="checkbox"]:not(.hage, [id^="op_area"])');
+	if(t.prop('checked')){
+		chk.prop('checked', true);
+	} else {
+		chk.prop('checked', false);
+	}
+
+	chk.each(function(index, elem){
+		$(elem).trigger('change');
+	});
+	
+	var radsel;
+
+	if(t.prop('checked')){
+		radsel = 'input[name="op_prince"][value="1.21"]'
+			   + ',input[name="op_ctcut"][value="0.7"]'
+			   + ',input[name="incatk"]:eq(3)'
+			   + ',input[name="incdef"]:eq(2)'
+			   + ',input[name="incpro"]:eq(3)'
+			   + ',input[name="dmgcut_mag"]:eq(1)'
+			   + ',input[name="emy_debatk"]:eq(4)'
+			   + ',input[name="emy_debmat"]:eq(2)'
+			   + ',input[name="emy_debdef"]:eq(1)'
+			   + ',input[name="emy_debresi"]:eq(2)';
+	} else {
+		radsel = 'input[name="op_prince"]:eq(0)'
+			   + ',input[name="op_ctcut"]:eq(0)'
+			   + ',input[name="incatk"]:eq(0)'
+			   + ',input[name="incdef"]:eq(0)'
+			   + ',input[name="incpro"]:eq(0)'
+			   + ',input[name="dmgcut_mag"]:eq(0)'
+			   + ',input[name="emy_debatk"]:eq(0)'
+			   + ',input[name="emy_debmat"]:eq(0)'
+			   + ',input[name="emy_debdef"]:eq(0)'
+			   + ',input[name="emy_debresi"]:eq(0)';
+	}
+	var radio = $(radsel);
+	radio.each(function(index, elem){
+		$(elem).prop('checked', true);
+		$(elem).trigger('change');
+	});
+	
+	var select = $('#buff select');
+	select.each(function(index, elem){
+		var sel = $(elem);
+		var len = sel.children().length - 1;
+		
+		if(!sel.prop('disabled') && len > 0){
+			sel.children('option:eq(' + len + ')').prop('selected', true);
+			sel.trigger('change');
+		}
+	});
+	
+}
+
 function buffRad_Change(){
     var t = $(this);
     var name = t.attr('name');
@@ -189,20 +242,21 @@ function buffSel_Change(){
     $('#' + name).html(val);
 }
 
-function skill_rosette_Change(){
-    var t = $('#skill_rosette');
-    var val = (toNum(t.attr('bmax')) - toNum(t.attr('bmin'))) / (toNum(t.attr('bslv')) - 1);
-    val = toNum(t.attr('bmin')) + val * toNum(t.val());
-    val = rounds(val, 2);
-    
-    $('#inc_rosette').val(val);
-}
-
 function inc_rosette_Change(){
 	var dis = !$(this).prop('checked');
     $('#skill_rosette').prop('disabled', dis);
     
     if(dis){ $(this).val(1); } else { skill_rosette_Change(); }
+}
+
+function skill_rosette_Change(){
+    var t = $('#skill_rosette');
+    var base = (toNum(t.attr('bmax')) - toNum(t.attr('bmin'))) / (toNum(t.attr('bslv')) - 1);
+    var val = $('#skill_rosette option:selected').val();
+    val = toNum(t.attr('bmin')) + base * val;
+    val = rounds(val, 3);
+
+    $('#inc_rosette').val(val);
 }
 
 function activateFromCheckbox(){

@@ -183,7 +183,7 @@
 
             <div class="optrow">
                 <label class="optcap">CC：</label>
-                <label><input type="checkbox" id="ccall" group="cc_" checked />全</label>
+                <label><input type="checkbox" id="ccall" group="cc_" isGrouptop="true" checked />全</label>
                 <label><input type="checkbox" id="cc_0" group="cc_" grouptop="ccall" value="0" />未</label>
                 <label><input type="checkbox" id="cc_1" group="cc_" grouptop="ccall" value="1" />CC</label>
                 <label><input type="checkbox" id="cc_2" group="cc_" grouptop="ccall" value="2" />覚</label>
@@ -192,7 +192,7 @@
 
             <div class="optrow">
                 <label class="optcap">レア：</label>
-                <label><input type="checkbox" id="rareall" group="rare_" checked />全</label>
+                <label><input type="checkbox" id="rareall" group="rare_" isGrouptop="true" checked />全</label>
                 <label><input type="checkbox" id="rare_1" group="rare_" grouptop="rareall" value="1" />鉄 </label>
                 <label><input type="checkbox" id="rare_2" group="rare_" grouptop="rareall" value="2" />銅 </label>
                 <label><input type="checkbox" id="rare_3" group="rare_" grouptop="rareall" value="3" />銀&nbsp;</label>
@@ -208,11 +208,19 @@
 
             <div class="optrow">
                 <label class="optcap">属性：</label>
-                <label><input type="checkbox" id="typeall" group="atktype_" />全</label>
+                <label><input type="checkbox" id="typeall" group="atktype_" isGrouptop="true" />全</label>
                 <label class="tooltip" tooltip="物理" ><input type="checkbox" id="atktype_mat" group="atktype_" grouptop="typeall" checked />物</label>
                 <label class="tooltip" tooltip="魔法"><input type="checkbox" id="atktype_mag" group="atktype_" grouptop="typeall"  checked />魔</label>
                 <label class="tooltip" tooltip="回復"><input type="checkbox" id="atktype_heal" group="atktype_" grouptop="typeall" />回</label>
                 <label class="tooltip" tooltip="ニート"><input type="checkbox" id="atktype_neet" group="atktype_" grouptop="typeall" />NEET</label>
+            </div>
+            
+            <div class="optrow">
+                <label class="optcap">入手：</label>
+                <label><input type="checkbox" id="eventunit" group="eveuni_" isgrouptop="true" checked />全</label>
+                <label class="tooltip" tooltip="ストミ及びイベントでドロップする銀" ><input type="checkbox" id="eveuni_normal" group="eveuni_" grouptop="eventunit" />通常</label>
+                <label class="tooltip" tooltip="イベユニ、確定系<br>(イーリス、シプリア、ビエラ、サファイア勢)<br><br>※伝説、ファルネ、課金キャンペーンユニットは基本ガチャなので除外"><input type="checkbox" id="eveuni_event" group="eveuni_" grouptop="eventunit" />イベ</label>
+                <label class="tooltip" tooltip="ガチャ限定<br>"><input type="checkbox" id="eveuni_gacha" group="eveuni_" grouptop="eventunit" />ガチャ</label>
             </div>
 
             <div class="optrow">
@@ -257,6 +265,13 @@
     </div>
 
     <div id="option">
+            <div class="bufrow">
+                <label class="bufcap">バフ：</label>
+                <label class="tooltip" tooltip="ONにすると全てのバフを最大値に設定します<br>OFFにすると全てのバフを無効にします<br>※マップ効果は除く">
+                    <input type="checkbox" id="buff_all"/>全部乗せ
+                </label>   
+            </div>
+    
         <div id="buff">
             <div class="bufrow">
                 <label class="bufcap">好感度：</label>
@@ -516,7 +531,7 @@
                 <div class="bufrow">
                     <label class="bufcap" style="margin-top: 4px;">特殊強化：</label>
                     <input type="checkbox" id="inc_rosette" class="skillcheckbox" value="1" />
-                    <select id="skill_rosette" bmin="1.1" bmax="1.2" bslv="5" btgt="inc_rosette" class="tooltip" tooltip="スキル中、銀ユニの攻撃,防御を上昇<br>Lv1:　1.1倍<br>Lv2:約1.1倍<br>Lv3:約1.1倍<br>Lv4:約1.2倍<br>Lv5:　1.2倍"disabled>
+                    <select id="skill_rosette" bmin="1.1" bmax="1.2" bslv="5" btgt="inc_rosette" class="tooltip" tooltip="スキル中、銀ユニの攻撃,防御を上昇<br>Lv1:　1.1倍<br>Lv2:約1.1倍<br>Lv3:約1.1倍<br>Lv4:約1.2倍<br>Lv5:　1.2倍" disabled>
                         <option value="0">ダモクレスの剣
                         <option value="0">Lv1
                         <option value="1">Lv2
@@ -770,14 +785,14 @@
             <br>
             　　　　　　<b>基本的にwikiの情報を基準に作っています</b><br>
             　　　　　　　ただしデータ作成時に未確認となっているステータス(wikiで*印付きのもの)を持つユニットは<br>
-            　　　　　　　結果の出力時に<font color="red">名前とクラスの部分が赤文字</font>で表示されるようになっています<br>
+            　　　　　　　結果の出力時に<font color="red">名前とクラス、問題のあるデータ部分が赤文字</font>で表示されるようになっています<br>
             　　　　　　　（例：CCアサルちゃん、CCアリア等）<br>
             <br>
             　　　　　　<b>フィルタ・バフ類</b><br>
             　　　　　　　結果の出力後にフィルタやバフ等の設定を変更しても出力結果には反映されません<br>
             　　　　　　　結果の最大数が800弱(公開時現在)となるため、ポチるたびに若干のラグが発生する可能性があるのは(中の人的に)ストレスを感じるらしいです<br>
             <br>
-            　　　　　　<b>ロゼットの【スキル：ダモクレスの剣】(銀ユニの攻防UP)</b><br>
+            　　　　　　<b>ロゼットの【スキル：ダモクレスの剣】(銀ユニの攻防UP)、鋭牙の火炎・堅鱗の癒し</b><br>
             　　　　　　　暫定的にシュウカやウズメ、レンのスキルとは重複不可にしています<br>
             　　　　　　　確認したいので誰かこの子か情報をください<br>
             <br>
@@ -793,30 +808,8 @@
             　　　　　　　　"0"でない場合は指定時間内で倒せるユニットを表示<br>
             　　　　　　　・スキル未使用時は通常攻撃を指定時間分計算<br>
             　　　　　　　・スキル使用時は着火(スキル攻撃)→CT(通常攻撃)→着火→...で計算します<br>
-            　　　　　　　　ただし、以下の理由により実測値とは誤差が出ます<br>
-            　　　　　　　　・<font color="red">形態変化系スキルは未対応</font>(ファーストショット→クイックショット、スイッチ、攻防変更等)で、同じスキルを再使用します<br>
-            　　　　　　　　・計算機内ではダメージが発生するまでの時間をモーション、残り攻撃間隔を待機時間としている<br>
-            　　　　　　　　　※重砲弾ならモーションが93→75frm、待機が53→75frm、合計は1セット150frmのまま<br>
-            　　　　　　　　・着火/終了時のモーションカット(着火した瞬間からのキャンセルや短縮)の辺りがよくわからない<br>
-            　　　　　　　　　<s>攻撃後の待機中に着火しても短縮されないクイック系とか、逆にいつ着火しても加速し始めるクインタナナリーとかのせい</s><br>
-            　　　　　　　　・よくわからないため、着火/通常が切り替わる場合、計算機上では以下の挙動が発生します<br>
-            　　　　　　　　　ａ．スキル中やCT中に攻撃(+待機)をｎセット行った、残り時間中に次の攻撃が間に合う(n+1回攻撃)<br>
-            　　　　　　　　　　ａ１．残り時間が非スキル時の待機モーションより短い場合<br>
-            　　　　　　　　　　　　→残り時間を非スキル時の待機モーション時間に置き換えて消化<br>
-            　　　　　　　　　　ａ２．残り時間が非スキル時の待機モーションより長い場合<br>
-            　　　　　　　　　　　　→残り時間をそのまま消化<br>
-            　　　　　　　　　ｂ．スキル中やCT中に攻撃(+待機)をｎセット行った、残り時間中に次の攻撃が間に合わない(n回攻撃)<br>
-            　　　　　　　　　　→切り替え時に攻撃モーションをやり直す<br>
-            　　　　　　　　　この挙動により、特にｂの場合においてやり直し分のロスが響いてきます<br>
-            　　　　　　　　　シャーリー等のスキル時間延長をかけたら逆に遅くなった、という場合はここらの影響によるものだと思ってください<br>
-            　　　　　　　　　長時間戦闘で切り替えが多く発生するような敵で発生しやすいです<br>
-            　　　　　　　　・VHや後衛軍師、クアドラ系は撃ち切るまでを一括り<br>
-            　　　　　　　　　VHなら「モーション開始から約13フレーム後より約4フレーム毎に3発の矢を発射」のため<br>
-            　　　　　　　　　13(1発目) +4*2(2,3発目) =21frm をモーションとしている（※この形にしないとバシラのトリプルがwiki記載のモーションより大きくなってしまう)<br>
-            　　　　　　　　　上記の一括りの影響により、VHなら残り計測時間が13frm以上であっても21frm未満ならおまけの1発分が計算されなくなる<br>
-            　　　　　　　　　※VHの1発目と2発目の間にスキルが切れた場合3発目にはスキル倍率が乗ってるのかとか<s>計算が面倒だとか</s>が主な理由<br>
-            　　　　　　　　　　理想的なタイミングだったのか処理落ちか何かの影響なのか、クインタ終了時の最後の1発でエフェクトがかかってない5連矢を射出する現象は確認済み<br>
-            　　　　　　　・後衛軍師によるCTカットは未実装<br>
+            　　　　　　　　ただし、<font color="red">大人の事情により実測値とは確実に誤差が出ます</font>(説明があったけど無駄に長いのでカット)<br>
+            　　　　　　　　これぐらいあれば終わるかもしれない、ぐらいで捉えてください<br>
             <br>
             　　　　　　画面サイズ次第では所々で出てくる説明文的なツールチップの表示が残念な事になります<br>
             <br>
@@ -891,6 +884,10 @@
                              </table>
                            </div>
             <br>
+            　　　　　　(new)まず無いとは思いますが<font color="red">この計算機の計算結果及びデータをwikiの記事に逆輸入しないでください</font><br>
+            　　　　　　　攻撃速度や*印つきのユニット等、wiki上でも曖昧なものや未確定等のものは<br>
+            　　　　　　　同職・同アビからこれぐらいだろうとか、面倒だから同職の汎用値でとかそういった雑なデータを多数使用しているためです<br>
+            <br>
             　　　　　　当たり前といえば当たり前ですが計算対象及び計算結果が多いとちょっと重いです<br>
             　　　　　　適度にフィルタを使って範囲を絞ることをお勧めします<br>
             <br>
@@ -899,13 +896,9 @@
             　　　　　　　作成中に余所見、寝落ち、作成後は確認省略等、非情に雑なため必ず何かやらかしています<br>
             <br>
             　　　　　　　ここがおかしい、この機能をつけろ等あれば本スレに<font color="blue">「豚計算機○○しろ」</font>等書き捨てて置いてください<br>
-            　　　　　　　計算で適当に検索かけているので、運良く気付けて対応可能そうであれば前向きに善処することを検討したいと思うことが無いこともないかもしれません<br>
+            　　　　　　　本スレ内を"計算"で適当に検索かけているので、運良く気付けて対応可能そうであれば前向きに善処することを検討したいと思うことが無いこともないかもしれません<br>
             <br>
             今後の云々：・公開場所に選んだもののよくわかってないGitHubを少しは理解する(理解できるとは言っていない)<br>
-            　　　　　　・コスト帯設定でも追加する？<br>
-            　　　　　　・シャーリーを特殊強化から外すか否か。コスト帯追加なら欲しいっちゃ欲しい...<br>
-            　　　　　　・アンナさんによる王子のモードチェンジを検討<br>
-            　　　　　　・スキル覚醒アリスのような永続効果を持つｓ覚醒ユニットをスキル使用チェック無しでも出せるようにするか考える<br>
             　　　　　　・二重詠唱エターナーのフィルタどうしよう(11/12現在では魔法のみ)<br>
             　　　　　　・複数職に跨って編成バフを適用するユニットが増えて、エステルとシャーリー、リーゼロッテとベルニス等効果範囲が被るユニットが出てきている<br>
             　　　　　　　単職バフが全然増えてこないようであれば、職バフ欄を潰してあいうえお順のリストにでも切り替えるべきだろうか<br>

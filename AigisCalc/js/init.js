@@ -463,7 +463,8 @@ function setUnits(){
     .Select(function(x){
         return {
             sid:x.sid, id:x.id, uid:x.uid, clas:x.clas, name:x.name,
-            rare:x.rare, cc:x.cc, noncc:x.noncc, lv:x.lv, lvmax:x.lvmax,
+            rare:x.rare, cc:x.cc, noncc:x.noncc, event:x.event,
+            lv:x.lv, lvmax:x.lvmax,
             hp:x.hp, hpmax:x.hpmax, atk:x.atk, atkmax:x.atkmax,
             def:x.def, defmax:x.defmax, resi:x.resi,
             block:x.block, range:x.range, costmax:x.costmax, costmin:x.costmin,
@@ -508,7 +509,8 @@ function setUnits(){
     .Select(function(x){
         return {
             sid:x.sid, id:x.id, uid:x.uid, clas:x.clas, name:x.name,
-            rare:x.rare, cc:x.cc, noncc:x.noncc, lv:x.lv, lvmax:x.lvmax,
+            rare:x.rare, cc:x.cc, noncc:x.noncc, event:x.event,
+            lv:x.lv, lvmax:x.lvmax,
             hp:x.hp, hpmax:x.hpmax, atk:x.atk, atkmax:x.atkmax,
             def:x.def, defmax:x.defmax, resi:x.resi,
             block:x.block, range:x.range, costmax:x.costmax, costmin:x.costmin,

@@ -1,4 +1,3 @@
-
 function submit_Click(){
     console.clear();
     clearbefore();
@@ -12,6 +11,7 @@ function submit_Click(){
     var whr_atktype = makeQuery_atkType(useSkill);
     var whr_melran = makeQuery_MelRan();
     var whr_rare = makeQuery_Rare();
+    var whr_event = makeQuery_Event();
 
     fil_units = Enumerable.From(units)
         .Where(whr_class)
@@ -19,6 +19,7 @@ function submit_Click(){
         .Where(whr_atktype)
         .Where(whr_melran)
         .Where(whr_rare)
+        .Where(whr_event)
         .ToArray();    
 
     if(!useSkill){
@@ -161,6 +162,23 @@ function makeQuery_Class(){
         }
     }
     return cls;
+}
+function makeQuery_Event(){
+	var eve = '';
+	if(!$('#eventunit').prop('checked')){
+		if($('#eveuni_normal').prop('checked')){
+			eve += '$.event == 0';
+		}
+		if($('#eveuni_event').prop('checked')){
+			if(eve.length > 0){ eve += ' || '; }
+			eve += '($.event == 1 || $.event == 3)';
+		}
+		if($('#eveuni_gacha').prop('checked')){
+			if(eve.length > 0){ eve += ' || '; }
+			eve += '($.event == 2 || $.event == 3)';
+		}
+	}
+	return eve;
 }
 
 function clearbefore(){
@@ -809,7 +827,8 @@ function make_bunits(){
 
             return {
                 sid:x.sid, id:x.id, uid:x.uid, clas:x.clas, name:x.name
-               ,rare:x.rare, cc:x.cc, noncc:x.noncc, lv:x.lv, lvmax:x.lvmax
+               ,rare:x.rare, cc:x.cc, noncc:x.noncc, event:x.event
+               ,lv:x.lv, lvmax:x.lvmax
                ,hp:x.hp, hpmax:x.hpmax, atk:x.atk, atkmax:x.atkmax
                ,def:x.def, defmax:x.defmax, resi:x.resi
                ,block:x.block, range:x.range, costmax:x.costmax, costmin:x.costmin
@@ -1126,6 +1145,7 @@ function make_bunitsjoin(){
     //unit
     	+ '  sid:$.sid, id:$.id, uid:$.uid'
 		+ ', clas:$.clas, name:$.name, rare:$.rare, cc:$.cc, noncc:$.noncc'
+		+ ', event:$.event'
 		+ ', lv:$.lv, lvmax:$.lvmax'
 	    + ', hp:$.hp, hpmax:$.hpmax, bonushp:$.bonushp'
 	    + ', atk:$.atk, atkmax:$.atkmax, bonusatk:$.bonusatk'
