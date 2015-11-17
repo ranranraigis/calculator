@@ -159,9 +159,16 @@ function changeLv(id){
         hp = Math.floor(hp * row.inchp * skill.inchp);
 
         atk = Math.floor(atk * row.bufatk);
-        atk = Math.floor(atk * row.prince * row.incatk * skill.incatk * row.incatksp);
-        atk = Math.floor(atk * oBuf.areaatk);
-        atk += oBuf.danceatk;
+        if(row.incatksp > 1){
+            atk = atk * row.prince * row.incatk * skill.incatk;
+            atk += oBuf.danceatk;
+            atk = Math.floor(atk * row.incatksp);
+            atk = Math.floor(atk * oBuf.areaatk);
+        } else {
+            atk = Math.floor(atk * row.prince * row.incatk * skill.incatk * row.incatksp);
+            atk = Math.floor(atk * oBuf.areaatk);
+            atk += oBuf.danceatk;
+        }
 
         var pripro = Math.max(row.prince, row.incpro, skill.incpro);
         def = Math.floor(def * row.bufdef);
@@ -200,7 +207,13 @@ function changeLv(id){
             
             if(enemy.mode === 'time'){
             	var data = dmgcalc(x, row, skill, lv, slv);
-        		dps = data.time + '秒';
+                
+                if(data.time === Number.POSITIVE_INFINITY){
+                    dps = '∞';
+                } else {
+                    dps = data.time + '秒';
+                }
+
                 s_dmg = data.dmg;
             } else {
 	            if(slv > 0){

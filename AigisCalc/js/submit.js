@@ -278,7 +278,6 @@ function chkBuff_other(){
     oBuf.ekidona_sv = (oBuf.ekidona_s)? 1.3: 1;
     oBuf.lubinus_s = $('#op_lubinus_s').prop('checked');
     oBuf.lubinus_sv = (oBuf.lubinus_s)? 1.3: 1;
-
 }
 
 function chkBuff_team_Base(){
@@ -722,13 +721,24 @@ function make_bunits(){
                     //魔法
                     reqAtk = Math.ceil(reqAtk / (1 - Math.ceil(enemy.resi * row.debresi * skill.debresi) / 100));
                 }
-                reqAtk -= oBuf.danceatk;
-                
-                reqLv = Math.ceil(reqAtk / oBuf.areaatk);
-                reqLv = Math.ceil(reqLv / (row.prince * row.incatk * skill.incatk * row.incatksp));
-                reqLv = Math.ceil(Math.ceil(reqLv / row.bufatk) / row.quadra);
-                reqLv = Math.ceil(reqLv - (x.atk + row.bonusatk));
-                reqLv = Math.ceil(reqLv / divatk) + 1;
+                //ダンサー＋特攻周りをちゃんと計算
+                if(row.incatksp > 1){
+                    reqLv = Math.ceil(reqAtk / oBuf.areaatk);
+                    reqLv = reqLv / row.incatksp;
+                    reqLv -= oBuf.danceatk;
+                    reqLv = Math.ceil(reqLv / (row.prince * row.incatk * skill.incatk));
+                    reqLv = Math.ceil(Math.ceil(reqLv / row.bufatk) / row.quadra);
+                    reqLv = Math.ceil(reqLv - (x.atk + row.bonusatk));
+                    reqLv = Math.ceil(reqLv / divatk) + 1;
+                } else {
+                    reqAtk -= oBuf.danceatk;
+                    
+                    reqLv = Math.ceil(reqAtk / oBuf.areaatk);
+                    reqLv = Math.ceil(reqLv / (row.prince * row.incatk * skill.incatk * row.incatksp));
+                    reqLv = Math.ceil(Math.ceil(reqLv / row.bufatk) / row.quadra);
+                    reqLv = Math.ceil(reqLv - (x.atk + row.bonusatk));
+                    reqLv = Math.ceil(reqLv / divatk) + 1;
+                }
 
                 if(reqLv <= 0){ reqLv = x.lv; }
 
@@ -736,10 +746,20 @@ function make_bunits(){
                     //餅つき計算
                     reqAtk = Math.ceil(enemy.hp / enemy.cnt) * 10;
 
-                    reqLv = Math.ceil(reqAtk / (row.prince * row.incatk * skill.incatk * row.incatksp));
-                    reqLv = Math.ceil(Math.ceil(reqLv / row.bufatk) / row.quadra);
-                    reqLv = Math.ceil(reqLv - (x.atk + row.bonusatk));
-                    reqLv = Math.ceil(reqLv / divatk) + 1;
+                    if(row.incatksp > 1){
+                        reqLv = reqAtk / row.incatksp;
+                        reqLv -= oBuf.danceatk;
+                        reqLv = Math.ceil(reqAtk / (row.prince * row.incatk * skill.incatk));
+                        reqLv = Math.ceil(Math.ceil(reqLv / row.bufatk) / row.quadra);
+                        reqLv = Math.ceil(reqLv - (x.atk + row.bonusatk));
+                        reqLv = Math.ceil(reqLv / divatk) + 1;
+                    } else {
+                        reqAtk -= oBuf.danceatk;
+                        reqLv = Math.ceil(reqAtk / (row.prince * row.incatk * skill.incatk * row.incatksp));
+                        reqLv = Math.ceil(Math.ceil(reqLv / row.bufatk) / row.quadra);
+                        reqLv = Math.ceil(reqLv - (x.atk + row.bonusatk));
+                        reqLv = Math.ceil(reqLv / divatk) + 1;
+                    }
                 }
             } else if(enemy.mode === 'dps' || enemy.mode === 'time' || mode === 'mix'){
                 //DPS計算
@@ -756,10 +776,16 @@ function make_bunits(){
                 if(reqLv === x.lvmax){ row_atk = x.atkmax + row.bonusatk; }
                 else { row_atk = Math.floor((x.atk + row.bonusatk) + (x.atkmax - x.atk) / (x.lvmax - 1) * (reqLv - 1)); }
                 row_atk = Math.floor(row_atk * row.bufatk);
-                row_atk = Math.floor(row_atk * row.prince * row.incatk * skill.incatk * row.incatksp);
-            	row_atk = Math.floor(row_atk * oBuf.areaatk);
-            	row_atk += oBuf.danceatk;
-                
+                if(row.incatksp > 1){
+                    row_atk = row_atk * row.prince * row.incatk * skill.incatk;
+                    row_atk += oBuf.danceatk;
+                    row_atk = Math.floor(row_atk * row.incatksp);
+                    row_atk = Math.floor(row_atk * oBuf.areaatk);
+                } else {
+                    row_atk = Math.floor(row_atk * row.prince * row.incatk * skill.incatk * row.incatksp);
+                    row_atk = Math.floor(row_atk * oBuf.areaatk);
+                    row_atk += oBuf.danceatk;
+                }
                 if(row.atktype === 1){
                     var row_def = Math.ceil(enemy.def * row.debdef * skill.debdef);
                     var dmglimit = Math.floor(row_atk / 10);
@@ -913,7 +939,7 @@ function dmgcalc(unit, row, skill, lv, slv){
                 break;
         }
     }
-
+    
 	var n_atk, s_atk;
 	var n_dmg, s_dmg, dmg;
 	var row_def, row_resi;
@@ -941,7 +967,7 @@ function dmgcalc(unit, row, skill, lv, slv){
 	} else if(unit.atktype === 2 || oBuf.enchant){
 		row_resi = 1 - Math.ceil(enemy.resi * sBuf.emydebresi) / 100;
 		n_dmg = Math.floor(n_atk * row_resi);
-	} else if(unit.atktype === 4){
+	} else if(unit.atktype >= 3){
 		n_dmg = 0;
 	}
 	n_dmg *= unit.quadra;
@@ -954,7 +980,7 @@ function dmgcalc(unit, row, skill, lv, slv){
 	} else if(unit.s_atktype === 2 || (unit.atktype === 2 && unit.s_atktype === 0) || oBuf.enchant){
 		row_resi = 1 - (enemy.resi * sBuf.emydebresi * skill.debresi) / 100;
 		s_dmg = Math.floor(s_atk * row_resi);
-	} else if(unit.s_atktype === 4){
+	} else if(unit.s_atktype >= 3){
 		s_dmg = 0;
 	}
 	if(unit.s_quadra !== 0){ s_dmg *= unit.s_quadra; }
