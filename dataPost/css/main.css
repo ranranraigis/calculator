@@ -1,0 +1,11 @@
+form.form-horizontal .label.label-danger {
+  border-radius: 4px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+form.form-horizontal input[required] {
+  border-top-left-radius: 0px;
+}
+html{
+	font-size: 14px;
+}
