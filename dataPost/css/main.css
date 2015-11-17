@@ -9,3 +9,6 @@ form.form-horizontal input[required] {
 html{
 	font-size: 14px;
 }
+label.error{
+	color:red;
+}

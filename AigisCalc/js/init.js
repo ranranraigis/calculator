@@ -245,10 +245,6 @@ function getBuff(sheetsEntry){
     $('#206atk').attr('class', 'link').attr('link', 'lubinus');
     */
     
-    $('.tooltip').each(tooltip);
-    $('.hiddenrow').hide();
-    $('.region').hide();
-    
     load_progress();
 }
 function setBuff(type){
@@ -452,6 +448,10 @@ function load_progress(){
         skilldata = null;
         classdata = null;
         updates = null;
+
+        $('.tooltip').each(tooltip);
+        $('.hiddenrow').hide();
+        $('.region').hide();
     }
 }
 

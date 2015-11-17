@@ -41,16 +41,19 @@
 			<div class="form-group">
 				<label class="col-md-2 control-label">投稿内容</label>
 				<div class="col-md-10">
-					<textarea id="main" name="投稿内容" placeholder="(´・ω・｀)なになに？" required="required" style="width: 420px; height: 129px;"></textarea>
-					<br>
-					<span style="font-size: 14px;">不具合報告の場合、発生日時や発生時の操作手順、再現性の有無あたりを書いてくれると嬉しいです</span><br>
+					<textarea id="main" name="投稿内容" placeholder="(´・ω・｀)なになに？" required="required" style="width: 420px; height: 129px;"></textarea><br>
+					<span style="font-size: 14px;">
+					不具合報告の場合、発生日時や再現性の有無・手順あたりを書いてくれると助かります<br>
+					本家メンテ日なんかはデータ更新作業とかち合って変になっている可能性もあるため<br>
+					時間を空けてページ再読込後に再現可能かなども確かめてくれるとありがたいです
+					</span>
 				</div>
 			</div>
 			
             <br>
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <button class="btn btn-primary" type="submit">送信</button>
+                    <button class="btn btn-primary" id="submit" type="submit">送信</button>
                 </div>
             </div>
             
@@ -63,11 +66,15 @@
             
 		</form>
 		<hr />
-		<p class="text-center">このページは下記リンク様の情報を<s>丸パクリ</s>参考にして作成しました</p>
-		<div class="text-center">
-			<a href="http://qiita.com/snowsunny/items/56a85c63598dcfb1b06e">【短いコードで色々出来る】Google
+		<br>
+		豚計算機：<br>
+		　<a href="http://ranranraigis.github.io/calculator/AigisCalc/" target="_blank">アイギス大雑把計算機</a>
+		<br>
+		<br>
+		<br>
+		このページは下記サイト様の情報を<s>丸パクリ</s>参考にして作成しました<br>
+        　<a href="http://qiita.com/snowsunny/items/56a85c63598dcfb1b06e">【短いコードで色々出来る】Google
 				Apps Scriptでスプレッドシートと連携した無料Ajaxフォームの作り方※サンプル付き【自動返信メールもあるよ】</a>
-		</div>
 	</div>
 	
 <script type="text/javascript" src="./js/jquery-2.1.4.min.js"></script>
@@ -92,9 +99,13 @@
                     dataType: 'jsonp',
                     data: form.serialize(),
                     beforeSend: function () {
+                        $('#submit').text('送信中');
+                        $('#submit').attr('disabled', true);
                         return btn_submit.attr('disabled', true);
                     },
                     complete: function () {
+                        $('#submit').text('送信');
+                        $('#submit').attr('disabled', false);
                         return btn_submit.attr('disabled', false);
                     },
                     success: function (response) {
