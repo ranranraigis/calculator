@@ -151,6 +151,7 @@ function setbClass(){
 function setFilterClass(){
     var que = Enumerable.From(classes)
     .Distinct('$.sid')
+    .Select('{sid:$.sid, sname:$.sname}')
     .ToArray();
 
     var mel, ran;

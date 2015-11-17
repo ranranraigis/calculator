@@ -968,19 +968,31 @@ function dmgcalc(unit, row, skill, lv, slv){
         ,motion:unit.motion, wait:unit.wait
         ,s_motion:unit.s_motion, s_wait:unit.s_wait
         ,s_atk:s_atk,n_atk:n_atk
+        ,next:'', nextact:'', over_frm: 0
     };
 
-    if(data.reqtime > 0){
+    var reqtime = (data.reqtime > 0);
+    var shortcut = true;
+    var sccnt = 0;
+    if(reqtime){
         if(slv > 0){
             while(data.remtime >= data.s_motion){
-                dmgcalc_skill(data, (data.reqtime > 0));
+                dmgcalc_skill(data, reqtime);
                 if(data.remtime >= data.motion){
-                    dmgcalc_noskill(data, (slv > 0), (data.reqtime > 0));
+                    dmgcalc_noskill(data, (slv > 0), reqtime);
+                }
+                
+                if(shortcut){
+                    shortcut = false;
+                    sccnt = Math.floor((data.remtime - data.time) / data.time);
+                    data.time *= sccnt;
+                    data.remtime -= data.time;
+                    data.dmg *= sccnt;
                 }
             }
         } else {
             while(data.remtime >= data.motion){
-                dmgcalc_noskill(data, (slv > 0), (data.reqtime > 0));
+                dmgcalc_noskill(data, (slv > 0), reqtime);
             }
         }
         if(data.time > data.reqtime){
@@ -989,14 +1001,20 @@ function dmgcalc(unit, row, skill, lv, slv){
     } else {
     	if(slv > 0){
     		while(data.dmg < data.reqhp){
-                dmgcalc_skill(data, (data.reqtime > 0));
+                dmgcalc_skill(data, reqtime);
                 if(data.dmg < data.reqhp){
-                    dmgcalc_noskill(data, (slv > 0), (data.reqtime > 0));
+                    dmgcalc_noskill(data, (slv > 0), reqtime);
+                }
+                if(shortcut){
+                    shortcut = false;
+                    sccnt = Math.floor((data.reqhp - data.dmg) / data.dmg);
+                    data.time *= sccnt;
+                    data.dmg *= sccnt;
                 }
     		}
     	} else {
     		while(data.dmg < data.reqhp){
-                dmgcalc_noskill(data, (slv > 0), (data.reqtime > 0));
+                dmgcalc_noskill(data, (slv > 0), reqtime);
     		}
     	}
     }
@@ -1033,6 +1051,7 @@ function dmgcalc_skill(data, timeatk){
     sub.motion = data.s_motion;
     sub.wait = data.s_wait;
     sub.frm = frm;
+    data.next = 'normal';
     dmgcalc_common(sub, data);
     
     data.dmg += sub.dmg;
@@ -1065,10 +1084,8 @@ function dmgcalc_noskill(data, useSkill, timeatk){
         	data.dmg += dmg;
         	data.time += time;
         	data.remtime = 0;
-        	//クリッサ - 240秒で殺したいけど
-        	//現状の計算だと正負で矛盾計算になる
         } else {
-        	//CTがあるk
+        	//CTがある
             if(useSkill && (data.remtime > data.ct)){
             	time = data.ct;
             } else {
@@ -1076,6 +1093,7 @@ function dmgcalc_noskill(data, useSkill, timeatk){
             }
             
             sub.time = time;
+            data.next = 'skill';
             dmgcalc_common(sub, data);
             
             data.dmg += sub.dmg;
@@ -1093,6 +1111,7 @@ function dmgcalc_noskill(data, useSkill, timeatk){
         } else {
         	//CTがある
             sub.time = data.ct;
+            data.next = 'skill';
             dmgcalc_common(sub, data);
             
             data.dmg += sub.dmg;
@@ -1111,25 +1130,46 @@ function dmgcalc_common(sub, data){
 	var time = sub.time;
 	var cnt = 0;
 	var dmg = 0;
+
+	if(data.nextact.indexOf('motion')){
+	    //スキル<->通常の切り替えタイミングが攻撃モーションだった場合
+	    cnt += 1;
+	    time -= sub.wait;
+	}
+	//超過時間処理
+    time -= data.over_frm;
 	
-	cnt = Math.floor(time / (sub.motion + sub.wait));
+	cnt += Math.floor(time / (sub.motion + sub.wait));
 	time -= (cnt * sub.frm);
 	if(time >= sub.motion){
 		//追加で1回攻撃できる
 		cnt += 1;
-		if(time < data.wait){
-			//残り時間が通常時waitより短い場合、置き換える
-			time = data.wait;
+		data.nextact = 'wait';
+		
+		if(data.next === 'skill'){
+		    //次の動作がスキル
+		    data.over_frm = Math.ceil(time / data.wait * data.s_wait);
+		} else {
+		    //次の動作が通常
+            data.over_frm = Math.ceil(time / data.s_wait * data.wait);
 		}
-		time += (cnt - 1) * sub.frm + sub.motion;
 	} else {
 		//追加で1回攻撃できない
-		time += cnt * sub.frm;
+	    data.nextact = 'motion';
+
+        if(data.next === 'skill'){
+            //次の動作がスキル
+            data.over_frm = Math.ceil(time / data.motion * data.s_motion);
+        } else {
+            //次の動作が通常
+            data.over_frm = Math.ceil(time / data.s_motion * data.motion);
+        }
 	}
 
+    time += cnt * sub.frm + data.over_frm;
 	dmg = cnt * sub.dmg;
 	if(dmg > (data.reqhp - data.dmg)){
-		//オーバーキルしていた場合、計算しなおす
+		//オーバーキルしていた場合、n+1の形になるよう計算しなおす
 		cnt = Math.ceil((data.reqhp - data.dmg) / sub.dmg);
 		time = (cnt - 1) * sub.frm + sub.motion;
 		dmg = cnt * sub.dmg;
