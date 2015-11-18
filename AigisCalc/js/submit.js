@@ -253,6 +253,9 @@ function chkData(){
     
     //その他バフ類
     chkBuff_other();
+    
+    //整理
+    chkBuff_arrange();
 }
 
 function incBuffHp(sid, val){ var bcls = bclass; bcls[sid].bufhp += val; }
@@ -260,6 +263,17 @@ function incBuffAtk(sid, val){ var bcls = bclass; bcls[sid].bufatk += val; }
 function incBuffDef(sid, val){ var bcls = bclass; bcls[sid].bufdef += val; }
 function incBuffResi(sid, val){ var bcls = bclass; bcls[sid].bufresi += val; }
 function incBuffTime(sid, val){ var bcls = bclass; bcls[sid].buftime += val; }
+
+function chkBuff_arrange(){
+    var bcls = bclass; 
+    
+    //トークン連中は編成バフの影響を受けない
+    bcls[199].bufhp = 0;    bcls[299].bufhp = 0;
+    bcls[199].bufatk = 0;   bcls[299].bufatk = 0;
+    bcls[199].bufdef = 0;   bcls[299].bufdef = 0;
+    bcls[199].bufresi = 0;  bcls[299].bufresi = 0;
+    bcls[199].buftime = 0;  bcls[299].buftime = 0;
+}
 
 function chkBuff_other(){
 	var oBuf = otherBuff;
@@ -739,6 +753,17 @@ function make_bunits(){
                     reqLv = Math.ceil(reqLv - (x.atk + row.bonusatk));
                     reqLv = Math.ceil(reqLv / divatk) + 1;
                 }
+                
+                //トークン(トラップ)専用
+                if(x.name.match(/トラップ/)){
+                    reqAtk = Math.ceil(enemy.hp / enemy.cnt);
+                    reqAtk -= oBuf.danceatk;
+                    
+                    reqLv = Math.ceil(reqAtk / oBuf.areaatk);
+                    reqLv = Math.ceil(reqLv / (row.prince * row.incatk * row.incatksp));
+                    reqLv = Math.ceil(reqLv - x.atk);
+                    reqLv = Math.ceil(reqLv / divatk) + 1;
+                }
 
                 if(reqLv <= 0){ reqLv = x.lv; }
 
@@ -760,6 +785,7 @@ function make_bunits(){
                         reqLv = Math.ceil(reqLv - (x.atk + row.bonusatk));
                         reqLv = Math.ceil(reqLv / divatk) + 1;
                     }
+                    if(x.name.match(/トラップ/)){ reqLv = x.lvmax + 1; }
                 }
             } else if(enemy.mode === 'dps' || enemy.mode === 'time' || mode === 'mix'){
                 //DPS計算
@@ -803,6 +829,17 @@ function make_bunits(){
                 }
 
                 dps = row_atk * row.quadra * 30 / (motion + wait);
+                
+                if(x.name.match(/トラップ/)){
+
+                    if(reqLv === x.lvmax){ row_atk = x.atkmax; }
+                    else { row_atk = Math.floor((x.atk) + (x.atkmax - x.atk) / (x.lvmax - 1) * (reqLv - 1)); }
+                    
+                    row_atk = row_atk * row.prince * row.incatk;
+                    row_atk += oBuf.danceatk;
+                    row_atk = Math.floor(row_atk * oBuf.areaatk);
+                    dps = row_atk * 30 / (motion + wait);
+                }
                 
                 if(mode === 'atk' && enemy.mode === 'time'){
                     data = dmgcalc(x, row, skill, x.lvmax, (useSkill)? x.s_lvmax: 0);
@@ -986,6 +1023,11 @@ function dmgcalc(unit, row, skill, lv, slv){
 	if(unit.s_quadra !== 0){ s_dmg *= unit.s_quadra; }
 	else { s_dmg *= unit.quadra; }
 
+	if(unit.name.match(/トラップ/)){
+	    n_dmg = n_atk;
+	    s_dmg = s_atk;
+	}
+	
     var data = {
 		reqhp:enemy.hp, reqlv: 999
 		,dmg:0, n_dmg:n_dmg, s_dmg:s_dmg

@@ -169,7 +169,7 @@ function changeLv(id){
             atk = Math.floor(atk * oBuf.areaatk);
             atk += oBuf.danceatk;
         }
-
+        
         var pripro = Math.max(row.prince, row.incpro, skill.incpro);
         def = Math.floor(def * row.bufdef);
         def = Math.floor(def * row.incdef * skill.incdef * pripro);
@@ -204,7 +204,13 @@ function changeLv(id){
             } else {
                 dps = 0;
             }
-            
+
+            //トークン(トラップ)の調整
+            if(x.name.match(/トラップ/)){
+                dmg = atk;
+                dps = '*' + dmg;
+            }
+
             if(enemy.mode === 'time'){
             	var data = dmgcalc(x, row, skill, lv, slv);
                 
@@ -233,6 +239,32 @@ function changeLv(id){
 	                s_dmg = '';
 	            }
             }
+            
+            //フルガード,スパイクシールドの調整
+            if(slv > 0){
+                var pat = /フルガード|スパイクシールド/;
+                var mat = x.skill.match(pat);
+                if(mat){
+                    if(mat[0] === 'スパイクシールド'){
+                        var debmat = Math.min(row.debatk, skill.debatk, row.debmat, skill.debmat);
+                        emyatk_row = Math.ceil(enemy.atk * debmat);
+                        atk = Math.floor(emyatk_row / 2);
+                        dmg = atk - emydef_row;
+                        if(dmg < Math.floor(atk / 10)){
+                            dmg = Math.floor(atk / 10);
+                        }
+                        
+                        atk = '*' + atk;
+                        dmg = '*' + dmg;
+                        dps = '(*反射)';
+                        s_dmg = '(*反射)';
+                    } else {
+                        atk = 0;
+                        dmg = 0;
+                    }
+                }
+            }
+
         } else if(gl_mode === 'def') {
             if(enemy.type === 1){
             	var debmat = Math.min(row.debatk, skill.debatk, row.debmat, skill.debmat);
@@ -241,6 +273,22 @@ function changeLv(id){
                 dmglimit = Math.ceil(Math.ceil(emyatk_row / 10) * row.cutmat * skill.cutmat);
             	dmg = (dmg <= dmglimit)? dmglimit: dmg;
                 
+                //フルガード,スパイクシールドの調整
+                if(slv > 0){
+                    var pat = /フルガード|スパイクシールド/;
+                    var mat = x.skill.match(pat);
+                    if(mat){
+                        switch(mat[0]){
+                            case 'スパイクシールド':
+                                atk = '*' + Math.floor(emyatk_row / 2);
+                                break;
+                            default:
+                                atk = 0;
+                                break;
+                        }
+                    }
+                }
+            	
             	if(x.sid === 115 && x.cc >= 2){
                 	temp = Math.floor(hp / 2);
             		dkhp = hp - dmg;
