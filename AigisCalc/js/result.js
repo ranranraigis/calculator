@@ -249,10 +249,7 @@ function changeLv(id){
                         var debmat = Math.min(row.debatk, skill.debatk, row.debmat, skill.debmat);
                         emyatk_row = Math.ceil(enemy.atk * debmat);
                         atk = Math.floor(emyatk_row / 2);
-                        dmg = atk - emydef_row;
-                        if(dmg < Math.floor(atk / 10)){
-                            dmg = Math.floor(atk / 10);
-                        }
+                        dmg = atk;
                         
                         atk = '*' + atk;
                         dmg = '*' + dmg;
