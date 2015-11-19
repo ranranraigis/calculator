@@ -522,8 +522,10 @@ function chkBuff_other(){
             var pripro = Math.max(sBuf.prince, sBuf.incpro);
             atk = Math.floor(atk * (1 + bcls[215].bufatk));
             atk = Math.floor(atk * sBuf.prince * sBuf.incatk);
+            atk = Math.floor(oBuf.areaatk);
             def = Math.floor(def * (1 + bcls[215].bufdef));
             def = Math.floor(def * pripro * sBuf.incdef);
+            def = Math.floor(oBuf.areadef);
             if(dancetype === 'calc10'){
                 oBuf.danceatk = Math.floor(atk / 10);
                 oBuf.dancedef = Math.floor(def / 10);
