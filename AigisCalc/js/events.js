@@ -23,6 +23,7 @@ $('#inc_rosette').change(inc_rosette_Change);
 $('body').on('change', 'select[id="skill_rosette"]', skill_rosette_Change);
 
 $('.actchk').change(activateFromCheckbox);
+$('#op_dance').change(op_dance_Change);
 
 $('#sortReset').click(sortReset_Click);
 $('#outputHead').click(function(){$('#outputTable').trigger('update');});
@@ -41,7 +42,7 @@ function sortReset_Click(){
 	    setLv(bunits);
 	    $('#outputTable').trigger('update');
 	} else {
-		$('#result').html('(´・ω・｀)だめよ');
+		$('#result').html('(´・ω・｀)まだだめよ');
 	}
 }
 
@@ -76,6 +77,8 @@ function number_Change(){
     }
     if(val < t.attr('min')){
         val = t.attr('min');
+    } else if(val > t.attr('max')){
+        val = t.attr('max');
     }
     t.val(val);
 }
@@ -182,25 +185,25 @@ function buff_all_Change(){
 	if(t.prop('checked')){
 		radsel = 'input[name="op_prince"][value="1.21"]'
 			   + ',input[name="op_ctcut"][value="0.7"]'
-			   + ',input[name="incatk"]:eq(3)'
-			   + ',input[name="incdef"]:eq(2)'
-			   + ',input[name="incpro"]:eq(3)'
-			   + ',input[name="dmgcut_mag"]:eq(1)'
-			   + ',input[name="emy_debatk"]:eq(4)'
-			   + ',input[name="emy_debmat"]:eq(2)'
-			   + ',input[name="emy_debdef"]:eq(1)'
-			   + ',input[name="emy_debresi"]:eq(2)';
+			   + ',input[name="incatk"]:last'
+			   + ',input[name="incdef"]:last'
+			   + ',input[name="incpro"]:last'
+			   + ',input[name="dmgcut_mag"]:last'
+			   + ',input[name="emy_debatk"]:last'
+			   + ',input[name="emy_debmat"]:last'
+			   + ',input[name="emy_debdef"]:last'
+			   + ',input[name="emy_debresi"]:last';
 	} else {
-		radsel = 'input[name="op_prince"]:eq(0)'
-			   + ',input[name="op_ctcut"]:eq(0)'
-			   + ',input[name="incatk"]:eq(0)'
-			   + ',input[name="incdef"]:eq(0)'
-			   + ',input[name="incpro"]:eq(0)'
-			   + ',input[name="dmgcut_mag"]:eq(0)'
-			   + ',input[name="emy_debatk"]:eq(0)'
-			   + ',input[name="emy_debmat"]:eq(0)'
-			   + ',input[name="emy_debdef"]:eq(0)'
-			   + ',input[name="emy_debresi"]:eq(0)';
+		radsel = 'input[name="op_prince"]:first'
+			   + ',input[name="op_ctcut"]:first'
+			   + ',input[name="incatk"]:first'
+			   + ',input[name="incdef"]:first'
+			   + ',input[name="incpro"]:first'
+			   + ',input[name="dmgcut_mag"]:first'
+			   + ',input[name="emy_debatk"]:first'
+			   + ',input[name="emy_debmat"]:first'
+			   + ',input[name="emy_debdef"]:first'
+			   + ',input[name="emy_debresi"]:first';
 	}
 	var radio = $(radsel);
 	radio.each(function(index, elem){
@@ -214,7 +217,7 @@ function buff_all_Change(){
 		var len = sel.children().length - 1;
 		
 		if(!sel.prop('disabled') && len > 0){
-			sel.children('option:eq(' + len + ')').prop('selected', true);
+			sel.children('option:last').prop('selected', true);
 			sel.trigger('change');
 		}
 	});
@@ -265,6 +268,21 @@ function activateFromCheckbox(){
     var chk = !t.prop('checked');
     
     $(tgt).prop('disabled', chk);
+}
+
+function op_dance_Change(){
+    var t = $(this);
+    var tgt = t.attr('ctgt');
+    var chk = t.prop('checked');
+    
+    $(tgt).prop('disabled', !chk);
+    if(chk){
+        $('#span_dance_type').show();
+        $('input[name="op_dance_type"]').prop('disabled', false);
+    } else {
+        $('#span_dance_type').hide();
+        $('input[name="op_dance_type"]').prop('disabled', true);
+    }
 }
 
 function tooltip(index, elem){

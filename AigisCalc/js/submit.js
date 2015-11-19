@@ -264,36 +264,6 @@ function incBuffDef(sid, val){ var bcls = bclass; bcls[sid].bufdef += val; }
 function incBuffResi(sid, val){ var bcls = bclass; bcls[sid].bufresi += val; }
 function incBuffTime(sid, val){ var bcls = bclass; bcls[sid].buftime += val; }
 
-function chkBuff_arrange(){
-    var bcls = bclass; 
-    
-    //トークン連中は編成バフの影響を受けない
-    bcls[199].bufhp = 0;    bcls[299].bufhp = 0;
-    bcls[199].bufatk = 0;   bcls[299].bufatk = 0;
-    bcls[199].bufdef = 0;   bcls[299].bufdef = 0;
-    bcls[199].bufresi = 0;  bcls[299].bufresi = 0;
-    bcls[199].buftime = 0;  bcls[299].buftime = 0;
-}
-
-function chkBuff_other(){
-	var oBuf = otherBuff;
-
-	//チェックon/offで表現できるものとかダンサー等のカテゴリ分けしにくいもの
-    oBuf.bonus = toNum($('input[name="bonus"]:checked').val()); 
-    oBuf.enchant = $('#op_enchant').prop('checked');
-    oBuf.danceatk = $('#op_dance').prop('checked') * $('#dance_atk').val();
-    oBuf.dancedef = $('#op_dance').prop('checked') * $('#dance_def').val();
-    oBuf.areaatk = $('#op_areaAtk').prop('checked')? $('#areaAtk').val() / 100: 1;
-    oBuf.areadef = $('#op_areaDef').prop('checked')? $('#areaDef').val() / 100: 1;
-    
-    oBuf.mahoken = toNum($('input[name="op_mahoken"][type="radio"]:checked').val());
-    
-    oBuf.ekidona_s = $('#op_ekidona_s').prop('checked');
-    oBuf.ekidona_sv = (oBuf.ekidona_s)? 1.3: 1;
-    oBuf.lubinus_s = $('#op_lubinus_s').prop('checked');
-    oBuf.lubinus_sv = (oBuf.lubinus_s)? 1.3: 1;
-}
-
 function chkBuff_team_Base(){
 	var oBuf = otherBuff;
 	var bcls = bclass;
@@ -396,7 +366,6 @@ function chkBuff_team_Ex(){
     if(oBuf.liselotte){
     	incbuf['def'](101, 0.05); incbuf['resi'](101, 5);
     	incbuf['def'](102, 0.05); incbuf['resi'](102, 5);
-    	
     }
     
     //ルイーズ、全体コスト+2
@@ -519,6 +488,62 @@ function chkBuff_skill_EnemyDecrease(){
     sBuf.emydebmat = emydebmat;
     sBuf.emydebdef = emydebdef;
     sBuf.emydebresi = emydebresi;
+}
+
+function chkBuff_other(){
+    var oBuf = otherBuff;
+
+    //チェックon/offで表現できるものとかダンサー等のカテゴリ分けしにくいもの
+    oBuf.bonus = toNum($('input[name="bonus"]:checked').val()); 
+    oBuf.enchant = $('#op_enchant').prop('checked');
+    oBuf.danceatk = $('#op_dance').prop('checked') * $('#dance_atk').val();
+    oBuf.dancedef = $('#op_dance').prop('checked') * $('#dance_def').val();
+    oBuf.areaatk = $('#op_areaAtk').prop('checked')? $('#areaAtk').val() / 100: 1;
+    oBuf.areadef = $('#op_areaDef').prop('checked')? $('#areaDef').val() / 100: 1;
+    
+    oBuf.mahoken = toNum($('input[name="op_mahoken"][type="radio"]:checked').val());
+    
+    oBuf.ekidona_s = $('#op_ekidona_s').prop('checked');
+    oBuf.ekidona_sv = (oBuf.ekidona_s)? 1.3: 1;
+    oBuf.lubinus_s = $('#op_lubinus_s').prop('checked');
+    oBuf.lubinus_sv = (oBuf.lubinus_s)? 1.3: 1;
+    
+    //ダンサーの整理
+    var dancetype = $('input[name="op_dance_type"][type="radio"]:checked').val();
+    if(dancetype !== 'add100'){
+        if(dancetype === 'add10'){
+            oBuf.danceatk = Math.floor(oBuf.danceatk / 10);
+            oBuf.dancedef = Math.floor(oBuf.dancedef / 10);
+        } else {
+            var sBuf = skillbuffs;
+            var bcls = bclass;
+            var atk = oBuf.danceatk;
+            var def = oBuf.dancedef;
+            var pripro = Math.max(sBuf.prince, sBuf.incpro);
+            atk = Math.floor(atk * (1 + bcls[215].bufatk));
+            atk = Math.floor(atk * sBuf.prince * sBuf.incatk);
+            def = Math.floor(def * (1 + bcls[215].bufdef));
+            def = Math.floor(def * pripro * sBuf.incdef);
+            if(dancetype === 'calc10'){
+                oBuf.danceatk = Math.floor(atk / 10);
+                oBuf.dancedef = Math.floor(def / 10);
+            } else {
+                oBuf.danceatk = atk;
+                oBuf.dancedef = def;
+            }
+        }
+    }
+}
+
+function chkBuff_arrange(){
+    var bcls = bclass; 
+    
+    //トークン連中は編成バフの影響を受けない
+    bcls[199].bufhp = 0;    bcls[299].bufhp = 0;
+    bcls[199].bufatk = 0;   bcls[299].bufatk = 0;
+    bcls[199].bufdef = 0;   bcls[299].bufdef = 0;
+    bcls[199].bufresi = 0;  bcls[299].bufresi = 0;
+    bcls[199].buftime = 0;  bcls[299].buftime = 0;
 }
 
 function make_bunits(){
@@ -1570,7 +1595,8 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
     		"|妖精郷の射手スピカ|黒槍騎士ダリア|風水士ピピン|白き魔女ベリンダ" +
     		"|大盾の乙女ベルニス|朱鎧の智将マツリ|聖鎚闘士ミランダ|背反の癒し手ユーノ" +
     		"|帝国兵長リーゼロッテ|提督リーンベル|武闘家リン|ルイーズ" +
-    		"|竜巫女ルビナス|天の軍師レン";
+    		"|竜巫女ルビナス|天の軍師レン" +
+    		"|暗黒騎士";
     name = new RegExp(name);
     mat = unit.name.match(name);
     
@@ -1704,6 +1730,8 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
 	    	case '天の軍師レン':
 	    		if(!oBuf.def2){ row.bufdef += toNum($('#op_def2').val()); }
 	    		break;
+	    	case '暗黒騎士':
+	    	    if(!act['115time']){ row.buftime += toNum($('#115time').val()); }
     	}
     }
     
