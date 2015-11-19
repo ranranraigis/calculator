@@ -1076,13 +1076,15 @@ function dmgcalc(unit, row, skill, lv, slv){
                 if(data.remtime >= data.motion){
                     dmgcalc_noskill(data, (slv > 0), reqtime);
                 }
-                
+
                 if(shortcut){
                     shortcut = false;
                     sccnt = Math.floor((data.remtime - data.time) / data.time);
-                    data.time *= sccnt;
-                    data.remtime -= data.time;
-                    data.dmg *= sccnt;
+                    if(sccnt > 1){
+                        data.time *= sccnt;
+                        data.remtime -= data.time;
+                        data.dmg *= sccnt;
+                    }
                 }
             }
         } else {
@@ -1103,8 +1105,10 @@ function dmgcalc(unit, row, skill, lv, slv){
                 if(shortcut){
                     shortcut = false;
                     sccnt = Math.floor((data.reqhp - data.dmg) / data.dmg);
-                    data.time *= sccnt;
-                    data.dmg *= sccnt;
+                    if(sccnt > 1){
+                        data.time *= sccnt;
+                        data.dmg *= sccnt;
+                    }
                 }
     		}
     	} else {
@@ -1223,12 +1227,13 @@ function dmgcalc_noskill(data, useSkill, timeatk){
 
 function dmgcalc_common(sub, data){
 	var time = sub.time;
-	var cnt = 0;
+	var cnt = 0, addcnt = 0;
 	var dmg = 0;
+	var prev_over = data.over_frm;
 
-	if(data.nextact.indexOf('motion')){
+	if(data.nextact.match(/motion/)){
 	    //スキル<->通常の切り替えタイミングが攻撃モーションだった場合
-	    cnt += 1;
+	    addcnt += 1;
 	    time -= sub.wait;
 	}
 	//超過時間処理
@@ -1239,14 +1244,15 @@ function dmgcalc_common(sub, data){
 	if(time >= sub.motion){
 		//追加で1回攻撃できる
 		cnt += 1;
+		time -= sub.motion;
 		data.nextact = 'wait';
 		
 		if(data.next === 'skill'){
 		    //次の動作がスキル
-		    data.over_frm = Math.ceil(time / data.wait * data.s_wait);
+		    data.over_frm = data.s_wait - Math.ceil(time / data.wait * data.s_wait);
 		} else {
 		    //次の動作が通常
-            data.over_frm = Math.ceil(time / data.s_wait * data.wait);
+            data.over_frm = data.wait - Math.ceil(time / data.s_wait * data.wait);
 		}
 	} else {
 		//追加で1回攻撃できない
@@ -1254,20 +1260,29 @@ function dmgcalc_common(sub, data){
 
         if(data.next === 'skill'){
             //次の動作がスキル
-            data.over_frm = Math.ceil(time / data.motion * data.s_motion);
+            data.over_frm = data.s_motion - Math.ceil(time / data.motion * data.s_motion);
         } else {
             //次の動作が通常
-            data.over_frm = Math.ceil(time / data.s_motion * data.motion);
+            data.over_frm = data.motion - Math.ceil(time / data.s_motion * data.motion);
         }
 	}
 
-    time += cnt * sub.frm + data.over_frm;
-	dmg = cnt * sub.dmg;
+    //time += cnt * sub.frm;
+	if(addcnt > 0){
+	    time = sub.time - data.over_frm - sub.wait;
+	} else {
+	    time = sub.time + data.over_frm;
+    }
+	
+	dmg = (cnt + addcnt) * sub.dmg;
 	if(dmg > (data.reqhp - data.dmg)){
 		//オーバーキルしていた場合、n+1の形になるよう計算しなおす
-		cnt = Math.ceil((data.reqhp - data.dmg) / sub.dmg);
+		cnt = Math.ceil((data.reqhp - data.dmg) / sub.dmg) - addcnt;
 		time = (cnt - 1) * sub.frm + sub.motion;
-		dmg = cnt * sub.dmg;
+		if(addcnt > 0){
+		    time += sub.wait;
+		}   
+		dmg = (cnt + addcnt) * sub.dmg;
 	}
 	
 	sub.time = time;
