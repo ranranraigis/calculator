@@ -512,9 +512,13 @@ function chkBuff_other(){
     var dancetype = $('input[name="op_dance_type"][type="radio"]:checked').val();
     if(dancetype !== 'add100'){
         if(dancetype === 'add10'){
+            console.log('a10');
+            console.log(oBuf.danceatk+','+oBuf.dancedef);
             oBuf.danceatk = Math.floor(oBuf.danceatk / 10);
             oBuf.dancedef = Math.floor(oBuf.dancedef / 10);
+            console.log(oBuf.danceatk+','+oBuf.dancedef);
         } else {
+            console.log(oBuf.danceatk+','+oBuf.dancedef);
             var sBuf = skillbuffs;
             var bcls = bclass;
             var atk = oBuf.danceatk;
@@ -522,17 +526,20 @@ function chkBuff_other(){
             var pripro = Math.max(sBuf.prince, sBuf.incpro);
             atk = Math.floor(atk * (1 + bcls[215].bufatk));
             atk = Math.floor(atk * sBuf.prince * sBuf.incatk);
-            atk = Math.floor(oBuf.areaatk);
+            atk = Math.floor(atk * oBuf.areaatk);
             def = Math.floor(def * (1 + bcls[215].bufdef));
             def = Math.floor(def * pripro * sBuf.incdef);
-            def = Math.floor(oBuf.areadef);
+            def = Math.floor(def * oBuf.areadef);
             if(dancetype === 'calc10'){
+                console.log('c10');
                 oBuf.danceatk = Math.floor(atk / 10);
                 oBuf.dancedef = Math.floor(def / 10);
             } else {
+                console.log('c100');
                 oBuf.danceatk = atk;
                 oBuf.dancedef = def;
             }
+            console.log(oBuf.danceatk+','+oBuf.dancedef);
         }
     }
 }
