@@ -227,7 +227,6 @@ function dataSave(){
 function sysLoad(){
     var cname = 'ranranAigisCalc' + $('#savedata').prop('selectedIndex');
     var str = $.cookie(cname);
-    console.log(str);
     if(str){
         $('#buff_all').prop('checked', false);
         $('#buff_all').trigger('change');
