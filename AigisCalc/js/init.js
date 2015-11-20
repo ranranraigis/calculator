@@ -441,6 +441,13 @@ function load_progress(){
         setUnits();
         setReadme();
         
+        var param = location.search.substring(1);
+        if(param){
+            $('#buff_all').prop('checked', false);
+            $('#buff_all').trigger('change');
+            dataLoad(param);
+        }
+        
         $('input.submit').prop('disabled', false);
         $('input.submit').val('計算してみる');
 
