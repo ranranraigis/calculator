@@ -22,6 +22,9 @@ $('input.skillradio[type="radio"]').change(buffRad_Change);
 $('#inc_rosette').change(inc_rosette_Change);
 $('body').on('change', 'select[id="skill_rosette"]', skill_rosette_Change);
 
+$('#inc_memento').change(inc_memento_Change);
+$('body').on('change', 'select[id="skill_memento"]', skill_memento_Change);
+
 $('.actchk').change(activateFromCheckbox);
 $('#op_dance').change(op_dance_Change);
 
@@ -246,7 +249,7 @@ function buffSel_Change(){
 }
 
 function inc_rosette_Change(){
-	var dis = !$(this).prop('checked');
+    var dis = !$(this).prop('checked');
     $('#skill_rosette').prop('disabled', dis);
     
     if(dis){ $(this).val(1); } else { skill_rosette_Change(); }
@@ -260,6 +263,23 @@ function skill_rosette_Change(){
     val = rounds(val, 3);
 
     $('#inc_rosette').val(val);
+}
+
+function inc_memento_Change(){
+    var dis = !$(this).prop('checked');
+    $('#skill_memento').prop('disabled', dis);
+    
+    if(dis){ $(this).val(1); } else { skill_memento_Change(); }
+}
+
+function skill_memento_Change(){
+    var t = $('#skill_memento');
+    var base = (toNum(t.attr('bmax')) - toNum(t.attr('bmin'))) / (toNum(t.attr('bslv')) - 1);
+    var val = $('#skill_memento option:selected').val();
+    val = toNum(t.attr('bmin')) + base * val;
+    val = rounds(val, 3);
+
+    $('#inc_memento').val(val);
 }
 
 function activateFromCheckbox(){

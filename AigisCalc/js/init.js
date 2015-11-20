@@ -346,7 +346,7 @@ function loadCC(){
         },
         error: function(){ // 通信が失敗した時
             load_error();
-            console.log('loadBuff error');
+            console.log('loadCC error');
         }
     });
 	
@@ -376,7 +376,7 @@ function loadRare(){
         },
         error: function(){ // 通信が失敗した時
             load_error();
-            console.log('loadBuff error');
+            console.log('loadRare error');
         }
     });
 }
@@ -439,6 +439,7 @@ function load_progress(){
     if(prog === 8){
         setParse();
         setUnits();
+        setReadme();
         
         $('input.submit').prop('disabled', false);
         $('input.submit').val('計算してみる');
@@ -463,43 +464,44 @@ function setUnits(){
     .Join(skills, '$.skill', '$.name', joinstr)
     .Select(function(x){
         return {
-            sid:x.sid, id:x.id, uid:x.uid, clas:x.clas, name:x.name,
-            rare:x.rare, cc:x.cc, noncc:x.noncc, event:x.event,
-            lv:x.lv, lvmax:x.lvmax,
-            hp:x.hp, hpmax:x.hpmax, atk:x.atk, atkmax:x.atkmax,
-            def:x.def, defmax:x.defmax, resi:x.resi,
-            block:x.block, range:x.range, costmax:x.costmax, costmin:x.costmin,
-            bonushp:x.bonushp, bonusatk:x.bonusatk, bonusdef:x.bonusdef,
-            bonusresi:x.bonusresi, bonusblock:x.bonusblock, 
-            bonusrange:x.bonusrange,
-            specialatk:x.specialatk, specialatk2:x.specialatk2, 
-            incatksp:x.incatksp,
-            quadra:x.quadra, atktype:x.atktype, type:x.type,
-            skill:x.skill, dataerr:x.dataerr,
-            motion:x.motion, wait:x.wait,
-            s_motion:x.s_motion, s_wait:x.s_wait,
-            teambuff:x.teambuff,
+            sid:x.sid, id:x.id, uid:x.uid, clas:x.clas, name:x.name
+            ,rare:x.rare, cc:x.cc, noncc:x.noncc, event:x.event
+            ,lv:x.lv, lvmax:x.lvmax
+            ,hp:x.hp, hpmax:x.hpmax, atk:x.atk, atkmax:x.atkmax
+            ,def:x.def, defmax:x.defmax, resi:x.resi
+            ,block:x.block, range:x.range, costmax:x.costmax, costmin:x.costmin
+            ,bonushp:x.bonushp, bonusatk:x.bonusatk, bonusdef:x.bonusdef
+            ,bonusresi:x.bonusresi, bonusblock:x.bonusblock
+            ,bonusrange:x.bonusrange
+            ,specialatk:x.specialatk, specialatk2:x.specialatk2
+            ,incatksp:x.incatksp
+            ,quadra:x.quadra, atktype:x.atktype, type:x.type
+            ,skill:x.skill, dataerr:x.dataerr
+            ,motion:x.motion, wait:x.wait
+            ,s_motion:x.s_motion, s_wait:x.s_wait
+            ,teambuff:x.teambuff
 
-            s_lvmax:x.s_lvmax,
-            s_inchp:x.s_inchp, s_inchpmax:x.s_inchpmax,
-            s_incatk:x.s_incatk, s_incatkmax:x.s_incatkmax,
-            s_incdef:x.s_incdef, s_incdefmax:x.s_incdefmax, 
-            s_incpro:x.s_incpro, s_incpromax:x.s_incpromax,
-            s_incresi:x.s_incresi, s_incresimax:x.s_incresimax, 
-            s_addresi:x.s_addresi, s_addresimax:x.s_addresimax,
-            s_incrange:x.s_incrange, s_incrangemax:x.s_incrangemax, 
-            s_incblock:x.s_incblock, s_incblockmax:x.s_incblockmax, 
-            s_dmgcut:x.s_dmgcut, s_dmgcutmax:x.s_dmgcutmax, 
-            s_dmgcutmat:x.s_dmgcutmat, s_dmgcutmatmax:x.s_dmgcutmatmax, 
-            s_dmgcutmag:x.s_dmgcutmag, s_dmgcutmagmax:x.s_dmgcutmagmax, 
-            s_enemyatkmax:x.s_enemyatkmax, s_enemyatkmin:x.s_enemyatkmin, 
-            s_enemymatmax:x.s_enemymatmax, s_enemymatmin:x.s_enemymatmin, 
-            s_enemydefmax:x.s_enemydefmax, s_enemydefmin:x.s_enemydefmin, 
-            s_enemyresimax:x.s_enemyresimax, s_enemyresimin:x.s_enemyresimin, 
-            s_specialatk:x.s_specialatk, s_incatksp:x.s_incatksp, 
-            s_quadra:x.s_quadra, s_atktype:x.s_atktype,
-            s_timemin:x.s_timemin, s_timemax:x.s_timemax,
-            s_ctmin:x.s_ctmin, s_ctmax:x.s_ctmax
+            ,s_lvmax:x.s_lvmax
+            ,s_inchp:x.s_inchp, s_inchpmax:x.s_inchpmax
+            ,s_incatk:x.s_incatk, s_incatkmax:x.s_incatkmax
+            ,s_incdef:x.s_incdef, s_incdefmax:x.s_incdefmax
+            ,s_incpro:x.s_incpro, s_incpromax:x.s_incpromax
+            ,s_incresi:x.s_incresi, s_incresimax:x.s_incresimax
+            ,s_addresi:x.s_addresi, s_addresimax:x.s_addresimax
+            ,s_incrange:x.s_incrange, s_incrangemax:x.s_incrangemax
+            ,s_incblock:x.s_incblock, s_incblockmax:x.s_incblockmax
+            ,s_dmgcut:x.s_dmgcut, s_dmgcutmax:x.s_dmgcutmax
+            ,s_dmgcutmat:x.s_dmgcutmat, s_dmgcutmatmax:x.s_dmgcutmatmax
+            ,s_dmgcutmag:x.s_dmgcutmag, s_dmgcutmagmax:x.s_dmgcutmagmax
+            ,s_enemyatkmax:x.s_enemyatkmax, s_enemyatkmin:x.s_enemyatkmin
+            ,s_enemymatmax:x.s_enemymatmax, s_enemymatmin:x.s_enemymatmin
+            ,s_enemydefmax:x.s_enemydefmax, s_enemydefmin:x.s_enemydefmin
+            ,s_enemyresimax:x.s_enemyresimax, s_enemyresimin:x.s_enemyresimin
+            ,s_specialatk:x.s_specialatk, s_incatksp:x.s_incatksp
+            ,s_quadra:x.s_quadra, s_atktype:x.s_atktype
+            ,s_timemin:x.s_timemin, s_timemax:x.s_timemax
+            ,s_ctmin:x.s_ctmin, s_ctmax:x.s_ctmax
+            ,s_motioncancel:x.s_motioncancel
         };
     })
     .ToArray();
@@ -509,43 +511,44 @@ function setUnits(){
     .Join(sskills, '$.skill', '$.name', joinstr)
     .Select(function(x){
         return {
-            sid:x.sid, id:x.id, uid:x.uid, clas:x.clas, name:x.name,
-            rare:x.rare, cc:x.cc, noncc:x.noncc, event:x.event,
-            lv:x.lv, lvmax:x.lvmax,
-            hp:x.hp, hpmax:x.hpmax, atk:x.atk, atkmax:x.atkmax,
-            def:x.def, defmax:x.defmax, resi:x.resi,
-            block:x.block, range:x.range, costmax:x.costmax, costmin:x.costmin,
-            bonushp:x.bonushp, bonusatk:x.bonusatk, bonusdef:x.bonusdef,
-            bonusresi:x.bonusresi, bonusblock:x.bonusblock, 
-            bonusrange:x.bonusrange,
-            specialatk:x.specialatk, specialatk2:x.specialatk2, 
-            incatksp:x.incatksp,
-            quadra:x.quadra, atktype:x.atktype, type:x.type,
-            skill:x.skill, dataerr:x.dataerr,
-            motion:x.motion, wait:x.wait,
-            s_motion:x.s_motion, s_wait:x.s_wait,
-            teambuff:x.teambuff,
+            sid:x.sid, id:x.id, uid:x.uid, clas:x.clas, name:x.name
+            ,rare:x.rare, cc:x.cc, noncc:x.noncc, event:x.event
+            ,lv:x.lv, lvmax:x.lvmax
+            ,hp:x.hp, hpmax:x.hpmax, atk:x.atk, atkmax:x.atkmax
+            ,def:x.def, defmax:x.defmax, resi:x.resi
+            ,block:x.block, range:x.range, costmax:x.costmax, costmin:x.costmin
+            ,bonushp:x.bonushp, bonusatk:x.bonusatk, bonusdef:x.bonusdef
+            ,bonusresi:x.bonusresi, bonusblock:x.bonusblock
+            ,bonusrange:x.bonusrange
+            ,specialatk:x.specialatk, specialatk2:x.specialatk2
+            ,incatksp:x.incatksp
+            ,quadra:x.quadra, atktype:x.atktype, type:x.type
+            ,skill:x.skill, dataerr:x.dataerr
+            ,motion:x.motion, wait:x.wait
+            ,s_motion:x.s_motion, s_wait:x.s_wait
+            ,teambuff:x.teambuff
 
-            s_lvmax:x.s_lvmax,
-            s_inchp:x.s_inchp, s_inchpmax:x.s_inchpmax,
-            s_incatk:x.s_incatk, s_incatkmax:x.s_incatkmax,
-            s_incdef:x.s_incdef, s_incdefmax:x.s_incdefmax, 
-            s_incpro:x.s_incpro, s_incpromax:x.s_incpromax,
-            s_incresi:x.s_incresi, s_incresimax:x.s_incresimax, 
-            s_addresi:x.s_addresi, s_addresimax:x.s_addresimax,
-            s_incrange:x.s_incrange, s_incrangemax:x.s_incrangemax, 
-            s_incblock:x.s_incblock, s_incblockmax:x.s_incblockmax, 
-            s_dmgcut:x.s_dmgcut, s_dmgcutmax:x.s_dmgcutmax, 
-            s_dmgcutmat:x.s_dmgcutmat, s_dmgcutmatmax:x.s_dmgcutmatmax, 
-            s_dmgcutmag:x.s_dmgcutmag, s_dmgcutmagmax:x.s_dmgcutmagmax, 
-            s_enemyatkmax:x.s_enemyatkmax, s_enemyatkmin:x.s_enemyatkmin, 
-            s_enemymatmax:x.s_enemymatmax, s_enemymatmin:x.s_enemymatmin, 
-            s_enemydefmax:x.s_enemydefmax, s_enemydefmin:x.s_enemydefmin, 
-            s_enemyresimax:x.s_enemyresimax, s_enemyresimin:x.s_enemyresimin, 
-            s_specialatk:x.s_specialatk, s_incatksp:x.s_incatksp, 
-            s_quadra:x.s_quadra, s_atktype:x.s_atktype,
-            s_timemin:x.s_timemin, s_timemax:x.s_timemax,
-            s_ctmin:x.s_ctmin, s_ctmax:x.s_ctmax
+            ,s_lvmax:x.s_lvmax
+            ,s_inchp:x.s_inchp, s_inchpmax:x.s_inchpmax
+            ,s_incatk:x.s_incatk, s_incatkmax:x.s_incatkmax
+            ,s_incdef:x.s_incdef, s_incdefmax:x.s_incdefmax
+            ,s_incpro:x.s_incpro, s_incpromax:x.s_incpromax
+            ,s_incresi:x.s_incresi, s_incresimax:x.s_incresimax
+            ,s_addresi:x.s_addresi, s_addresimax:x.s_addresimax
+            ,s_incrange:x.s_incrange, s_incrangemax:x.s_incrangemax
+            ,s_incblock:x.s_incblock, s_incblockmax:x.s_incblockmax
+            ,s_dmgcut:x.s_dmgcut, s_dmgcutmax:x.s_dmgcutmax
+            ,s_dmgcutmat:x.s_dmgcutmat, s_dmgcutmatmax:x.s_dmgcutmatmax
+            ,s_dmgcutmag:x.s_dmgcutmag, s_dmgcutmagmax:x.s_dmgcutmagmax
+            ,s_enemyatkmax:x.s_enemyatkmax, s_enemyatkmin:x.s_enemyatkmin
+            ,s_enemymatmax:x.s_enemymatmax, s_enemymatmin:x.s_enemymatmin
+            ,s_enemydefmax:x.s_enemydefmax, s_enemydefmin:x.s_enemydefmin
+            ,s_enemyresimax:x.s_enemyresimax, s_enemyresimin:x.s_enemyresimin
+            ,s_specialatk:x.s_specialatk, s_incatksp:x.s_incatksp
+            ,s_quadra:x.s_quadra, s_atktype:x.s_atktype
+            ,s_timemin:x.s_timemin, s_timemax:x.s_timemax
+            ,s_ctmin:x.s_ctmin, s_ctmax:x.s_ctmax
+            ,s_motioncancel:x.s_motioncancel
         };
     })
     .ToArray();
@@ -619,6 +622,35 @@ function setParse(){
 	});
 }
 
+function setReadme(){
+    var str0 = '', str1 = '';
+    var que = Enumerable.From(skills)
+    .Where('$.name != ""')
+    .Select(function(x){
+        if(x.motioncancel === 0){
+            str0 += '<tr><td>' + x.name + '</td></tr>';
+        } else {
+            str1 += '<tr><td>' + x.name + '</td></tr>';
+        }
+    })
+    .ToArray();
+
+    str0 += '<tr><td>－－スキル覚醒－－</td></tr>';
+    str1 += '<tr><td>－－スキル覚醒－－</td></tr>';
+    var que_s = Enumerable.From(sskills)
+    .Select(function(x){
+        if(x.motioncancel === 0){
+            str0 += '<tr><td>' + x.name + '</td></tr>';
+        } else {
+            str1 += '<tr><td>' + x.name + '</td></tr>';
+        }
+    })
+    .ToArray();
+
+
+    $('#tbl_mot0').append(str0);
+    $('#tbl_mot1').append(str1);
+}
 
 function linkCheckbox(){
 	var t = $(this);

@@ -530,7 +530,7 @@
 
                 <div class="bufrow">
                     <label class="bufcap" style="margin-top: 4px;">特殊強化：</label>
-                    <input type="checkbox" id="inc_rosette" class="skillcheckbox" value="1" />
+                    <input type="checkbox" id="inc_rosette" class="skillcheckbox" value="1" sel="#skill_rosette" style="margin-right: 0px;"/>
                     <select id="skill_rosette" bmin="1.1" bmax="1.2" bslv="5" btgt="inc_rosette" class="tooltip" tooltip="スキル中、銀ユニの攻撃,防御を上昇<br>Lv1:　1.1倍<br>Lv2:約1.1倍<br>Lv3:約1.1倍<br>Lv4:約1.2倍<br>Lv5:　1.2倍" disabled>
                         <option value="0">ダモクレスの剣
                         <option value="0">Lv1
@@ -545,6 +545,25 @@
                     <label class="bufcap">　</label>
                     <label><input type="checkbox" id="op_enchant" />マジックウェポン</label>
                 </div>
+                
+                <div class="bufrow">
+                    <label class="bufcap" style="margin-top: 4px;">　</label>
+                    <input type="checkbox" id="inc_memento" class="skillcheckbox" value="1" sel="#skill_memento" style="margin-right: 0px;"/>
+                    <select id="skill_memento" bmin="1.5" bmax="3.0" bslv="10" btgt="inc_rosette" class="tooltip" tooltip="スキル中、ネクロマンサー系のトークンの攻撃,防御を上昇<br>Lv1:　1.5倍<br>Lv2:約1.7倍<br>Lv3:約1.8倍<br>Lv4:約2.0倍<br>Lv5:約2.2倍<br>Lv6:約2.3倍<br>Lv7:約2.5倍<br>Lv8:約2.7倍<br>Lv9:約2.8倍<br>Lv10: 3.0倍" disabled>
+                        <option value="0">死霊強化
+                        <option value="0">Lv1
+                        <option value="1">Lv2
+                        <option value="2">Lv3
+                        <option value="3">Lv4
+                        <option value="4">Lv5
+                        <option value="5">Lv6
+                        <option value="6">Lv7
+                        <option value="7">Lv8
+                        <option value="8">Lv9
+                        <option value="9">Lv10
+                    </select>
+                </div>
+                
             </div><!-- div_skillbuff -->
 
             <div class="bufrow">
@@ -743,9 +762,9 @@
         　　　　　　　テーブルの上に配置されている<b>[ソート解除]</b>ボタンで出力時の状態に戻るらしいです<br>
         　　　　　　　　名前：※wiki遠近一覧のクラス内での記載順<br>
         　　　　　　　　 ｸﾗｽ：wiki遠近一覧のクラス順<br>
-        　　　　　　　　　ﾚｱ：鉄→黒→青<br>
-        　　　　　　　　　CC：未→Ｓ<br>
-        　　　　　　　　　他：数値順あるいは文字順(スキルのみ)<br>
+        　　　　　　　　　ﾚｱ：鉄→(中略)→黒→青<br>
+        　　　　　　　　　CC：未→(中略)→Ｓ<br>
+        　　　　　　　　　他：数値順(スキルのみ文字順)<br>
         <br>
         雑な説明類：<label class="region_toggle" region="notes"><label>田</label>　(クリックで開閉)</label>
         <div id="notes" class="region">
@@ -810,7 +829,7 @@
             　　　　　　　バフ計算：入力値をもとに、編成バフや王子等を計算した上で計算に含めます<br>
             　　　　　　　　　　　　出撃前の値は入れてもいいけどバフ計算は計算機に面倒という人に向いてるかもしれません<br>
             <br>
-            　　　　　　<b>マップ効果</b>
+            　　　　　　<b>マップ効果</b><br>
             　　　　　　　マップ効果は王子やスキルによる計算結果を切り捨てたものに乗算されます<br>
             　　　　　　　※リコラの碑石、エターナーの小人で確認<br>
             　　　　　　　　覚醒クリッサLv99＋大英雄勝利のるーん＋碑石　⇒　2632　(参考：<a href="http://aoi.bbspink.com/test/read.cgi/mobpink/1444280414/790" target="_blank">本スレ4179年目>>790</a>)<br>
@@ -829,7 +848,7 @@
             <br>
             　　　　　　<b>DPS関連</b><br>
             　　　　　　　wiki記載の攻撃速度(フレーム数)を参考に計算しているつもりらしいです<br>
-            　　　　　　　攻撃【DPS】及び耐+DPSの検索を行う場合はDPSが高い順で出力されるらしいです<br>
+            　　　　　　　攻撃【DPS】及び[耐+DPS]の検索を行う場合はDPSが高い順で出力されるらしいです<br>
             　　　　　　　大まかな仕様はこんな感じです<br>
             　　　　　　　・DPS = Dmg * 30[frm] / 攻撃間隔[frm]<br>
             <br>
@@ -841,7 +860,20 @@
             　　　　　　　・スキル使用時は着火(スキル攻撃)→CT(通常攻撃)→着火→...で計算します<br>
             　　　　　　　　ただし、<font color="red">大人の事情により実測値とは確実に誤差が出ます</font>(説明があったけど無駄に長いのでカット)<br>
             　　　　　　　　これぐらいあれば終わるかもしれない、ぐらいで捉えてください<br>
-            　　　　　　　・(new)スキル着火・終了の挙動を変更。一律でオートホモや暴走まほけんのような扱いに変更<br>
+            　　　　　　　・スキル着火・終了周りの挙動を変更。一律でオートホモや暴走まほけんのような扱いに変更<br>
+            　　　　　　　・(new)モーションキャンセルを仮実装(スキルごとに仮設定)<br>
+            　　　　　　　　モーションキャンセルが発生するスキルの場合、スキル着火/終了時にモーションを最初からやり直して計算します<br>
+            　　　　　　　　区分けは以下の通り。<font color="red">※このスキルが間違ってる等の指摘歓迎</font><br>
+            　　　　　　　　<label class="region_toggle" region="motioncancel0"><label>田</label>　ﾓｰｼｮﾝｷｬﾝｾﾙ無し(クリックで開閉)</label>
+                            <div id="motioncancel0" class="region" style="width: 200px; height: 111px; overflow-y: scroll; margin-left: 116px;">
+                            <table id="tbl_mot0" border="1" style="margin:0px; padding: 0px;"></table>
+                            </div>
+                            <br><br>
+            　　　　　　　　<label class="region_toggle" region="motioncancel1"><label>田</label>　ﾓｰｼｮﾝｷｬﾝｾﾙ有り(クリックで開閉)</label>
+                            <div id="motioncancel1" class="region" style="width: 200px; height: 111px; overflow-y: scroll; margin-left: 116px;">
+                            <table id="tbl_mot1" border="1" style="margin:0px; padding: 0px;"></table>
+                            </div>
+            <br>
             <br>
             　　　　　　画面サイズ次第では所々で出てくる説明文的なツールチップの表示が残念な事になります<br>
             <br>
@@ -925,9 +957,11 @@
             <br>
             　　　　　　<font color=red>【最重要】</font><br>
             　　　　　　　中の人は基本らんらんなため難しいことは出来ず<br>
-            　　　　　　　作成中に余所見、寝落ち、作成後は確認省略等、非情に雑なため必ず何かやらかしています<br>
+            　　　　　　　作成中に余所見、寝落ち、作成後は確認省略等、とても雑なため必ず何かやらかしています<br>
             <br>
-            　　　　　　　ここがおかしい、この機能をつけろ等あれば<a href="http://ranranraigis.github.io/calculator/dataPost/" target="_blank">こちらから</a>ご投稿ください<br>
+            　　　　　　　中の人は持ってない・育ってないユニットも多く<br>
+            　　　　　　　wikiにない部分は多分こうだろうとか動画情報(ｷﾘｯ)というものも少なくないため<br>
+            　　　　　　　ここがおかしい(もしくは機能要望)等あれば<a href="http://ranranraigis.github.io/calculator/dataPost/" target="_blank" class="dataPost">こちらから</a>ご投稿ください<br>
             　　　　　　　本スレ内も"計算"で適当に検索かけているので「豚計算機○○しろ」等と書き捨てておいてくれれば<br>
             　　　　　　　運良く気付けて対応可能そうであれば前向きに善処することを検討したいと思うことが無いこともないかもしれません<br>
             <br>
@@ -947,7 +981,8 @@
         <br>
             情報募集中：<label class="region_toggle" region="need"><label>田</label>　(クリックで開閉)</label></label>
                         <div id="need" class="region">
-            　　　　　　　(new)<a href="http://ranranraigis.github.io/calculator/dataPost/" target="_blank">ここから</a>投稿できるようになりました<br>
+            　　　　　　　<a href="http://ranranraigis.github.io/calculator/dataPost/" target="_blank" class="dataPost">ここから</a>投稿できるようになりました<br>
+            　　　　　　・(new)スキル使用時のモーションキャンセル有無の情報整理(雑説明>仕様>【時間】計算参照)<br>
             　　　　　　・物理攻撃力減少(聖霊の護りや聖なるオーラ)と攻撃力減少(呪術師や暗黒オーラ)が重ねがけ可能かの追検証情報<br>
             　　　　　　・ロゼット【ダモクレスの剣】とレンやウズメのバフスキルが重ねがけ可能かの情報<br>
             　　　　　　　エキドナ・ルビナスのスキル覚醒も同様に募集中<br>

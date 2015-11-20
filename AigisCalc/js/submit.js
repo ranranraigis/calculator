@@ -461,8 +461,12 @@ function chkBuff_skill_Increase(){
     var dmgcutmat = 1;
     var dmgcutmag = toNum($('#dmgcut_mag').html());
 
+    //ロゼットとメメントはon/offで1とスキル値が行き来するため if val():1をしないでいい
     var incrosette = toNum($('#inc_rosette').val());
     oBuf.rosette = $('#inc_rosette').prop('checked');
+    
+    var incmemento = toNum($('#inc_memento').val());
+    oBuf.memento = $('#inc_memento').prop('checked');
 
 	var sBuf = skillbuffs;
     sBuf.prince = prince;
@@ -475,6 +479,7 @@ function chkBuff_skill_Increase(){
     sBuf.dmgcutmat = dmgcutmat;
     sBuf.dmgcutmag = dmgcutmag;
     sBuf.incrosette = incrosette;
+    sBuf.incmemento = incmemento;
 }
 
 function chkBuff_skill_EnemyDecrease(){
@@ -512,13 +517,9 @@ function chkBuff_other(){
     var dancetype = $('input[name="op_dance_type"][type="radio"]:checked').val();
     if(dancetype !== 'add100'){
         if(dancetype === 'add10'){
-            console.log('a10');
-            console.log(oBuf.danceatk+','+oBuf.dancedef);
             oBuf.danceatk = Math.floor(oBuf.danceatk / 10);
             oBuf.dancedef = Math.floor(oBuf.dancedef / 10);
-            console.log(oBuf.danceatk+','+oBuf.dancedef);
         } else {
-            console.log(oBuf.danceatk+','+oBuf.dancedef);
             var sBuf = skillbuffs;
             var bcls = bclass;
             var atk = oBuf.danceatk;
@@ -531,15 +532,12 @@ function chkBuff_other(){
             def = Math.floor(def * pripro * sBuf.incdef);
             def = Math.floor(def * oBuf.areadef);
             if(dancetype === 'calc10'){
-                console.log('c10');
                 oBuf.danceatk = Math.floor(atk / 10);
                 oBuf.dancedef = Math.floor(def / 10);
             } else {
-                console.log('c100');
                 oBuf.danceatk = atk;
                 oBuf.dancedef = def;
             }
-            console.log(oBuf.danceatk+','+oBuf.dancedef);
         }
     }
 }
@@ -960,15 +958,7 @@ function make_bunits(){
                ,s_quadra:x.s_quadra, s_atktype:x.s_atktype
                ,s_timemin:x.s_timemin, s_timemax:x.s_timemax
                ,s_ctmin:x.s_ctmin, s_ctmax:x.s_ctmax
-
-               /*
-               ,prince:sBuf.prince
-               ,bufhp:row.bufhp, bufatk:row.bufatk, bufdef:row.bufdef, bufresi:row.bufresi
-               ,inchp:sBuf.inchp, incatk:sBuf.incatk, incdef:sBuf.incdef, incpro:sBuf.incpro,  incresi:sBuf.incresi
-               ,dmgcutmat:sBuf.cutmat, dmgcutmag:sBuf.cutmag, incrosette:sBuf.incrosette
-               ,emydebatk:sBuf.emydebatk, emydebdef:sBuf.emydebdef, emydebresi:sBuf.emydebresi
-               ,emydebmat:sBuf.emydebmat
-               */
+               ,s_motioncancel:x.s_motioncancel
                ,reqlv:reqLv, dps:dps
            };
     })
@@ -981,6 +971,7 @@ function dmgcalc(unit, row, skill, lv, slv){
 	var enemy = gl_enemy;
 	var oBuf = otherBuff;
 	var sBuf = skillbuffs;
+	var useSkill = (slv > 0);
 
 	var incatksp, s_incatksp;
 	
@@ -999,7 +990,7 @@ function dmgcalc(unit, row, skill, lv, slv){
             case '烈火の陣':
             case '猛火の陣':
             	//通常の計算とは違い、自身の方が弱ければ上書きする
-            	//※スキルon/offで計算式を変えるため
+            	//※スキルlv次第で適用値が変わるため
                 if(sBuf.incatk >= skill.incatk){ skill.incatk = 1; }
                 break;
             case 'レヴァンテイン':
@@ -1071,17 +1062,18 @@ function dmgcalc(unit, row, skill, lv, slv){
         ,s_motion:unit.s_motion, s_wait:unit.s_wait
         ,s_atk:s_atk,n_atk:n_atk
         ,next:'', nextact:'', over_frm: 0
+        ,motioncancel: useSkill * unit.s_motioncancel
     };
 
     var reqtime = (data.reqtime > 0);
     var shortcut = true;
     var sccnt = 0;
     if(reqtime){
-        if(slv > 0){
+        if(useSkill){
             while(data.remtime >= data.s_motion){
                 dmgcalc_skill(data, reqtime);
                 if(data.remtime >= data.motion){
-                    dmgcalc_noskill(data, (slv > 0), reqtime);
+                    dmgcalc_noskill(data, useSkill, reqtime);
                 }
 
                 if(shortcut){
@@ -1096,18 +1088,18 @@ function dmgcalc(unit, row, skill, lv, slv){
             }
         } else {
             while(data.remtime >= data.motion){
-                dmgcalc_noskill(data, (slv > 0), reqtime);
+                dmgcalc_noskill(data, useSkill, reqtime);
             }
         }
         if(data.time > data.reqtime){
         	data.dmg = 0;
         }
     } else {
-    	if(slv > 0){
+    	if(useSkill){
     		while(data.dmg < data.reqhp){
                 dmgcalc_skill(data, reqtime);
                 if(data.dmg < data.reqhp){
-                    dmgcalc_noskill(data, (slv > 0), reqtime);
+                    dmgcalc_noskill(data, useSkill, reqtime);
                 }
                 if(shortcut){
                     shortcut = false;
@@ -1120,7 +1112,7 @@ function dmgcalc(unit, row, skill, lv, slv){
     		}
     	} else {
     		while(data.dmg < data.reqhp){
-                dmgcalc_noskill(data, (slv > 0), reqtime);
+                dmgcalc_noskill(data, useSkill, reqtime);
     		}
     	}
     }
@@ -1237,7 +1229,7 @@ function dmgcalc_common(sub, data){
 	var cnt = 0, addcnt = 0;
 	var dmg = 0;
 	var prev_over = data.over_frm;
-
+	
 	if(data.nextact.match(/motion/)){
 	    //スキル<->通常の切り替えタイミングが攻撃モーションだった場合
 	    addcnt += 1;
@@ -1274,7 +1266,13 @@ function dmgcalc_common(sub, data){
         }
 	}
 
-    //time += cnt * sub.frm;
+    if(data.motioncancel === 1){
+        //モーションキャンセル持ち
+        //モーションキャンセルするため次の動作設定、超過分をぶった切る
+        data.nextact = '';
+        data.over_frm = 0;
+    }
+
 	if(addcnt > 0){
 	    time = sub.time - data.over_frm - sub.wait;
 	} else {
@@ -1340,6 +1338,7 @@ function make_bunitsjoin(){
 	    + ', s_atktype:$$.atktype'
 	    + ', s_timemin:$$.timemin, s_timemax:$$.timemax'
 	    + ', s_ctmin:$$.ctmin, s_ctmax:$$.ctmax'
+	    + ', s_motioncancel:$$.motioncancel'
 	
 	    + ' }';
     return str;
@@ -1576,8 +1575,9 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
     
     //特殊バフ(エキドナ、エステル、ルビナスは実質的に職バフ)
     if(oBuf.olivie && ((unit.type === 2) || (unit.type === 3))){ row.bufhp += 0.15; }
-    if(oBuf.sherry && (unit.rare <= 4)){ row.bufhp += 0.05; row.bufatk += 0.05; row.bufdef += 0.05; }
-    if(oBuf.hikage && ((unit.id === 105171) || (unit.id === 105271))){ row.bufatk += 0.1; row.bufdef +=0.1;}
+    if(oBuf.sherry && unit.rare <= 4){ row.bufhp += 0.05; row.bufatk += 0.05; row.bufdef += 0.05; }
+    if(oBuf.hikage && unit.name === '月姫カグヤ'){ row.bufatk += 0.1; row.bufdef +=0.1;}
+    if(oBuf.memento && unit.name.match(/スケルトン/)){ row.prince = Math.max(row.prince, sBuf.incmemento); }
     
     //暫定。ロゼットは全体バフと重複不可とする。重複可能の場合は後の計算にincrosetteを追加する
     if(unit.rare === 3){

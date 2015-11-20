@@ -123,7 +123,7 @@ tr{
     z-index: 9999;
 }
 
-#sample{
+#sample, #tbl_mot0, #tbl_mot1{
     border-collapse: collapse;
     border: 1px solid black;
 }
@@ -137,6 +137,7 @@ tr{
 .sampling{
     background-color: #E2EFDA;
 }
+
 tr:nth-child(even){
     background-color: #F6F6F4;
 }
@@ -178,4 +179,7 @@ td>label{
 .blue{
 	background-color: blue;
     color: white;
+}
+a.dataPost:link, a.dataPost:visited{
+	color: red;
 }

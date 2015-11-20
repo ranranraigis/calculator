@@ -107,6 +107,7 @@ var skilldata = function skilldata(rows){
     this.timemax = toNum(rows.gsx$timemax.$t);
     this.ctmax = toNum(rows.gsx$ctmax.$t);
     this.ctmin = toNum(rows.gsx$ctmin.$t);
+    this.motioncancel = toNum(rows.gsx$motioncancel.$t);
     this.wtsilmax = toNum(rows.gsx$wtsilmax.$t);
     this.wtsilmin = toNum(rows.gsx$wtsilmin.$t);
     this.wtgolmax = toNum(rows.gsx$wtgolmax.$t);
