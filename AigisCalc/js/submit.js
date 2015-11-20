@@ -2,7 +2,7 @@ function submit_Click(){
     console.clear();
     clearbefore();
     chkData();
-    
+
     var useSkill = $('#use_skill').prop('checked');
     var que, que1;
     

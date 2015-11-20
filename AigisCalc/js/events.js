@@ -33,10 +33,6 @@ $('#outputHead').click(function(){$('#outputTable').trigger('update');});
 
 $('body').on('change', 'input[class="link"][type="checkbox"]', linkCheckbox);
 
-$('#sysLoad').click(sysLoad);
-$('#sysSave').click(sysSave);
-$('#outputURL').click(outputURL_Click);
-
 function sortReset_Click(){
 	if(tableclone !== undefined){
 		rowclear();
@@ -307,12 +303,6 @@ function op_dance_Change(){
         $('#span_dance_type').hide();
         $('input[name="op_dance_type"]').prop('disabled', true);
     }
-}
-
-function outputURL_Click(){
-    var t = $('#txt_outputURL');
-    t.val('http://ranranraigis.github.io/calculator/AigisCalc/?' + dataSave());
-    t.focus().select();
 }
 
 function tooltip(index, elem){
