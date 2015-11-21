@@ -203,6 +203,9 @@ function dataSave(){
     save[89] = 1 * $('#inc_memento').prop('checked');
     save[90] = $('#skill_memento').prop('selectedIndex');
     
+    //スキル使用
+    save[91] = 1 * $('#use_skill').prop('checked');
+    
     
     ////職フィルタ
     var filmel = new Array();
@@ -432,6 +435,9 @@ function dataLoad(str){
      //死霊強化
      $('#inc_memento').prop('checked', save[89]);
      $('#skill_memento').prop('selectedIndex', save[90]);
+     
+     //スキル使用
+     $('#use_skill').prop('checked', save[91]);
      
      //職フィルタ
      var selmel = $('input[group="cls_mel"]');
