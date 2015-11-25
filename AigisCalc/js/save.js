@@ -206,6 +206,10 @@ function dataSave(){
     //スキル使用
     save[91] = 1 * $('#use_skill').prop('checked');
     
+    //【時間】モード
+    expr = 'input[name="timeMode"]';
+    save[92] = $(expr + ':checked').index(expr);
+    
     
     ////職フィルタ
     var filmel = new Array();
@@ -438,6 +442,9 @@ function dataLoad(str){
      
      //スキル使用
      $('#use_skill').prop('checked', save[91]);
+     
+     //【時間】モード
+     $('input[name="timeMode"]:eq(' + save[92] + ')').prop('checked', true);
      
      //職フィルタ
      var selmel = $('input[group="cls_mel"]');

@@ -54,7 +54,7 @@
             
             <div class="mainrow">
                 <label class="maincap">ＨＰ：</label>
-                <input type="number" id="atkHP" class="num6" min="1" max="16777215" value="20000" />
+                <input type="number" id="atkHP" class="num7" min="1" max="16777215" value="20000" />
             </div>
 
             <div class="mainrow">
@@ -70,13 +70,24 @@
             <div class="mainrow">
                 <label class="maincap">回数：</label>
                 <input type="radio" name="atkMode" value="cnt" checked />
-                <input type="number" id="atkCnt" class="num3" min="1" max="65535" value="1" /> 発以内
+                <input type="number" id="atkCnt" class="num5" min="1" max="65535" value="1" /> 発
             </div>
             
             <div class="mainrow">
                 <label class="maincap">時間：</label>
                 <input type="radio" name="atkMode" value="time" />
-                <input type="number" id="atkTime" class="num3" min="0" max="65535" value="20" disabled/> 秒以内
+                <input type="number" id="atkTime" class="num5" min="0" max="65535" value="20" disabled/> 秒
+            </div>
+            
+            <div id="atkTimeMode" class="mainrow" style="display: none;">
+                <label class="maincap">　</label>
+                <span>　</span>
+                <label class="tooltip" tooltip="指定時間内に倒しきれるユニットを検索します">
+                    <input type="radio" name="timeMode" value="timeatk" style="margin-top: 4px;" checked />討伐
+                </label>
+                <label class="tooltip" tooltip="指定時間いっぱい殴り続けた場合の総ダメージを計算します">
+                    <input type="radio" name="timeMode" value="totaldmg"/>ｻﾝﾄﾞﾊﾞｯｸﾞ
+                </label>
             </div>
                         
             <div class="mainrow">
@@ -102,7 +113,7 @@
 
             <div class="mainrow">
                 <label class="maincap">回数：</label>
-                <input type="number" id="defCnt" class="num3" min="1" max="65535" value="1" /> 発
+                <input type="number" id="defCnt" class="num5" min="1" max="65535" value="1" /> 発
             </div>
         </div>
         
@@ -137,7 +148,7 @@
             
             <div class="mainrow">
                 <label class="maincap">攻撃：</label>
-                <input type="number" id="mixAtk" class="num6" min="1" max="65535" value="3900" />
+                <input type="number" id="mixAtk" class="num5" min="1" max="65535" value="3900" />
             </div>
             
             <div class="mainrow">
@@ -161,7 +172,7 @@
             
             <div class="mainrow">
                 <label class="maincap">回数：</label>
-                <input type="number" id="mixCnt" class="num3" min="1" max="65535" value="1" /> 発
+                <input type="number" id="mixCnt" class="num5" min="1" max="65535" value="1" /> 発
             </div>
             
             <div class="mainrow">
@@ -187,7 +198,7 @@
             
             <div class="optrow">
                 <label class="optcap tooltip" tooltip="検索結果の数を制限します<br>0を設定すると無制限となります" style="margin-top: 3px;">行数制限：</label>
-                <input type="number" id="take_cnt" class="num4" min="0" max="10000" value="100" /> 行　
+                <input type="number" id="take_cnt" class="num5" min="0" max="10000" value="100" /> 行　
             </div>
             
             <div class="optrow">
@@ -701,8 +712,8 @@
                 <div class="bufrow">
                     <label class="bufcap tooltip" tooltip="単純加算：入力値を単純加算します<br>バフ計算：入力値をもとに王子等を計算した値を適用します" style="margin-top: 4px;">ダンサー：</label>
                     <label class="tooltip" tooltip="単純加算：入力値を単純加算します<br>バフ計算：入力値をもとに王子等を計算した値を適用します"><input type="checkbox" id="op_dance" class="actchk" ctgt=".dance"/>使用</label>　
-                    攻：<input type="number" id="dance_atk" class="num4 dance" min="0" max="65535" value="0" disabled />　
-                    防：<input type="number" id="dance_def" class="num4 dance" min="0" max="65535" value="0" disabled />
+                    攻：<input type="number" id="dance_atk" class="num5 dance" min="0" max="65535" value="0" disabled />　
+                    防：<input type="number" id="dance_def" class="num5 dance" min="0" max="65535" value="0" disabled />
                 </div>
             </div>
 
@@ -724,12 +735,12 @@
             <div class="bufrow">
                 <label class="bufcap" style="margin-top: 4px;">マップ効果：</label>
                 <label><input type="checkbox" id="op_areaAtk" class="actchk" ctgt="#areaAtk"/>攻撃</label>
-                <input type="number" id="areaAtk" class="num4" min="1" max="10000" value="50" disabled /> ％　
+                <input type="number" id="areaAtk" class="num5" min="1" max="10000" value="50" disabled /> ％　
             </div>
             <div class="bufrow">
                 <label class="bufcap" style="margin-top: 4px;">　</label>
                 <label><input type="checkbox" id="op_areaDef" class="actchk" ctgt="#areaDef"/>防御</label>
-                <input type="number" id="areaDef" class="num4" min="1" max="10000" value="50" disabled /> ％　
+                <input type="number" id="areaDef" class="num5" min="1" max="10000" value="50" disabled /> ％　
             </div>
         
             <div class="bufrow">
@@ -785,15 +796,18 @@
             <br>
             　確認内容：<b>攻撃</b><br>
             　　　　　　　【回数】ＨＰ○○、防御○○の敵をｎ発で倒したい<br>
-            　　　　　　　【時間】ＨＰ○○、防御○○の敵をｎ秒で倒したい(削りたい)<br>
+            　　　　　　　【時間】討伐(設定時間n)：ＨＰ○○、防御○○の敵をｎ秒で倒したい(削りたい)<br>
+            　　　　　　　　　　　討伐(設定時間0)：ＨＰ○○、防御○○の敵の何秒で倒せるか知りたい<br>
+            　　　　　　　　　　　　 サンドバッグ：防御○○を指定時間分殴り続けた場合の総Dmgを知りたい<br>
             　　　　　　　【 DPS】防御○○の相手に対してのDPSをざっと見てみたい<br>
             　　　　　　　そんな時に使えるのかもしれません<br>
             　　　　　　　Dmg列には与ダメ(1回分)が表示されます<br>
             <br>
             　　　　　　　回復系ユニットはＨＰ、回数のみを計算します<br>
             　　　　　　　ＨＰ○○をｎ回で回復したい、そんな時に使えるのかもしれません<br>
-            　　　　　　　(new)シャーマンやビショップ等、攻撃と回復を行き来するユニットがいるので、混乱を防ぐために【時間】計算では回復は0ダメージ扱いとしています<br>
+            　　　　　　　シャーマンやビショップ等、攻撃と回復を行き来するユニットがいるので、混乱を防ぐために【時間】計算では回復は0ダメージ扱いとしています<br>
             　　　　　　　回復力の計算をしたい場合は【回数】か【DPS】でお願いします<br>
+            　　　　　　　※仕様上特攻計算が含まれるため、計算する際は注意してください（例：ポーラのアンデッド）<br>
             <br>
             　　　　　　<b>耐久</b><br>
             　　　　　　　攻撃○○の(物理/魔法)攻撃をｎ発耐えたい、そんな時に使えるのかもしれません<br>
@@ -857,8 +871,10 @@
             　　　　　　<b>フィルタ・バフ類</b><br>
             　　　　　　　結果の出力後にフィルタやバフ等の設定を変更しても出力結果には反映されません<br>
             <br>
-            　　　　　　<b>ロゼットの【スキル：ダモクレスの剣】(銀ユニの攻防UP)、鋭牙の火炎・堅鱗の癒し</b><br>
-            　　　　　　　暫定的にシュウカやウズメ、レンのスキルとは重複不可にしています<br>
+            　　　　　　<b><s>ロゼットの【スキル：ダモクレスの剣】(銀ユニの攻防UP)、鋭牙の火炎・堅鱗の癒し</s></b><br>
+            　　　　　　　<s>暫定的にシュウカやウズメ、レンのスキルとは重複不可にしています</s><br>
+            　　　　　　　<font color="red">重複可能だとのことで、現在情報募集中です</font><br>
+            　　　　　　　画面下部の[情報募集中]から投稿できる場所へ飛べるので、ご協力いただける方は是非お願いします<br>
             <br>
             　　　　　　<b>DPS関連</b><br>
             　　　　　　　wiki記載の攻撃速度(フレーム数)を参考に計算しているつもりらしいです<br>
@@ -868,14 +884,17 @@
             <br>
             　　　　　　<b>攻撃【時間】計算について</b><br>
             　　　　　　　大まかな仕様はこんな感じです<br>
-            　　　　　　　・指定時間が"0"の場合は倒すまでの時間を計算<br>
-            　　　　　　　　"0"でない場合は指定時間内で倒せるユニットを表示<br>
-            　　　　　　　・スキル未使用時は通常攻撃を指定時間分計算<br>
             　　　　　　　・スキル使用時は着火(スキル攻撃)→CT(通常攻撃)→着火→...で計算します<br>
             　　　　　　　　ただし、<font color="red">大人の事情により実測値とは確実に誤差が出ます</font>(説明があったけど無駄に長いのでカット)<br>
             　　　　　　　　これぐらいあれば終わるかもしれない、ぐらいで捉えてください<br>
+            　　　　　　　・スキル使用時、イカロスウイングやタスラム、完全スイッチ系のようなスキル自体が変更されるものはまともに計算されません<br>
+            　　　　　　　　スキルは常に同じものを使用し、スイッチ系は強化時間あるいはCT時間分しか計算されません<br>
+            　　　　　　　　　イカロス1回目→CT(通常攻撃)→イカロス1回目<br>
+            　　　　　　　　　チェンジアタック(強化10秒なので10秒だけ攻撃)→CT(回復0ダメージ扱い)→チェンジアタック<br>
+            　　　　　　　　　神降ろし解除(強化無しなのでCT19～15秒だけ攻撃)→CT(回復0ダメージ扱い)→神降ろし解除<br>
+            　　　　　　　　※完全スイッチ系はスキル未使用で計算したほうが無難です<br>
             　　　　　　　・スキル着火・終了周りの挙動を変更。一律でオートホモや暴走まほけんのような扱いに変更<br>
-            　　　　　　　・(new)モーションキャンセルを仮実装(スキルごとに仮設定)<br>
+            　　　　　　　・モーションキャンセルは仮実装中(スキルごとの仮設定)<br>
             　　　　　　　　モーションキャンセルが発生するスキルの場合、スキル着火/終了時にモーションを最初からやり直して計算します<br>
             　　　　　　　　区分けは以下の通り。<font color="red">※このスキルが間違ってる等の指摘歓迎</font><br>
             　　　　　　　　<label class="region_toggle" region="motioncancel0"><label>田</label>　ﾓｰｼｮﾝｷｬﾝｾﾙ無し(クリックで開閉)</label>
@@ -889,7 +908,9 @@
                             </div>
             <br>
             <br>
-            　　　　　　画面サイズ次第では所々で出てくる説明文的なツールチップの表示が残念な事になります<br>
+            　　　　　　<b>ツールチップ</b><br>
+            　　　　　　　所々にマウスを載せた際に説明文的なツールチップが表示されます<br>
+            　　　　　　　画面サイズ次第では表示が残念な事になります<br>
             <br>
             <br>
             　　注意点：<font color="red">仕様上、レベルによる基礎ステータス変化の部分で誤差があります</font><br>
@@ -990,7 +1011,7 @@
             　　公開日：2015/11/07(土)　見切り発車<br>
        &nbsp;ｽﾃｰﾀｽ情報：2015/11/17(火)　※新キャラやスキル覚醒は随時追加<br>
             　　　更新：<label class="region_toggle" region="update"><label>田</label>　(クリックで開閉)</label></label>
-                        <div id="update" class="region"></div>
+                        <div id="update" class="region" style="overflow-y: scroll; height: 120px; border: 1px black solid;"></div>
         <br>
         <br>
             情報募集中：<label class="region_toggle" region="need"><label>田</label>　(クリックで開閉)</label></label>

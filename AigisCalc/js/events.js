@@ -94,6 +94,12 @@ function atkMode_Change(){
     $('#atkCnt').prop('disabled', true);
     $('#atkTime').prop('disabled', true);
     
+    if($(this).val() === 'time'){
+        $('#atkTimeMode').show();
+    } else {
+        $('#atkTimeMode').hide();
+    }
+    
     $(this).next().prop('disabled', false);
 }
 

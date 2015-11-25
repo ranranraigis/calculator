@@ -41,7 +41,6 @@ function makeSkillSel(max, id, useSkill){
 
 function setQue(que, useSkill){
 	var enemy = gl_enemy;
-	var mode = gl_mode;
     var trs, tr;
     
     que.forEach(function(rows){
@@ -241,7 +240,7 @@ function changeLv(id){
             }
             
             //フルガード,スパイクシールドの調整
-            if(slv > 0){
+            if(slv > 0 && (enemy.timemode === 'timeatk' && enemy.time > 0)){
                 var pat = /フルガード|スパイクシールド/;
                 var mat = x.skill.match(pat);
                 if(mat){
