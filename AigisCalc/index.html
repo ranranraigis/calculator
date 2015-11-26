@@ -48,23 +48,23 @@
                     <option value="4">アンデッド
                     <option value="5">ドラゴン
                     <option value="6">妖怪
-                    <option value="7">デーモン
+                    <option value="7" selected>デーモン
                 </select>
             </div>
             
             <div class="mainrow">
                 <label class="maincap">ＨＰ：</label>
-                <input type="number" id="atkHP" class="num7" min="1" max="16777215" value="20000" />
+                <input type="number" id="atkHP" class="num7" min="1" max="16777215" value="52000" />
             </div>
 
             <div class="mainrow">
                 <label class="maincap">防御：</label>
-                <input type="number" id="atkDef" class="num5" min="0" max="65535" value="450" />
+                <input type="number" id="atkDef" class="num5" min="0" max="65535" value="500" />
             </div>
 
             <div class="mainrow">
                 <label class="maincap">魔耐：</label>
-                <input type="number" id="atkResi" class="num3" min="0" max="100" value="10" />
+                <input type="number" id="atkResi" class="num3" min="0" max="100" value="40" />
             </div>
 
             <div class="mainrow">
@@ -139,16 +139,16 @@
                     <option value="1">地上
                     <option value="2">飛行
                     <option value="3">アーマー
-                    <option value="4" selected>アンデッド
+                    <option value="4">アンデッド
                     <option value="5">ドラゴン
-                    <option value="6">妖怪
+                    <option value="6" selected>妖怪
                     <option value="7">デーモン
                 </select>
             </div>
             
             <div class="mainrow">
                 <label class="maincap">攻撃：</label>
-                <input type="number" id="mixAtk" class="num5" min="1" max="65535" value="3900" />
+                <input type="number" id="mixAtk" class="num5" min="1" max="65535" value="1500" />
             </div>
             
             <div class="mainrow">
@@ -162,12 +162,12 @@
 
             <div class="mainrow">
                 <label class="maincap">防御：</label>
-                <input type="number" id="mixDef" class="num5" min="0" max="65535" value="450" />
+                <input type="number" id="mixDef" class="num5" min="0" max="65535" value="420" />
             </div>
 
             <div class="mainrow">
                 <label class="maincap">魔耐：</label>
-                <input type="number" id="mixResi" class="num3" min="0" max="100" value="10" />
+                <input type="number" id="mixResi" class="num3" min="0" max="100" value="50" />
             </div>
             
             <div class="mainrow">
@@ -312,6 +312,11 @@
                 <label class="tooltip" tooltip="１．１９倍" ><input type="radio" name="op_prince" class="skillradio" value="1.19" style="margin: 0px 3px 0px 6px !important;" />救世主</label>
                 <label class="tooltip" tooltip="１．２１倍" ><input type="radio" name="op_prince" class="skillradio" value="1.21" style="margin: 0px 3px 0px 6px !important;" checked />大英雄</label>
                 <label class="tooltip" tooltip="１．１２倍" ><input type="radio" name="op_prince" class="skillradio" value="1.12" style="margin: 0px 3px 0px 6px !important;" />その他</label>
+            </div>
+            
+            <div class="bufrow">
+                <label class="bufcap">　</label>
+                <label class="tooltip" tooltip="神器の継承者" ><input type="radio" name="op_prince" class="skillradio" value="1" style="margin-right: 3px !important;" />神器</label>
             </div>
             
             <div class="bufrow">
@@ -786,7 +791,7 @@
         　　　　　　　また、Shiftを押しながらクリックしていくと押した順の優先度でソートされていくらしいです<br>
         　　　　　　　テーブルの上に配置されている<b>[ソート解除]</b>ボタンで出力時の状態に戻るらしいです<br>
         　　　　　　　　名前：※wiki遠近一覧のクラス内での記載順<br>
-        　　　　　　　　 ｸﾗｽ：wiki遠近一覧のクラス順<br>
+        　　　　　　　　 ｸﾗｽ：wiki遠近一覧のクラス順(トークンは遠近それぞれの最後尾)<br>
         　　　　　　　　　ﾚｱ：鉄→(中略)→黒→青<br>
         　　　　　　　　　CC：未→(中略)→Ｓ<br>
         　　　　　　　　　他：数値順(スキルのみ文字順)<br>

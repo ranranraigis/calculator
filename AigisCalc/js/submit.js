@@ -453,6 +453,10 @@ function chkBuff_skill_Increase(){
     var oBuf = otherBuff;
     var prince = toNum($('input[name="op_prince"][type="radio"]:checked').val());
 
+    //神器王子(多分スキルバフ扱いだからここ)
+    var prince_s = $('input[name="op_prince"]:checked').index('input[name="op_prince"]');
+    prince_s = (prince_s === 6)? 1.2: 1;
+    
     var inchp = 1;
     var incatk = toNum($('#incatk').html());
     var incdef = toNum($('#incdef').html());
@@ -472,6 +476,7 @@ function chkBuff_skill_Increase(){
 
     var sBuf = skillbuffs;
     sBuf.prince = prince;
+    sBuf.prince_s = prince_s; 
     sBuf.inchp = inchp;
     sBuf.incatk = incatk;
     sBuf.incdef = incdef;
@@ -528,10 +533,10 @@ function chkBuff_other(){
             var def = oBuf.dancedef;
             var pripro = Math.max(sBuf.prince, sBuf.incpro);
             atk = Math.floor(atk * (1 + bcls[215].bufatk));
-            atk = Math.floor(atk * sBuf.prince * sBuf.incatk);
+            atk = Math.floor(atk * sBuf.prince * sBuf.incatk * sBuf.prince_s);
             atk = Math.floor(atk * oBuf.areaatk);
             def = Math.floor(def * (1 + bcls[215].bufdef));
-            def = Math.floor(def * pripro * sBuf.incdef);
+            def = Math.floor(def * pripro * sBuf.incdef * sBuf.prince_s);
             def = Math.floor(def * oBuf.areadef);
             if(dancetype === 'calc10'){
                 oBuf.danceatk = Math.floor(atk / 10);
@@ -601,7 +606,7 @@ function make_bunits(){
                 row_hp = Math.floor(row_hp * row.inchp * skill.inchp);
 
                 row_def = Math.floor((x.defmax + row.bonusdef) * row.bufdef);
-                row_def = Math.floor(row_def * pripro * row.incdef * skill.incdef);
+                row_def = Math.floor(row_def * pripro * row.incdef * skill.incdef * row.prince_s);
                 tempdef = row_def * 2;
                 row_def = Math.floor(row_def * oBuf.areadef);
                 row_def += oBuf.dancedef;
@@ -669,7 +674,7 @@ function make_bunits(){
                         row_hp = Math.floor(row_hp * row.inchp * skill.inchp);
                         row_def = x.def + row.bonusdef + Math.floor(divdef * (i - 1));
                         row_def = Math.floor(row_def * row.bufdef);
-                        row_def = Math.floor(row_def * pripro * row.incdef * skill.incdef);
+                        row_def = Math.floor(row_def * pripro * row.incdef * skill.incdef * row.prince_s);
                         tempdef = row_def * 1.5;
                         row_def = Math.floor(row_def * oBuf.areadef);
                         row_def += oBuf.dancedef;
@@ -774,7 +779,7 @@ function make_bunits(){
                     reqLv = Math.ceil(reqAtk / oBuf.areaatk);
                     reqLv = reqLv / row.incatksp;
                     reqLv -= oBuf.danceatk;
-                    reqLv = Math.ceil(reqLv / (row.prince * row.incatk * skill.incatk));
+                    reqLv = Math.ceil(reqLv / (row.prince * row.incatk * skill.incatk * row.prince_s));
                     reqLv = Math.ceil(Math.ceil(reqLv / row.bufatk) / row.quadra);
                     reqLv = Math.ceil(reqLv - (x.atk + row.bonusatk));
                     reqLv = Math.ceil(reqLv / divatk) + 1;
@@ -782,7 +787,7 @@ function make_bunits(){
                     reqAtk -= oBuf.danceatk;
                     
                     reqLv = Math.ceil(reqAtk / oBuf.areaatk);
-                    reqLv = Math.ceil(reqLv / (row.prince * row.incatk * skill.incatk * row.incatksp));
+                    reqLv = Math.ceil(reqLv / (row.prince * row.incatk * skill.incatk * row.incatksp * row.prince_s));
                     reqLv = Math.ceil(Math.ceil(reqLv / row.bufatk) / row.quadra);
                     reqLv = Math.ceil(reqLv - (x.atk + row.bonusatk));
                     reqLv = Math.ceil(reqLv / divatk) + 1;
@@ -794,7 +799,7 @@ function make_bunits(){
                     reqAtk -= oBuf.danceatk;
                     
                     reqLv = Math.ceil(reqAtk / oBuf.areaatk);
-                    reqLv = Math.ceil(reqLv / (row.prince * row.incatk * row.incatksp));
+                    reqLv = Math.ceil(reqLv / (row.prince * row.incatk * row.incatksp * row.prince_s));
                     reqLv = Math.ceil(reqLv - x.atk);
                     reqLv = Math.ceil(reqLv / divatk) + 1;
                 }
@@ -808,13 +813,13 @@ function make_bunits(){
                     if(row.incatksp > 1){
                         reqLv = reqAtk / row.incatksp;
                         reqLv -= oBuf.danceatk;
-                        reqLv = Math.ceil(reqAtk / (row.prince * row.incatk * skill.incatk));
+                        reqLv = Math.ceil(reqAtk / (row.prince * row.incatk * skill.incatk * row.prince_s));
                         reqLv = Math.ceil(Math.ceil(reqLv / row.bufatk) / row.quadra);
                         reqLv = Math.ceil(reqLv - (x.atk + row.bonusatk));
                         reqLv = Math.ceil(reqLv / divatk) + 1;
                     } else {
                         reqAtk -= oBuf.danceatk;
-                        reqLv = Math.ceil(reqAtk / (row.prince * row.incatk * skill.incatk * row.incatksp));
+                        reqLv = Math.ceil(reqAtk / (row.prince * row.incatk * skill.incatk * row.incatksp * row.prince_s));
                         reqLv = Math.ceil(Math.ceil(reqLv / row.bufatk) / row.quadra);
                         reqLv = Math.ceil(reqLv - (x.atk + row.bonusatk));
                         reqLv = Math.ceil(reqLv / divatk) + 1;
@@ -837,12 +842,12 @@ function make_bunits(){
                 else { row_atk = Math.floor((x.atk + row.bonusatk) + (x.atkmax - x.atk) / (x.lvmax - 1) * (reqLv - 1)); }
                 row_atk = Math.floor(row_atk * row.bufatk);
                 if(row.incatksp > 1){
-                    row_atk = row_atk * row.prince * row.incatk * skill.incatk;
+                    row_atk = row_atk * row.prince * row.incatk * skill.incatk * row.prince_s;
                     row_atk += oBuf.danceatk;
                     row_atk = Math.floor(row_atk * row.incatksp);
                     row_atk = Math.floor(row_atk * oBuf.areaatk);
                 } else {
-                    row_atk = Math.floor(row_atk * row.prince * row.incatk * skill.incatk * row.incatksp);
+                    row_atk = Math.floor(row_atk * row.prince * row.incatk * skill.incatk * row.incatksp * row.prince_s);
                     row_atk = Math.floor(row_atk * oBuf.areaatk);
                     row_atk += oBuf.danceatk;
                 }
@@ -869,7 +874,7 @@ function make_bunits(){
                     if(reqLv === x.lvmax){ row_atk = x.atkmax; }
                     else { row_atk = Math.floor((x.atk) + (x.atkmax - x.atk) / (x.lvmax - 1) * (reqLv - 1)); }
                     
-                    row_atk = row_atk * row.prince * row.incatk;
+                    row_atk = row_atk * row.prince * row.incatk * row.prince_s;
                     row_atk += oBuf.danceatk;
                     row_atk = Math.floor(row_atk * oBuf.areaatk);
                     dps = row_atk * 30 / (motion + wait);
@@ -1022,11 +1027,11 @@ function dmgcalc(unit, row, skill, lv, slv){
         n_atk = n_atk + Math.floor((unit.atkmax - unit.atk) / (unit.lvmax - 1) * (lv - 1));
     }
     n_atk = Math.floor(n_atk * row.bufatk);
-    s_atk = Math.floor(n_atk * sBuf.prince * sBuf.incatk * skill.incatk * s_incatksp);
+    s_atk = Math.floor(n_atk * row.prince * sBuf.incatk * skill.incatk * s_incatksp * sBuf.prince_s);
     s_atk = Math.floor(s_atk * oBuf.areaatk);
     s_atk += oBuf.danceatk;
     
-    n_atk = Math.floor(n_atk * sBuf.prince * sBuf.incatk * incatksp);
+    n_atk = Math.floor(n_atk * row.prince * sBuf.incatk * incatksp * sBuf.prince_s);
     n_atk = Math.floor(n_atk * oBuf.areaatk);
     n_atk += oBuf.danceatk;
 
@@ -1398,6 +1403,7 @@ function setRowBuffs(unit, row, skill, useSkill, slv){
     
     //各行毎の補正値等
     row.prince = sBuf.prince;
+    row.prince_s = sBuf.prince_s;
     row.inchp = sBuf.inchp;
     row.incatk = sBuf.incatk;
     row.incdef = sBuf.incdef;

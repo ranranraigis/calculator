@@ -159,19 +159,19 @@ function changeLv(id){
 
         atk = Math.floor(atk * row.bufatk);
         if(row.incatksp > 1){
-            atk = atk * row.prince * row.incatk * skill.incatk;
+            atk = atk * row.prince * row.incatk * skill.incatk * row.prince_s;
             atk += oBuf.danceatk;
             atk = Math.floor(atk * row.incatksp);
             atk = Math.floor(atk * oBuf.areaatk);
         } else {
-            atk = Math.floor(atk * row.prince * row.incatk * skill.incatk * row.incatksp);
+            atk = Math.floor(atk * row.prince * row.incatk * skill.incatk * row.incatksp * row.prince_s);
             atk = Math.floor(atk * oBuf.areaatk);
             atk += oBuf.danceatk;
         }
         
         var pripro = Math.max(row.prince, row.incpro, skill.incpro);
         def = Math.floor(def * row.bufdef);
-        def = Math.floor(def * row.incdef * skill.incdef * pripro);
+        def = Math.floor(def * row.incdef * skill.incdef * pripro * row.prince_s);
         dkdef = def * 1.5;
         def = Math.floor(def * oBuf.areadef);
         def += oBuf.dancedef;
