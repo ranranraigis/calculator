@@ -214,8 +214,8 @@ function dataSave(){
     expr = 'input[name="op_anna_type"]';
     save[93] = 1 * $('#op_anna').prop('checked');
     save[94] = $(expr + ':checked').index(expr);
-    val[16] = $('#op_annaatk').val();
-    val[17] = $('#op_annadef').val();
+    val[16] = $('#anna_atk').val();
+    val[17] = $('#anna_def').val();
     
     
     ////職フィルタ
@@ -456,8 +456,8 @@ function dataLoad(str){
      //支援アンナ
      $('#op_anna').prop('checked', save[93]);
      $('input[name="op_anna_type"]:eq(' + save[94] + ')').prop('checked', true);
-     $('#op_annaatk').val(val[16]);
-     $('#op_annadef').val(val[17]);
+     $('#anna_atk').val(val[16]);
+     $('#anna_def').val(val[17]);
      
      //職フィルタ
      var selmel = $('input[group="cls_mel"]');
