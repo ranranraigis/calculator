@@ -175,6 +175,11 @@ function changeLv(id){
         dkdef = def * 1.5;
         def = Math.floor(def * oBuf.areadef);
         def += oBuf.dancedef;
+        //王子(アンナ)の計算
+        if(x.sid === 100){
+            atk += oBuf.annaatk;
+            def += oBuf.annadef;
+        }
 
         resi = x.resi + row.bonusresi + row.bufresi;
         resi = Math.floor(resi + row.addresi + skill.addresi);

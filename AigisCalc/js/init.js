@@ -11,6 +11,7 @@ function initialize(){
     loadCC();
     loadRare();
     loadUpdate();
+    loadDefault();
 
     $('#outputTable').trigger('sortReset');
 
@@ -29,6 +30,7 @@ function load_error(){
     sSkill	:omg5gm7
     Buff	:ook351m
     UPDATE	:ot7d01q
+    Default :otidvve
 */
 
 function loadUnit(){
@@ -432,14 +434,41 @@ function setUpdate(){
 	$('#update').append(str);
 }
 
+function loadDefault(){
+    $.ajax({
+        type: 'GET',
+        url: 'https://spreadsheets.google.com/feeds/list/1GO0fzdzow6HXWfqUGDokR_k4993hjN_GJp6qgGc2XZ0/otidvve/public/values?alt=json',
+        dataType: 'jsonp',
+        cache: false,
+        success: function(data){ // 通信が成功した時
+            var sheetsEntry = data.feed.entry; // 実データ部分を取得
+            tmp = getDefault(sheetsEntry); // データを整形
+        },
+        error: function(){ // 通信が失敗した時
+            load_error();
+            console.log('loadRare error');
+        }
+    });
+}
+function getDefault(sheetsEntry){
+    var dv = defval;
+    sheetsEntry.forEach(function(rows){
+        var temp = new defaultvalue(rows);
+        dv.push(temp);
+    });
+
+    load_progress();
+}
+
 var prog = 0;
 function load_progress(){
     prog += 1;
     
-    if(prog === 8){
+    if(prog === 9){
         setParse();
         setUnits();
         setReadme();
+        setPageDefault();
         
         var param = location.search.substring(1);
         if(param){
@@ -456,6 +485,7 @@ function load_progress(){
         skilldata = null;
         classdata = null;
         updates = null;
+        defval = null;
 
         $('.tooltip').each(tooltip);
         $('.hiddenrow').hide();
@@ -471,7 +501,8 @@ function setUnits(){
     .Join(skills, '$.skill', '$.name', joinstr)
     .Select(function(x){
         return {
-            sid:x.sid, id:x.id, uid:x.uid, clas:x.clas, name:x.name
+            sort:x.sort
+            ,sid:x.sid, id:x.id, uid:x.uid, clas:x.clas, name:x.name
             ,rare:x.rare, cc:x.cc, noncc:x.noncc, event:x.event
             ,lv:x.lv, lvmax:x.lvmax
             ,hp:x.hp, hpmax:x.hpmax, atk:x.atk, atkmax:x.atkmax
@@ -518,7 +549,8 @@ function setUnits(){
     .Join(sskills, '$.skill', '$.name', joinstr)
     .Select(function(x){
         return {
-            sid:x.sid, id:x.id, uid:x.uid, clas:x.clas, name:x.name
+            sort:x.sort
+            ,sid:x.sid, id:x.id, uid:x.uid, clas:x.clas, name:x.name
             ,rare:x.rare, cc:x.cc, noncc:x.noncc, event:x.event
             ,lv:x.lv, lvmax:x.lvmax
             ,hp:x.hp, hpmax:x.hpmax, atk:x.atk, atkmax:x.atkmax
@@ -566,7 +598,6 @@ function setUnits(){
     .ToArray();
 }
 
-
 function setParse(){
 	var prs = parse;
 	var name = [];
@@ -577,7 +608,7 @@ function setParse(){
 	var que;
 	que = Enumerable.From(units)
 	.Distinct('$.name')
-	.Select(function(x){ name[x.name] = x.id; }).ToArray();
+	.Select(function(x){ name[x.name] = x.sort; }).ToArray();
 	
 	que = Enumerable.From(classes)
 	.Select(function(x){ cls.push(x.name); }).ToArray();
@@ -657,6 +688,36 @@ function setReadme(){
 
     $('#tbl_mot0').append(str0);
     $('#tbl_mot1').append(str1);
+}
+
+function setPageDefault(){
+    var dv = Enumerable.From(defval)
+    .ToArray();
+    
+    //攻撃
+    $('#atksp').prop('selectedIndex', dv[0].sp);
+    $('#atkHP').val(dv[0].req);
+    $('#atkDef').val(dv[0].def);
+    $('#atkResi').val(dv[0].resi);
+    $('input[name="atkMode"]:eq(' + dv[0].type + ')').prop('checked', true);
+    $('#atkCnt').val(dv[0].cnt);
+    
+    //防御
+    $('#defAtk').val(dv[1].req);
+    $('#defType').prop('selectedIndex', dv[1].matmag);
+    $('#defCnt').val(dv[1].cnt);
+    
+    //リハビリ
+    
+    //耐+DPS
+    $('#mixsp').prop('selectedIndex', dv[2].sp);
+    $('#mixAtk').val(dv[2].req);
+    $('#mixType').prop('selectedIndex', dv[2].matmag);
+    $('#mixDef').val(dv[2].def);
+    $('#mixResi').val(dv[2].resi);
+    $('#mixCnt').val(dv[2].cnt);
+    $('input[name="mixLv"]:eq(' + dv[2].type + ')').prop('checked', true);
+       
 }
 
 function linkCheckbox(){

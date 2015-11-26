@@ -18,6 +18,7 @@ var bunits = [];
 var fil_units = [];
 var units = [];
 var unitdata = function unitdata(rows){
+    this.sort = toNum(rows.gsx$sort.$t);
     this.sid = toNum(rows.gsx$sid.$t);
     this.id = toNum(rows.gsx$id.$t);
     this.clas = rows.gsx$class.$t;
@@ -196,6 +197,18 @@ var updates = [];
 function update(rows){
 	this.ymd = rows.gsx$ymd.$t;
 	this.summary = rows.gsx$summary.$t;
+}
+
+var defval = [];
+function defaultvalue(rows){
+    this.page = rows.gsx$page.$t;
+    this.sp = toNum(rows.gsx$sp.$t);
+    this.req = toNum(rows.gsx$req.$t);
+    this.def = toNum(rows.gsx$def.$t);
+    this.resi = toNum(rows.gsx$resi.$t);
+    this.matmag = toNum(rows.gsx$matmag.$t);
+    this.cnt = toNum(rows.gsx$cnt.$t);
+    this.type = toNum(rows.gsx$type.$t);
 }
 
 var sptype = {999:'なし', 1:'地上', 2:'飛行', 3:'アーマー', 4:'アンデッド', 5:'ドラゴン', 6:'妖怪', 7:'デーモン'};

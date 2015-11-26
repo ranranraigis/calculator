@@ -27,6 +27,7 @@ $('body').on('change', 'select[id="skill_memento"]', skill_memento_Change);
 
 $('.actchk').change(activateFromCheckbox);
 $('#op_dance').change(op_dance_Change);
+$('#op_anna').change(op_anna_Change);
 
 $('#sortReset').click(sortReset_Click);
 $('#outputHead').click(function(){$('#outputTable').trigger('update');});
@@ -152,11 +153,23 @@ function filterClassTop_Change(){
     var chk = t.prop('checked');
     
     if(t.attr('id').substr(-3) === 'mel'){
-        $('#atkmelee').prop('checked', chk);
-        $('input[id^="cls_mel"][type="checkbox"]').prop('checked', false);
+        if(!chk){
+            $('input[id^="cls_mel"][type="checkbox"]:not(#clsmel)').each(function(index, elem){
+                $(elem).prop('checked', true);
+            });
+        } else {
+            $('input[id^="cls_mel"][type="checkbox"]').prop('checked', false);
+        }
+        $('#atkmelee').prop('checked', true);
     } else {
-        $('#atkranged').prop('checked', chk);
-        $('input[id^="cls_ran"][type="checkbox"]').prop('checked', false);
+        if(!chk){
+            $('input[id^="cls_ran"][type="checkbox"]:not(#clsran)').each(function(index, elem){
+                $(elem).prop('checked', true);
+            });
+        }else{
+            $('input[id^="cls_ran"][type="checkbox"]').prop('checked', false);
+        }
+        $('#atkranged').prop('checked', true);
     }
 }
 
@@ -312,6 +325,21 @@ function op_dance_Change(){
     } else {
         $('#span_dance_type').hide();
         $('input[name="op_dance_type"]').prop('disabled', true);
+    }
+}
+
+function op_anna_Change(){
+    var t = $(this);
+    var tgt = t.attr('ctgt');
+    var chk = t.prop('checked');
+    
+    $(tgt).prop('disabled', !chk);
+    if(chk){
+        $('#span_anna_type').show();
+        $('input[name="op_anna_type"]').prop('disabled', false);
+    } else {
+        $('#span_dance_type').hide();
+        $('input[name="op_anna_type"]').prop('disabled', true);
     }
 }
 

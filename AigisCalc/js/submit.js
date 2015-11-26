@@ -317,9 +317,9 @@ function chkBuff_team_Ex(){
     //後衛軍師
     oBuf.ctcut = toNum($('input[name="op_ctcut"][type="radio"]:checked').val());
     
-    //アンナ(未実装)
+    //アンナ(未実装、ダンサーバフの方へ移動)
     //sid=100
-    oBuf.anna = $('#op_anna').prop('checked');
+    //oBuf.anna = $('#op_anna_old').prop('checked');
     
     //エキドナ(竜、ドラゴンライダーのHPと防御5%)
     //sid=109,110,111,126,206 or type=1
@@ -510,6 +510,8 @@ function chkBuff_other(){
     oBuf.enchant = $('#op_enchant').prop('checked');
     oBuf.danceatk = $('#op_dance').prop('checked') * $('#dance_atk').val();
     oBuf.dancedef = $('#op_dance').prop('checked') * $('#dance_def').val();
+    oBuf.annaatk = $('#op_anna').prop('checked') * $('#anna_atk').val();
+    oBuf.annadef = $('#op_anna').prop('checked') * $('#anna_def').val();
     oBuf.areaatk = $('#op_areaAtk').prop('checked')? $('#areaAtk').val() / 100: 1;
     oBuf.areadef = $('#op_areaDef').prop('checked')? $('#areaDef').val() / 100: 1;
     
@@ -544,6 +546,35 @@ function chkBuff_other(){
             } else {
                 oBuf.danceatk = atk;
                 oBuf.dancedef = def;
+            }
+        }
+    }
+    //アンナの整理
+    var annatype = $('input[name="op_anna_type"][type="radio"]:checked').val();
+    if(annatype !== 'add100'){
+        if(annatype === 'add10'){
+            oBuf.annaatk = Math.floor(oBuf.annaatk / 10);
+            oBuf.annadef = Math.floor(oBuf.annadef / 10);
+        } else {
+            var sBuf = skillbuffs;
+            var bcls = bclass;
+            var atk = oBuf.annaatk;
+            var def = oBuf.annadef;
+            var pripro = Math.max(sBuf.prince, sBuf.incpro);
+            atk = Math.floor(atk * (1 + bcls[216].bufatk));
+            atk = Math.floor(atk * sBuf.prince * sBuf.incatk * sBuf.prince_s);
+            atk = Math.floor(atk * oBuf.areaatk);
+            atk += oBuf.danceatk;
+            def = Math.floor(def * (1 + bcls[216].bufdef));
+            def = Math.floor(def * pripro * sBuf.incdef * sBuf.prince_s);
+            def = Math.floor(def * oBuf.areadef);
+            def += oBuf.dancedef;
+            if(annatype === 'calc10'){
+                oBuf.annaatk = Math.floor(atk / 10);
+                oBuf.annadef = Math.floor(def / 10);
+            } else {
+                oBuf.annaatk = atk;
+                oBuf.annadef = def;
             }
         }
     }
@@ -610,6 +641,9 @@ function make_bunits(){
                 tempdef = row_def * 2;
                 row_def = Math.floor(row_def * oBuf.areadef);
                 row_def += oBuf.dancedef;
+                
+                //王子(アンナ)の計算
+                if(x.sid === 100){ row_def += oBuf.annadef; }
 
                 //聖霊の護りと暗黒オーラは重複しない
                 debmat = Math.min(row.debatk, skill.debatk, row.debmat, skill.debmat);
@@ -630,6 +664,7 @@ function make_bunits(){
                 }
                 
                 if(x.sid === 115 && x.cc >= 2){
+                    //パラディン
                     temp = Math.floor(row_hp / 2);
                     temphp = row_hp - dmgmax;
                     tempdef = Math.floor(tempdef * oBuf.areadef);
@@ -678,13 +713,16 @@ function make_bunits(){
                         tempdef = row_def * 1.5;
                         row_def = Math.floor(row_def * oBuf.areadef);
                         row_def += oBuf.dancedef;
+                        //王子(アンナ)の計算
+                        if(x.sid === 100){ row_def += oBuf.annadef; }
                         
                         //被ダメ(通常)の計算と被ダメ決定
                         dmgmax = Math.ceil((row_defAtk - row_def) * row.cutmat * skill.cutmat);
                         dmgmax = (dmgmax <= dmglimit)? dmglimit : dmgmax;
 
                         //耐久チェック
-                        if(x.sid === 115 && x.cc === 2){
+                        if(x.sid === 115 && x.cc >= 2){
+                            //パラディン
                             temp = Math.floor(row_hp / 2);
                             temphp = row_hp - dmgmax;
                             tempdef = Math.floor(row_def * oBuf.areadef);
@@ -784,6 +822,8 @@ function make_bunits(){
                     reqLv = Math.ceil(reqLv - (x.atk + row.bonusatk));
                     reqLv = Math.ceil(reqLv / divatk) + 1;
                 } else {
+                    //王子(アンナ)の計算
+                    if(x.sid === 100){ row_atk -= oBuf.annaatk; }
                     reqAtk -= oBuf.danceatk;
                     
                     reqLv = Math.ceil(reqAtk / oBuf.areaatk);
@@ -812,6 +852,8 @@ function make_bunits(){
 
                     if(row.incatksp > 1){
                         reqLv = reqAtk / row.incatksp;
+                        //王子(アンナ)の計算
+                        if(x.sid === 100){ reqLv -= oBuf.annaatk; }
                         reqLv -= oBuf.danceatk;
                         reqLv = Math.ceil(reqAtk / (row.prince * row.incatk * skill.incatk * row.prince_s));
                         reqLv = Math.ceil(Math.ceil(reqLv / row.bufatk) / row.quadra);
@@ -851,6 +893,9 @@ function make_bunits(){
                     row_atk = Math.floor(row_atk * oBuf.areaatk);
                     row_atk += oBuf.danceatk;
                 }
+                //王子(アンナ)の計算
+                if(x.sid === 100){ row_atk += oBuf.annaatk; }
+                
                 if(row.atktype === 1){
                     var row_def = Math.ceil(enemy.def * row.debdef * skill.debdef);
                     var dmglimit = Math.floor(row_atk / 10);
@@ -928,7 +973,8 @@ function make_bunits(){
         }
 
             return {
-                sid:x.sid, id:x.id, uid:x.uid, clas:x.clas, name:x.name
+                sort:x.sort
+               ,sid:x.sid, id:x.id, uid:x.uid, clas:x.clas, name:x.name
                ,rare:x.rare, cc:x.cc, noncc:x.noncc, event:x.event
                ,lv:x.lv, lvmax:x.lvmax
                ,hp:x.hp, hpmax:x.hpmax, atk:x.atk, atkmax:x.atkmax
@@ -1034,6 +1080,11 @@ function dmgcalc(unit, row, skill, lv, slv){
     n_atk = Math.floor(n_atk * row.prince * sBuf.incatk * incatksp * sBuf.prince_s);
     n_atk = Math.floor(n_atk * oBuf.areaatk);
     n_atk += oBuf.danceatk;
+    //王子(アンナ)の計算
+    if(x.sid === 100){
+        s_atk += oBuf.annaatk;
+        n_atk += oBuf.annaatk;
+    }
 
     if(unit.atktype === 1 && !oBuf.enchant){
         row_def = Math.ceil(enemy.def * sBuf.emydebdef);
@@ -1345,7 +1396,8 @@ function make_bunitsjoin(){
     var str;
     str = '{'
     //unit
-        + '  sid:$.sid, id:$.id, uid:$.uid'
+        + 'sort:$.sort'
+        + ', sid:$.sid, id:$.id, uid:$.uid'
         + ', clas:$.clas, name:$.name, rare:$.rare, cc:$.cc, noncc:$.noncc'
         + ', event:$.event'
         + ', lv:$.lv, lvmax:$.lvmax'

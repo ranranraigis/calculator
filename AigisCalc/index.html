@@ -11,7 +11,7 @@
 <div id="contents">
     <div id="main">
         <div class="mainrow">
-            <label class="maincap">設定保存：</label>
+            <label class="maincap tooltip" tooltip="Cookieを使って設定を保存します<br>ブラウザの設定等によっては保存できない、あるいは何かしらのタイミングで削除されるため<br>気になる方や毎度読み込むのが面倒という方はＵＲＬ出力を使ってブックマークでもしてやってください">設定保存：</label>
             <select id="savedata">
                 <option>Save1
                 <option>Save2
@@ -351,7 +351,7 @@
 
             <div class="bufrow">
                 <label class="bufcap">特殊強化：</label>
-                <label class="tooltip" tooltip="<s>面倒なので</s>未実装です、王子！" ><input type="checkbox" id="op_anna" class="hage"/>アンナ　　</label>
+                <label class="tooltip" tooltip="<s>面倒なので</s>未実装です、王子！" ><input type="checkbox" id="op_anna_hage" class="hage"/>アンナ　　</label>
                 <label class="tooltip" tooltip="竜族(ドラゴンライダー系含)のＨＰ,防御＋５％" ><input type="checkbox" id="op_ekidona" />エキドナ　</label>
                 <label class="tooltip" tooltip="メイジ/ビショップ、<br>メイジアーマー/魔法剣士の攻撃力＋５％" ><input type="checkbox" id="op_ester" />エステル　</label>
                 <label class="tooltip" tooltip="エルフとドワーフのＨＰ＋１５％" ><input type="checkbox" id="op_olivie" />オリヴィエ</label>
@@ -723,20 +723,44 @@
             </div>
 
             <span id="span_dance_type" style="display: none;">
-	            <div class="bufrow">
-	                <label class="bufcap" style="margin-top: 4px;">　</label>
-	                <label>単純加算：</label>
-	                <label><input type="radio" name="op_dance_type" value="add10" disabled>10%</label>
-	                <label><input type="radio" name="op_dance_type" value="add100" checked disabled>100%</label>　
-	            </div>
-	            <div class="bufrow">
-	                <label class="bufcap" style="margin-top: 4px;">　</label>
-	                <label>バフ計算：</label>
-	                <label><input type="radio" name="op_dance_type" value="calc10" disabled>10%</label>
-	                <label><input type="radio" name="op_dance_type" value="calc100" disabled>100%</label>
-	            </div>
+                <div class="bufrow">
+                    <label class="bufcap" style="margin-top: 4px;">　</label>
+                    <label>単純加算：</label>
+                    <label><input type="radio" name="op_dance_type" value="add10" disabled>10%</label>
+                    <label><input type="radio" name="op_dance_type" value="add100" disabled>100%</label>　
+                </div>
+                <div class="bufrow">
+                    <label class="bufcap" style="margin-top: 4px;">　</label>
+                    <label>バフ計算：</label>
+                    <label><input type="radio" name="op_dance_type" value="calc10" disabled>10%</label>
+                    <label><input type="radio" name="op_dance_type" value="calc100" checked disabled>100%</label>
+                </div>
             </span>
-             
+            
+            <div class="bufrow">
+                <div class="bufrow">
+                    <label class="bufcap tooltip" tooltip="単純加算：入力値を単純加算します<br>バフ計算：入力値をもとに王子等を計算した値を適用します" style="margin-top: 4px;">支援アンナ：</label>
+                    <label class="tooltip" tooltip="単純加算：入力値を単純加算します<br>バフ計算：入力値をもとに王子等を計算した値を適用します"><input type="checkbox" id="op_anna" class="actchk" ctgt=".anna"/>使用</label>　
+                    攻：<input type="number" id="anna_atk" class="num5 anna" min="0" max="65535" value="294" disabled />　
+                    防：<input type="number" id="anna_def" class="num5 anna" min="0" max="65535" value="197" disabled />
+                </div>
+            </div>
+
+            <span id="span_anna_type" style="display: none;">
+                <div class="bufrow">
+                    <label class="bufcap" style="margin-top: 4px;">　</label>
+                    <label>単純加算：</label>
+                    <label><input type="radio" name="op_anna_type" value="add10" disabled>10%</label>
+                    <label><input type="radio" name="op_anna_type" value="add100" disabled>100%</label>　
+                </div>
+                <div class="bufrow">
+                    <label class="bufcap" style="margin-top: 4px;">　</label>
+                    <label>バフ計算：</label>
+                    <label><input type="radio" name="op_anna_type" value="calc10" disabled>10%</label>
+                    <label><input type="radio" name="op_anna_type" value="calc100" checked disabled>100%</label>
+                </div>
+            </span>
+            
             <div class="bufrow">
                 <label class="bufcap" style="margin-top: 4px;">マップ効果：</label>
                 <label><input type="checkbox" id="op_areaAtk" class="actchk" ctgt="#areaAtk"/>攻撃</label>
@@ -919,7 +943,7 @@
             <br>
             <br>
             　　注意点：<font color="red">仕様上、レベルによる基礎ステータス変化の部分で誤差があります</font><br>
-            　　　　　　　育成目標にする場合は表示レベルに+1したり、実際に使用する前にステータスの誤差確認をしたほうが無難です<br>
+            　　　　　　　育成目標にする場合は表示レベルに+1,2したり、実際に使用する前にステータスの誤差確認をしたほうが無難です<br>
             　　　　　　　信じて送り出したユニットがｷｬｰしたりｳｧｰしたり、そのせいで(｡i _ i｡)ｷｭｯてしたりﾊﾟﾘﾝしたりしても責任は取れません<br>
             　　　　　　　　※一次関数でないものを一次関数に落とし込んでいるために誤差が出ます<br>
             　　　　　　　　　完璧なデータが欲しいという場合、現行のwikiには無い情報を集める必要が出てきます...<br>
