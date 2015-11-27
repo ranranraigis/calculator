@@ -70,6 +70,8 @@ function submit_Click(){
     setQue(bunits, useSkill);
     setLv(bunits);
 
+    gl_enemy.calcend = true;
+    
     $('#outputTable').trigger('update');
 }
 
@@ -209,6 +211,8 @@ function chkData(){
     
     //モード
     gl_mode = $('#chkMode').val();
+    
+    enemy.calcend = false;
     
     //計算用値
     if(gl_mode !== 'mix'){
@@ -1158,7 +1162,7 @@ function dmgcalc(unit, row, skill, lv, slv){
             }
         }
         if(data.time > data.reqtime && enemy.timemode === 'timeatk'){
-            data.dmg = 0;
+            //data.dmg = 0;
         }
     } else {
         if(enemy.timemode === 'timeatk'){
@@ -1188,7 +1192,7 @@ function dmgcalc(unit, row, skill, lv, slv){
     }
     
     if(enemy.timemode === 'timeatk'){
-        if(data.dmg >= data.reqhp){
+        if(data.dmg >= data.reqhp && data.time <= data.reqtime){
             data.reqlv = unit.lvmax;
         } else {
             data.reqlv = 999;
@@ -1250,15 +1254,28 @@ function dmgcalc_noskill(data, useSkill, timeatk){
         //時間制限あり
         if(!useSkill || data.ct >= 99999){
             //スキル未使用もしくは使い切り
-            if(enemy.timemode === 'timeatk'){
-                cnt = Math.ceil((data.reqhp - data.dmg) / data.n_dmg);
-                dmg = cnt * data.n_dmg;
-                time = (cnt - 1) * frm + data.motion;
+            if(!enemy.calcend){
+                //本計算
+                if(enemy.timemode === 'timeatk'){
+                    cnt = Math.ceil((data.reqhp - data.dmg) / data.n_dmg);
+                    dmg = cnt * data.n_dmg;
+                    time = (cnt - 1) * frm + data.motion;
+                } else {
+                    sub.time = data.remtime;
+                    dmgcalc_common(sub, data);
+                    time = sub.time;
+                    dmg = sub.dmg;
+                }
             } else {
-                sub.time = data.remtime;
-                dmgcalc_common(sub, data);
-                time = sub.time;
-                dmg = sub.dmg;
+                //出力後のスキルon/offでここに来た場合
+                cnt = Math.floor(data.remtime / sub.frm);
+                time = data.remtime - cnt * sub.frm;
+                if(time >= data.motion){
+                    cnt += 1;
+                    time -= data.motion;
+                }
+                time = data.remtime - time;
+                dmg = cnt * data.n_dmg;
             }
             data.dmg += dmg;
             data.time += time;
@@ -1320,7 +1337,7 @@ function dmgcalc_common(sub, data){
     //超過時間処理
     time -= data.over_frm;
     sub.time = time;
-    
+
     cnt += Math.floor(time / sub.frm);
     time -= (cnt * sub.frm);
     if(time >= sub.motion){
@@ -1357,7 +1374,7 @@ function dmgcalc_common(sub, data){
         data.nextact = '';
         data.over_frm = 0;
     }
-
+    
     time = sub.time + data.over_frm;
     if(addcnt > 0){
         time += sub.wait;
