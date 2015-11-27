@@ -1081,7 +1081,7 @@ function dmgcalc(unit, row, skill, lv, slv){
     n_atk = Math.floor(n_atk * oBuf.areaatk);
     n_atk += oBuf.danceatk;
     //王子(アンナ)の計算
-    if(x.sid === 100){
+    if(unit.sid === 100){
         s_atk += oBuf.annaatk;
         n_atk += oBuf.annaatk;
     }
