@@ -9,7 +9,6 @@ function submit_Click(){
     var whr_class = makeQuery_Class();
     var whr_cc = makeQuery_CC();
     var whr_atktype = makeQuery_atkType(useSkill);
-    var whr_melran = makeQuery_MelRan();
     var whr_rare = makeQuery_Rare();
     var whr_event = makeQuery_Event();
 
@@ -17,7 +16,6 @@ function submit_Click(){
         .Where(whr_class)
         .Where(whr_cc)
         .Where(whr_atktype)
-        .Where(whr_melran)
         .Where(whr_rare)
         .Where(whr_event)
         .ToArray();    
@@ -136,25 +134,12 @@ function makeQuery_atkType(useSkill){
     
     return atktype;
 }
-function makeQuery_MelRan(){
-    var melran = '';
-    var melee = $('#atkmelee').prop('checked');
-    var ranged = $('#atkranged').prop('checked');
-    
-    switch(true){
-        case (!melee && ranged):
-            melran = '$.sid >= 200';
-            break;
-        case (melee && !ranged):
-            melran = '$.sid < 200';
-            break;
-    }
-    return melran;
-}
 function makeQuery_Class(){
     var checked = $('input[id^="cls_"][type="checkbox"]:checked');
     var len = checked.length;
     var cls = '';
+    var mel = $('#clsmel').prop('checked');
+    var ran = $('#clsran').prop('checked');
     
     if(len >= 1){
         cls += '$.sid == ' + checked[0].value;
@@ -163,6 +148,27 @@ function makeQuery_Class(){
             cls += ' || $.sid == ' + checked[i].value;
         }
     }
+    
+    if(mel || ran){
+        if(mel && ran){
+            if(len >= 1){
+                cls += ' && ($.sid <= 300)';
+            } else {
+                cls = '';
+            }
+        } else {
+            if(mel){
+                if(len >= 1){
+                    cls += ' || $.sid < 200';
+                }
+            } else {
+                if(len >= 1){
+                    cls += ' || $.sid >= 200';
+                }
+            }
+        }
+    }
+    
     return cls;
 }
 function makeQuery_Event(){
