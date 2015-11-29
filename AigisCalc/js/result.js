@@ -109,9 +109,14 @@ function setQue(que, useSkill){
             result += '　マジックウェポン:OFF';
         }
     } else if(gl_mode === 'def'){
-        result += '　攻撃:' + enemy.atk + '　属性:' + $('#defType option:selected').text();
+        result += '　攻撃:' + enemy.atk + '(' + Math.ceil(enemy.atk * sBuf.emydebatk) + ')'
+                + '　属性:' + $('#defType option:selected').text();
     } else if(gl_mode === 'mix'){
-        result += '　特攻:' + sptype[enemy.sp] + '　攻撃:' + enemy.atk + '　属性:' + $('#mixType option:selected').text() + '　防御:' + enemy.def + '　魔耐:' + enemy.resi;
+        result += '　特攻:' + sptype[enemy.sp]
+                + '　攻撃:' + enemy.atk + '(' + Math.ceil(enemy.atk * sBuf.emydebatk) + ')'
+                + '　属性:' + $('#mixType option:selected').text()
+                + '　防御:' + enemy.def + '(' + Math.ceil(sBuf.emydebdef * enemy.def) + ')'
+                + '　魔耐:' + enemy.resi+ '(' + Math.ceil(sBuf.emydebresi * enemy.resi) + ')';
     } else if(gl_mode === 'reha'){
     	result += '(' + $('#rehaMode option:selected').text().trim() + ')';
     }
