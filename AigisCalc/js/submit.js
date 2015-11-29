@@ -11,7 +11,7 @@ function submit_Click(){
     var whr_atktype = makeQuery_atkType(useSkill);
     var whr_rare = makeQuery_Rare();
     var whr_event = makeQuery_Event();
-
+    
     fil_units = Enumerable.From(units)
         .Where(whr_class)
         .Where(whr_cc)
@@ -150,21 +150,13 @@ function makeQuery_Class(){
     }
     
     if(mel || ran){
-        if(mel && ran){
-            if(len >= 1){
-                cls += ' && ($.sid <= 300)';
-            } else {
-                cls = '';
-            }
-        } else {
+        if(!(mel && ran)){
             if(mel){
-                if(len >= 1){
-                    cls += ' || $.sid < 200';
-                }
+                if(len >= 1){ cls += ' || '; }
+                cls += '$.sid < 200';
             } else {
-                if(len >= 1){
-                    cls += ' || $.sid >= 200';
-                }
+                if(len >= 1){ cls += ' || '; }
+                cls += '$.sid >= 200';
             }
         }
     }

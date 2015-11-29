@@ -41,6 +41,7 @@ function makeSkillSel(max, id, useSkill){
 
 function setQue(que, useSkill){
 	var enemy = gl_enemy;
+	var sBuf = skillbuffs;
     var trs, tr;
     
     que.forEach(function(rows){
@@ -98,9 +99,12 @@ function setQue(que, useSkill){
     var result = que.length + 'ユニットが見つかりました 確認内容:' + $('#chkMode option:selected').text().trim();
     if(gl_mode === 'atk'){
     	result += '(' + atkmode[enemy.mode] + ')';
-        result += '　特攻:' + sptype[enemy.sp] + '　ＨＰ:' + enemy.hp + '　防御:' + enemy.def + '　魔耐:' + enemy.resi;
+        result += '　特攻:' + sptype[enemy.sp]
+                + '　ＨＰ:' + enemy.hp
+                + '　防御:' + enemy.def + '(' + Math.ceil(sBuf.emydebdef * enemy.def) + ')'
+                + '　魔耐:' + enemy.resi+ '(' + Math.ceil(sBuf.emydebresi * enemy.resi) + ')';
         if(otherBuff.enchant){
-            result += '　マジックウェポン:ON';
+            result += '　マジックウェポン:<font color="red">ON</font>';
         } else {
             result += '　マジックウェポン:OFF';
         }
@@ -227,7 +231,7 @@ function changeLv(id){
                 s_dmg = data.dmg;
             } else {
 	            if(slv > 0){
-	                skill.time *= 30;
+	                if(x.s_timemin !== 0){ skill.time *= 30; }
 	                if((row.motion + row.wait) !== 0){
 	                    var s_cnt = Math.floor(skill.time / (row.motion + row.wait));
 	                    if((skill.time - (row.motion + row.wait) * s_cnt) >= row.motion){
@@ -236,8 +240,6 @@ function changeLv(id){
 	                } else {
 	                    s_cnt = 1;
 	                }
-	                if(skill.time === 0){ s_cnt = 1; }
-	                
 	                s_dmg = dmg * s_cnt;
 	            } else {
 	                s_dmg = '';
