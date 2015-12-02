@@ -426,9 +426,13 @@ function setUpdate(){
 	
 	var str = '';
 	que.forEach(function(rows){
-		str += '　　　　　　' + rows.ymd
-		     + '　' + rows.summary
-		     + '<br>';
+	    if(rows.ymd.match(/region/)){
+	        str += '　　　　 ' + rows.ymd + rows.summary;
+	    } else {
+	        str += '　　　　　　' + rows.ymd
+	             + '　' + rows.summary
+	             + '<br>';
+	    }
 	});
 
 	$('#update').append(str);

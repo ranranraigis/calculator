@@ -1,5 +1,4 @@
-
-$('.region_toggle').click(regionToggle);
+$('body').on('click', '.region_toggle', regionToggle);
 
 $('#chkMode').change(chkMode_Change);
 $('input[type="number"]').change(number_Change);
