@@ -610,10 +610,6 @@ function setParse(){
 	var cc = [];
 	
 	var que;
-	que = Enumerable.From(units)
-	.Distinct('$.name')
-	.Select(function(x){ name[x.name] = x.sort; }).ToArray();
-	
 	que = Enumerable.From(classes)
 	.Select(function(x){ cls.push(x.name); }).ToArray();
 
@@ -623,7 +619,6 @@ function setParse(){
 	que = Enumerable.From(ccs)
 	.Select(function(x){ cc.push(x.sname); }).ToArray();
 	
-	prs.name = name;
 	prs.cls = cls;
 	prs.rare = rare;
 	prs.cc = cc;
@@ -631,7 +626,7 @@ function setParse(){
 	$.tablesorter.addParser({
 		id: 'name',
 		is: function(s){ return false; },
-		format: function(s){ var prs = parse; return prs.name[s]; },
+		format: function(s, table, cell){ return cell.id; },
 		type: 'numeric'
 	});
 	$.tablesorter.addParser({

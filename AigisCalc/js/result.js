@@ -49,10 +49,10 @@ function setQue(que, useSkill){
         tr = '<tr id="row_' + rows.id + '" align="center">';
         
         if(rows.dataerr.trim() !== ''){
-            tr += '<td style="color: red;">' + rows.name + '</td>'
+            tr += '<td id="' + rows.sort + '" style="color: red;">' + rows.name + '</td>'
                 + '<td style="color: red;">' + rows.clas + '</td>';
         } else {
-            tr += '<td>' + rows.name + '</td>'
+            tr += '<td id="' + rows.sort + '">' + rows.name + '</td>'
                 + '<td>' + rows.clas + '</td>';
         }
         tr += '<td>' + rar[rows.rare] + '</td>'
@@ -198,12 +198,14 @@ function changeLv(id){
             emydef_row = Math.ceil(enemy.def * row.debdef * skill.debdef);
             emyresi_row = 1 - Math.ceil(enemy.resi * row.debresi * skill.debresi) / 100;
             
-            if(row.atktype === 1){
+            if(atk === 0){
+                dmg = 0;
+            }else if(row.atktype === 1){
                 dmg = atk - emydef_row;
                 if(dmg <= atk/10){ dmg = Math.floor(atk/10); }
             } else if(row.atktype === 2){
                 dmg = Math.floor(atk * emyresi_row);
-                if(dmg === 0){ dmg = 1; }
+                if(dmg <= atk/10){ dmg = Math.floor(atk/10); }
             } else if(row.atktype === 3){
                 dmg = atk;
             } else if(row.atktype === 4){
