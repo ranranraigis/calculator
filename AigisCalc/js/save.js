@@ -216,6 +216,9 @@ function dataSave(){
     val[16] = $('#anna_atk').val();
     val[17] = $('#anna_def').val();
     
+    //アイリーン
+    save[95] = $('#op_irene').prop('checked');
+    
     
     ////職フィルタ
     var filmel = new Array();
@@ -457,6 +460,9 @@ function dataLoad(str){
      $('input[name="op_anna_type"]:eq(' + save[94] + ')').prop('checked', true);
      $('#anna_atk').val(val[16]);
      $('#anna_def').val(val[17]);
+
+     //アイリーン
+     $('#op_irene').prop('checked', save[95]);
      
      //職フィルタ
      var selmel = $('input[group="cls_mel"]');

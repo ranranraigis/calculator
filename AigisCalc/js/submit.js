@@ -315,9 +315,20 @@ function chkBuff_team_Ex(){
     incbuf['atk'] = incBuffAtk;
     incbuf['def'] = incBuffDef;
     incbuf['resi'] = incBuffResi;
+    incbuf['time'] = incBuffTime;
     
     //後衛軍師
     oBuf.ctcut = toNum($('input[name="op_ctcut"][type="radio"]:checked').val());
+    
+    //アイリーン
+    //山賊(108)のHP7%、ローグ(104)のスキル20%
+    //海賊(205)の攻撃5%、シーフ(222)のコスト-1
+    oBuf.irene = $('#op_irene').prop('checked');
+    if(oBuf.irene){
+        incbuf['hp'](108, 0.07);
+        incbuf['time'](104, 0.2);
+        incbuf['atk'](205, 0.05);
+    }
     
     //アンナ(未実装、ダンサーバフの方へ移動)
     //sid=100
@@ -335,7 +346,7 @@ function chkBuff_team_Ex(){
         incbuf['hp'](206, 0.05); incbuf['def'](206, 0.05);
     }
     
-    //エステル(魔法剣士、メイジアーマー、メイジ、ビショップの攻撃力+5%)
+    //エステル(魔法剣士、メイジアーマー、メイジ、ビショップの攻撃力+5%、コスト-1)
     //sid=119,125,202,209
     oBuf.ester = $('#op_ester').prop('checked');
     if(oBuf.ester){
@@ -1190,7 +1201,7 @@ function dmgcalc(unit, row, skill, lv, slv){
     }
     
     if(enemy.timemode === 'timeatk'){
-        if(data.dmg >= data.reqhp && data.time <= data.reqtime){
+        if((data.dmg >= data.reqhp && data.time <= data.reqtime) || data.reqtime === 0){
             data.reqlv = unit.lvmax;
         } else {
             data.reqlv = 999;
