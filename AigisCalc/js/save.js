@@ -1,5 +1,8 @@
 var S52 = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-var dig_val = [5, 4, 2, 4, 4, 4, 4, 4, 4, 2, 4, 4, 4, 4, 4, 4, 4, 4];
+var dig_val = [ 5, 4, 2, 4, 4, 4, 4, 4, 4, 2
+              , 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
+              , 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
+              , 4, 4, 4, 4, 4, 4, 4];
 
 function sysSave(){
     var data = dataSave();
@@ -219,6 +222,33 @@ function dataSave(){
     //アイリーン
     save[95] = $('#op_irene').prop('checked');
     
+    //必死計算
+    expr = 'input[name="hhcmode"]';
+    val[18] = $('#hhc_time').val();
+    save[96] = $(expr + ':checked').index(expr);
+    val[19] = $('#hhc_emyAtk').val();
+    val[20] = $('#hhc_emyMotion').val();
+    val[21] = $('#hhc_emyFrm').val();
+    save[97] = $('#hhc_emyType').prop('selectedIndex');
+    
+    val[22] = $('#hhcHp').val();
+    val[23] = $('#hhcDef').val();
+    val[24] = $('#hhcResi').val();
+
+    val[25] = $('#hhc_Heal1').val();
+    val[26] = $('#hhc_Heal1_Motion').val();
+    val[27] = $('#hhc_Heal1_Frm').val();
+    val[28] = $('#hhc_Heal1_Shift').val();
+    
+    val[29] = $('#hhc_Heal2').val();
+    val[30] = $('#hhc_Heal2_Motion').val();
+    val[31] = $('#hhc_Heal2_Frm').val();
+    val[32] = $('#hhc_Heal2_Shift').val();
+
+    val[33] = $('#hhc_Heal3').val();
+    val[34] = $('#hhc_Heal3_Motion').val();
+    val[35] = $('#hhc_Heal3_Frm').val();
+    val[36] = $('#hhc_Heal3_Shift').val();
     
     ////職フィルタ
     var filmel = new Array();
@@ -464,6 +494,34 @@ function dataLoad(str){
      //アイリーン
      $('#op_irene').prop('checked', save[95]);
      
+     //必死計算
+     expr = '';
+     $('#hhc_time').val(val[18]);
+     $('input[name="hhcmode"]:eq(' + save[96] + ')').prop('checked', true);
+     $('#hhc_emyAtk').val(val[19]);
+     $('#hhc_emyMotion').val(val[20]);
+     $('#hhc_emyFrm').val(val[21]);
+     $('#hhc_emyType').prop('selectedIndex', save[97]);
+     
+     $('#hhcHp').val(val[22]);
+     $('#hhcDef').val(val[23]);
+     $('#hhcResi').val(val[24]);
+
+     $('#hhc_Heal1').val(val[25]);
+     $('#hhc_Heal1_Motion').val(val[26]);
+     $('#hhc_Heal1_Frm').val(val[27]);
+     $('#hhc_Heal1_Shift').val(val[28]);
+     
+     $('#hhc_Heal2').val(val[29]);
+     $('#hhc_Heal2_Motion').val(val[30]);
+     $('#hhc_Heal2_Frm').val(val[31]);
+     $('#hhc_Heal2_Shift').val(val[32]);
+
+     $('#hhc_Heal3').val(val[33]);
+     $('#hhc_Heal3_Motion').val(val[34]);
+     $('#hhc_Heal3_Frm').val(val[35]);
+     $('#hhc_Heal3_Shift').val(val[36]);
+          
      //職フィルタ
      var selmel = $('input[group="cls_mel"]');
      var selran = $('input[group="cls_ran"]');

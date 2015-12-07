@@ -2,12 +2,26 @@ function submit_Click(){
     console.clear();
     clearbefore();
     chkData();
+
+    var mode = gl_mode;
+    if(mode !== 'hhc'){
+        //通常計算
+        submit_normal();
+    } else {
+        //ハイパー必死計算
+        submit_hhc();
+    }
+}
+
+function submit_normal(){
+    var mode = gl_mode;
+    var enemy = gl_enemy;
     
     var useSkill = $('#use_skill').prop('checked');
     var que, que1;
     
     var whr_class = makeQuery_Class();
-    var whr_cc = makeQuery_CC();
+    var whr_cc = makeQuery_CC(useSkill);
     var whr_atktype = makeQuery_atkType(useSkill);
     var whr_rare = makeQuery_Rare();
     var whr_event = makeQuery_Event();
@@ -18,13 +32,7 @@ function submit_Click(){
         .Where(whr_atktype)
         .Where(whr_rare)
         .Where(whr_event)
-        .ToArray();    
-
-    if(!useSkill){
-        fil_units = Enumerable.From(fil_units)
-        .Where('$.cc < 3')
         .ToArray();
-    }
         
     make_bunits();
     
@@ -32,10 +40,10 @@ function submit_Click(){
     .Where('$.reqlv <= $.lvmax')
     .ToArray();
 
-    if(gl_mode === 'atk' || gl_mode === 'def' || gl_mode === 'mix'){
+    if(mode === 'atk' || mode === 'def' || mode === 'mix'){
         que = Enumerable.From(bunits)
         .ToArray();
-    } else if(gl_mode === 'reha'){
+    } else if(mode === 'reha'){
         que1 = Enumerable.From(bunits)
         .Where('$.cc == 2')
         .ToArray();
@@ -54,7 +62,7 @@ function submit_Click(){
     .ThenBy('$.cc')
     .ToArray();
     
-    if((gl_enemy.mode === 'dps' && gl_mode === 'atk') || gl_mode === 'mix'){
+    if((enemy.mode === 'dps' && mode === 'atk') || mode === 'mix'){
         que = Enumerable.From(que)
             .OrderByDescending('$.dps')
             .ToArray();
@@ -68,12 +76,230 @@ function submit_Click(){
     setQue(bunits, useSkill);
     setLv(bunits);
 
-    gl_enemy.calcend = true;
+    enemy.calcend = true;
     
     $('#outputTable').trigger('update');
+    var row = $('#outputTable tbody').children().length;
+    if(row > 10){
+        $('#outputTable tbody').css('height', '230px');
+    } else {
+        $('#outputTable tbody').css('height', (row * 22 + row) + 'px');
+    }
 }
 
-function makeQuery_CC(){
+function submit_hhc(){
+    //ハイパー必死計算
+    var str = '';
+    var reqtime = $('#hhc_time').val() * 30;
+    
+    var hhc = {};
+    hhc.reqtime = reqtime;
+    hhc.time = 0;
+    hhc.cnt = 1;
+    hhc.atkcnt = 0;
+    
+    var mode = $('input[name="hhcmode"]:checked').val();
+    
+    var def = toNum($('#hhcDef').val());
+    var resi = toNum($('#hhcResi').val());
+    
+    var atk = toNum($('#hhc_emyAtk').val());
+    var type = toNum($('#hhc_emyType option:selected').val());
+    var mot_e = toNum($('#hhc_emyMotion').val());
+    var frm_e = toNum($('#hhc_emyFrm').val());
+
+    var mot_h1 = toNum($('#hhc_Heal1_Motion').val());
+    var mot_h2 = toNum($('#hhc_Heal2_Motion').val());
+    var mot_h3 = toNum($('#hhc_Heal3_Motion').val());
+    var frm_h1 = toNum($('#hhc_Heal1_Frm').val());
+    var frm_h2 = toNum($('#hhc_Heal2_Frm').val());
+    var frm_h3 = toNum($('#hhc_Heal3_Frm').val());
+    var shift_h1 = toNum($('#hhc_Heal1_Shift').val());
+    var shift_h2 = toNum($('#hhc_Heal2_Shift').val());
+    var shift_h3 = toNum($('#hhc_Heal3_Shift').val());
+    
+    //計算に使う情報の整理
+    //HP,MHP設定
+    hhc.mhp = toNum($('#hhcHp').val());
+    hhc.hp = hhc.mhp;
+    //空白パディングの生成
+    var atklen = $('#hhc_emyAtk').val().length;
+    var hplen = $('#hhcHp').val().length;
+    (atklen >= hplen)? hhc.hplen = atklen+1:hplen+1;
+    hhc.pad = '';
+    for(var i=0; i<hhc.hplen; i++){ hhc.pad += ' '; }
+    
+    //ヒーラー周りの設定
+    hhc.heals = [toNum($('#hhc_Heal1').val())
+                 ,toNum($('#hhc_Heal2').val())
+                 ,toNum($('#hhc_Heal3').val())];
+    hhc.frm_heals = [frm_h1, frm_h2, frm_h3];
+    hhc.mot_heals = [mot_h1, mot_h2, mot_h3];
+    hhc.shift_heals = [shift_h1, shift_h2, shift_h3];
+    hhc.squat = [false, false, false];
+    hhc.next_heals = [mot_e + mot_h1 + shift_h1
+                      ,mot_e + mot_h2 + shift_h2
+                      ,mot_e + mot_h3 + shift_h3];
+    for(var i=0; i<3; i++){
+        if(hhc.heals[i] === 0){ 
+            hhc.next_heals[i] = reqtime + 1;
+        }
+    }
+
+    //被弾周りの設定
+    hhc.frm_atk = frm_e;
+    hhc.next = 'atk';
+    hhc.next_atk = mot_e;
+    //ダメージ設定
+    if(type === 1){
+        //物理
+        hhc.dmg = atk - def;
+    } else {
+        //魔法
+        hhc.dmg = Math.floor(atk * ((100-resi)/100));
+    }
+    //下限
+    if(hhc.dmg < Math.floor(atk/10)){
+        hhc.dmg = Math.floor(atk/10);
+    }
+
+    //実計算
+    hhc.calc = true;
+    if(mode === 'simple'){
+        while(hhc.calc){ hhc_main(hhc); }
+    } else { 
+        while(hhc.calc){ str += hhc_main(hhc); }
+    }
+    
+    if(mode === 'simple'){
+        str = '<tr>'
+            + '<td></td>'
+            + '<td>' + hhc.time + 'frm</td>'
+            + '<td>' + rounds(hhc.time/30, 2, true) + '秒</td>'
+            + '<td>' + ((hhc.hp > 0)? '生存':'死亡')  + '</td>'
+            + '<td>最終ＨＰ：' + hhc.hp + '</td>'
+            + '<td>' + hhc.atkcnt + '回</td>'
+            + '<td></td>'
+            + '<td></td>'
+            + '<td></td>'
+            + '</tr>';
+    }
+    
+    $('#outputTable_hhc').append(str);
+    var row = $('#outputTable_hhc tbody').children().length;
+    if(row > 10){
+        $('#outputTable_hhc tbody').css('height', '220px');
+    } else {
+        $('#outputTable_hhc tbody').css('height', row * 22 + (row - 1) + 'px');
+    }
+}
+
+function hhc_main(hhc){
+    var str = '';
+    var act = '';
+    
+    var prevtime = hhc.time;
+    if(hhc.next === 'atk'){
+        act = '被弾';
+        hhc.time = hhc.next_atk;
+        hhc.prev = hhc.hp;
+        hhc.hp -= hhc.dmg;
+        hhc.next_atk += hhc.frm_atk;
+        hhc.atkcnt++;
+    } else {
+        act = '回復(' + (hhc.idx + 1) + ')';
+        hhc.time = hhc.next_heal;
+        hhc.prev = hhc.hp;
+        hhc.hp += hhc.heals[hhc.idx];
+        hhc.next_heals[hhc.idx] += hhc.frm_heals[hhc.idx];
+        
+        if(hhc.hp >= hhc.mhp){
+            hhc.hp = hhc.mhp;
+            
+            //スクワット計算
+            for(var i=0; i<3; i++){
+                var nextheal = hhc.next_heals[i] - hhc.time;
+                if(hhc.next_heals[i] > hhc.shift_heals[i]
+                && nextheal > 0 && nextheal < hhc.mot_heals[i]){
+                    hhc.next_heals[i] = hhc.next_atk + hhc.mot_heals[i];
+                    hhc.squat[i] = true;
+                }
+            }
+        }
+    }
+
+    if(hhc.time > hhc.reqtime){
+        hhc.hp = hhc.prev;
+        hhc.time = prevtime;
+        hhc.calc = false;
+    } else {
+        var prev = hhc.pad + hhc.prev;
+        prev = prev.substr(-1 * hhc.hplen);
+        prev = prev.replace(/ /g, '&nbsp;');
+        var hp = hhc.pad + hhc.hp;
+        hp = hp.substr(-1 * hhc.hplen);
+        hp = hp.replace(/ /g, '&nbsp;');
+
+        hhc.idx = Math.min.apply(null, hhc.next_heals);
+        hhc.idx = hhc.next_heals.indexOf(hhc.idx);
+        hhc.next_heal = hhc.next_heals[hhc.idx];
+        if(hhc.next_atk <= hhc.next_heal){
+            hhc.next = 'atk';
+        } else {
+            hhc.next = 'heal';
+            hhc.heal = hhc.heals[hhc.idx];
+        }
+
+        str += '<tr>'
+            + '<td>' + hhc.cnt++ + '</td>'
+            + '<td>' + hhc.time + 'frm' + '</td>'
+            + '<td>' + rounds(hhc.time/30, 2, true) + '秒' + '</td>'
+            + '<td>' + act + '</td>'
+            + '<td>' + prev + ' → ' + hp + '</td>'
+            + '<td>' + ((act === '被弾')? hhc.atkcnt + '回目':'') + '</td>'
+            + '<td>' + ((hhc.squat[0])? 'ｽｸﾜｯﾄ!':'') + '</td>'
+            + '<td>' + ((hhc.squat[1])? 'ｽｸﾜｯﾄ!':'') + '</td>'
+            + '<td>' + ((hhc.squat[2])? 'ｽｸﾜｯﾄ!':'') + '</td>'
+            + '</tr>';
+        
+        if(hhc.hp <= 0){
+            str += '<tr>'
+                + '<td></td>'
+                + '<td></td>'
+                + '<td></td>'
+                + '<td></td>'
+                + '<td>&nbsp;ｷｬｰ</td>'
+                + '<td></td>'
+                + '<td></td>'
+                + '<td></td>'
+                + '<td></td>'
+                + '</tr>';
+            hhc.calc = false;
+        }
+        
+        for(var i=0; i<3; i++){
+            hhc.squat[i] = false;
+        }
+    }
+
+    if(!hhc.calc && hhc.hp > 0){
+        str += '<tr>'
+            + '<td></td>'
+            + '<td></td>'
+            + '<td></td>'
+            + '<td></td>'
+            + '<td>&nbsp;終了</td>'
+            + '<td></td>'
+            + '<td></td>'
+            + '<td></td>'
+            + '<td></td>'
+            + '</tr>';
+    }
+    
+    return str;
+}
+
+function makeQuery_CC(useSkill){
     var checked = $('input[id^="cc_"][type="checkbox"]:checked');
     var len = checked.length;
     var cc = '';
@@ -84,6 +310,8 @@ function makeQuery_CC(){
         for(var i=1; i < len; i++){
             cc += ' || $.cc == ' + checked[i].value;
         }
+    } else {
+        if(!useSkill){ cc = '$.cc < 3'; }
     }
     return cc;    
 }
@@ -201,7 +429,11 @@ function clearbClass(){
 }
 
 function rowclear(){
-    $('#outputTable').find('tr:gt(0)').remove();
+    //$('#outputTable').find('tr:gt(0)').remove();
+    //$('#outputTable_hhc').find('tr:gt(0)').remove();
+
+    $('table[id^="outputTable"] tbody').children().remove();
+    $('table[id^="outputTable"] tbody').css('height', '0px');
 }
 
 function chkData(){
@@ -790,7 +1022,7 @@ function make_bunits(){
                 row_defAtk = Math.ceil(enemy.atk * debmag);
                 
                 //被ダメ(下限)
-                dmglimit = Math.ceil(Math.ceil(row_defAtk / 10) * row.cutmag * skill.cutmag);
+                dmglimit = Math.ceil(Math.floor(row_defAtk / 10) * row.cutmag * skill.cutmag);
                 //被ダメ(通常)
                 dmgmax = Math.ceil(Math.ceil(row_defAtk * row_resi) * row.cutmag * skill.cutmag);
                 //被ダメの決定(魔法にそもそも下限ダメがあるのか不明)

@@ -46,7 +46,7 @@ function setQue(que, useSkill){
     
     que.forEach(function(rows){
         var id = rows.id;
-        tr = '<tr id="row_' + rows.id + '" align="center">';
+        tr = '<tr id="row_' + rows.id + '">';
         
         if(rows.dataerr.trim() !== ''){
             tr += '<td id="' + rows.sort + '" style="color: red;">' + rows.name + '</td>'
@@ -194,7 +194,7 @@ function changeLv(id){
         resi = Math.floor(resi + row.addresi + skill.addresi);
         resi = Math.floor(resi * row.incresi * skill.incresi);
 
-        if(gl_mode === 'atk' || gl_mode === 'mix' || enemy.mode === 'time'){
+        if(gl_mode === 'atk' || gl_mode === 'mix'){
             emydef_row = Math.ceil(enemy.def * row.debdef * skill.debdef);
             emyresi_row = 1 - Math.ceil(enemy.resi * row.debresi * skill.debresi) / 100;
             
@@ -215,7 +215,7 @@ function changeLv(id){
 
             if(row.atktype < 4){
                 dps = dmg * 30 / (row.motion + row.wait);
-                dps = rounds(dps, 2);
+                dps = rounds(dps, 2, true);
             } else {
                 dps = 0;
             }
@@ -232,7 +232,7 @@ function changeLv(id){
                 if(data.time === Number.POSITIVE_INFINITY){
                     dps = '∞';
                 } else {
-                    dps = data.time + '秒';
+                    dps = rounds(data.time, 2, true) + '秒';
                 }
 
                 s_dmg = data.dmg;
@@ -276,6 +276,9 @@ function changeLv(id){
             }
 
         } else if(gl_mode === 'def') {
+            dps = '';
+            s_dmg = '';
+            
             if(enemy.type === 1){
             	var debmat = Math.min(row.debatk, skill.debatk, row.debmat, skill.debmat);
             	emyatk_row = Math.ceil(enemy.atk * debmat);

@@ -6,10 +6,33 @@ function toNum(val){
     return (val - 0);
 }
 
-function rounds(val, digit){
-    digit = Math.pow(10, digit);
-    val = Math.round(val * digit);
-    val = val / digit;
+function rounds(val, digit, padding){
+    var dig = Math.pow(10, digit);
+    val = Math.round(val * dig);
+    val = val / dig;
+
+    if(padding){
+        var pad = '';
+        for(var i=0; i<digit; i++){
+            pad += '0';
+        }
+
+        var prev = val;
+        val += ''; 
+        var idx = val.indexOf('.');
+        if(idx >= 0){
+            var int = val.substr(0, idx);
+            var dec = val.substr(idx-1);
+            dec += pad;
+            dec = dec.substr(2, digit);
+            val = int + '.' + dec;
+        } else {
+            val += '.' + pad;
+        }
+        if((val-0) != (prev-0)){
+            console.log(prev+':'+val);
+        }
+    }
 
     return val;
 }

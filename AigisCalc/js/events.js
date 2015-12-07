@@ -71,6 +71,14 @@ function chkMode_Change(){
     $('.admField').hide();
     
     $('#' + val + 'Field').show();
+    
+    if(val !== 'hhc'){
+        $('#output_normal').show();
+        $('#output_hhc').hide();
+    } else {
+        $('#output_normal').hide();
+        $('#output_hhc').show();
+    }
 }
 
 function number_Change(){

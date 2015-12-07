@@ -12,7 +12,10 @@ html{
     padding: 0px;
 }
 #contents{
-    width: 1021px;
+    width: 1038px;
+}
+#datas{
+	height: 550px;
 }
 #main{
     width: 430px;
@@ -78,6 +81,12 @@ table{
 tr{
     height: 22px;
 }
+tr:nth-child(even){
+    background-color: #F6F6F4;
+}
+tr:nth-child(odd){
+    background-color: beige;
+}
 .fildiv{
     overflow-y:scroll; 
     width: 130px;
@@ -140,12 +149,49 @@ tr{
     background-color: #E2EFDA;
 }
 
-tr:nth-child(even){
-    background-color: #F6F6F4;
+table[id^=output]{
+    border-bottom: 1px solid #cdcdcd;
+    border-right: 1px solid #cdcdcd;
 }
-tr:nth-child(odd){
-    background-color: beige;
+table[id^=output] thead, table[id^=output] tbody{
+    display: block;
 }
+
+#outputTable tr{
+	text-align: center;
+}
+#outputTable td:nth-child(n+6):nth-child(-n+12){
+    text-align: right;
+}
+#outputTable td:nth-child(1){ width: 137px; }
+#outputTable td:nth-child(2){ width: 147px; }
+#outputTable td:nth-child(3){ width: 46px; }
+#outputTable td:nth-child(4){ width: 46px; }
+#outputTable td:nth-child(5){ width: 55px; }
+#outputTable td:nth-child(6){ width: 46px; }
+#outputTable td:nth-child(7){ width: 46px; }
+#outputTable td:nth-child(8){ width: 46px; }
+#outputTable td:nth-child(9){ width: 46px; }
+#outputTable td:nth-child(10){ width: 46px; }
+#outputTable td:nth-child(11){ width: 57px; }
+#outputTable td:nth-child(12){ width: 67px; }
+#outputTable td:nth-child(13){ width: 147px; }
+#outputTable td:nth-child(14){ width: 46px; }
+
+#outputTable_hhc tr{
+	text-align: center;
+}
+#outputTable_hhc th:nth-child(-n+4){ width: 59px; }
+#outputTable_hhc th:nth-child(5){ width: 476px; }
+#outputTable_hhc th:nth-child(6){ width: 74px; }
+#outputTable_hhc th:nth-child(n+7){ width: 51px; }
+
+#outputTable_hhc td:nth-child(-n+3){ width: 65px; text-align: right; }
+#outputTable_hhc td:nth-child(4){ width: 65px; }
+#outputTable_hhc td:nth-child(5){ width: 482px; text-align: left;}
+#outputTable_hhc td:nth-child(6){ width: 80px; }
+#outputTable_hhc td:nth-child(n+7){ width: 57px; }
+
 div>table{
 	width: 100%;
 }
