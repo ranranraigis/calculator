@@ -1,8 +1,16 @@
 var S52 = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 var dig_val = [ 5, 4, 2, 4, 4, 4, 4, 4, 4, 2
-              , 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
-              , 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
-              , 4, 4, 4, 4, 4, 4, 4];
+              , 4, 4, 4, 4, 4, 4, 4, 4];
+var dig_hhc = [ 4
+              , 6, 4, 4, 2, 2, 2
+              , 4, 4, 2
+              , 4, 2, 2, 3, 3
+              , 4, 2, 2, 3, 3
+              , 4, 2, 2, 3, 3
+              , 4, 2, 2, 3, 3
+              , 4, 2, 2, 2
+              , 4, 2, 2, 2
+              , 4, 2, 2, 2];
 
 function sysSave(){
     var data = dataSave();
@@ -14,6 +22,7 @@ function dataSave(){
 
     var save = new Array();
     var val = new Array();
+    var hhc = new Array();
     var expr;
     
     ////確認内容
@@ -223,32 +232,64 @@ function dataSave(){
     save[95] = $('#op_irene').prop('checked');
     
     //必死計算
+    var ih = 0;
     expr = 'input[name="hhcmode"]';
-    val[18] = $('#hhc_time').val();
+    hhc[ih++] = $('#hhc_time').val();
     save[96] = $(expr + ':checked').index(expr);
-    val[19] = $('#hhc_emyAtk').val();
-    val[20] = $('#hhc_emyMotion').val();
-    val[21] = $('#hhc_emyFrm').val();
+    hhc[ih++] = $('#hhc_emyHp').val();
+    hhc[ih++] = $('#hhc_emyAtk').val();
+    hhc[ih++] = $('#hhc_emyDef').val();
+    hhc[ih++] = $('#hhc_emyResi').val();
+    hhc[ih++] = $('#hhc_emyMotion').val();
+    hhc[ih++] = $('#hhc_emyFrm').val();
     save[97] = $('#hhc_emyType').prop('selectedIndex');
     
-    val[22] = $('#hhcHp').val();
-    val[23] = $('#hhcDef').val();
-    val[24] = $('#hhcResi').val();
-
-    val[25] = $('#hhc_Heal1').val();
-    val[26] = $('#hhc_Heal1_Motion').val();
-    val[27] = $('#hhc_Heal1_Frm').val();
-    val[28] = $('#hhc_Heal1_Shift').val();
+    hhc[ih++] = $('#hhcHp').val();
+    hhc[ih++] = $('#hhcDef').val();
+    hhc[ih++] = $('#hhcResi').val();
     
-    val[29] = $('#hhc_Heal2').val();
-    val[30] = $('#hhc_Heal2_Motion').val();
-    val[31] = $('#hhc_Heal2_Frm').val();
-    val[32] = $('#hhc_Heal2_Shift').val();
+    hhc[ih++] = $('#hhcAtk').val();
+    hhc[ih++] = $('#hhcMotion').val();
+    hhc[ih++] = $('#hhcFrm').val();
+    hhc[ih++] = Math.round($('#hhcSkill').val() * 1000);
+    hhc[ih++] = Math.round($('#hhcSP').val() * 1000);
+    save[98] = $('#hhcType').prop('selectedIndex');
 
-    val[33] = $('#hhc_Heal3').val();
-    val[34] = $('#hhc_Heal3_Motion').val();
-    val[35] = $('#hhc_Heal3_Frm').val();
-    val[36] = $('#hhc_Heal3_Shift').val();
+    hhc[ih++] = $('#hhc_Atk1').val();
+    hhc[ih++] = $('#hhc_Atk1_Motion').val();
+    hhc[ih++] = $('#hhc_Atk1_Frm').val();
+    hhc[ih++] = Math.round($('#hhc_Atk1_Skill').val() * 1000);
+    hhc[ih++] = Math.round($('#hhc_Atk1_SP').val() * 1000);
+    save[99] = $('#hhc_Atk1_Type').prop('selectedIndex');
+    
+    hhc[ih++] = $('#hhc_Atk2').val();
+    hhc[ih++] = $('#hhc_Atk2_Motion').val();
+    hhc[ih++] = $('#hhc_Atk2_Frm').val();
+    hhc[ih++] = Math.round($('#hhc_Atk2_Skill').val() * 1000);
+    hhc[ih++] = Math.round($('#hhc_Atk2_SP').val() * 1000);
+    save[100] = $('#hhc_Atk2_Type').prop('selectedIndex');
+
+    hhc[ih++] = $('#hhc_Atk3').val();
+    hhc[ih++] = $('#hhc_Atk3_Motion').val();
+    hhc[ih++] = $('#hhc_Atk3_Frm').val();
+    hhc[ih++] = Math.round($('#hhc_Atk3_Skill').val() * 1000);
+    hhc[ih++] = Math.round($('#hhc_Atk3_SP').val() * 1000);
+    save[101] = $('#hhc_Atk3_Type').prop('selectedIndex');
+
+    hhc[ih++] = $('#hhc_Heal1').val();
+    hhc[ih++] = $('#hhc_Heal1_Motion').val();
+    hhc[ih++] = $('#hhc_Heal1_Frm').val();
+    hhc[ih++] = $('#hhc_Heal1_Shift').val();
+    
+    hhc[ih++] = $('#hhc_Heal2').val();
+    hhc[ih++] = $('#hhc_Heal2_Motion').val();
+    hhc[ih++] = $('#hhc_Heal2_Frm').val();
+    hhc[ih++] = $('#hhc_Heal2_Shift').val();
+
+    hhc[ih++] = $('#hhc_Heal3').val();
+    hhc[ih++] = $('#hhc_Heal3_Motion').val();
+    hhc[ih++] = $('#hhc_Heal3_Frm').val();
+    hhc[ih++] = $('#hhc_Heal3_Shift').val();
     
     ////職フィルタ
     var filmel = new Array();
@@ -265,8 +306,15 @@ function dataSave(){
     var str_val = encodeSave(val, dig_val);
     var str_filmel = encodeSave(filmel, null);
     var str_filran = encodeSave(filran, null);
-    var uri = str_save + '&' + str_val + '&' + str_filmel + '&' + str_filran + '&' + str_mel + '&' + str_ran;
-    
+    var str_hhc = encodeSave(hhc, dig_hhc);
+    var uri = str_save
+            + '&' + str_val
+            + '&' + str_filmel
+            + '&' + str_filran
+            + '&' + str_mel
+            + '&' + str_ran
+            + '&' + str_hhc;
+
     return uri;
 }
 
@@ -284,24 +332,22 @@ function dataLoad(str){
     var data = str.split('&');
     var save = new Array();
     var val = new Array();
+    var hhc = new Array();
     var filmel = new Array();
     var filran = new Array();
     var bufmel = new Array();
     var bufran = new Array();
 
-    data[0] = unzip52(data[0]);
-    data[1] = unzip52(data[1]);
-    data[2] = unzip52(data[2]);
-    data[3] = unzip52(data[3]);
-    data[4] = unzip52(data[4]);
-    data[5] = unzip52(data[5]);
-
+    for(var i=0; i<=6; i++){
+        data[i] = unzip52(data[i]);
+    }
     getData(data[0], save, null);
     getData(data[1], val, dig_val);
     getData(data[2], filmel, null);
     getData(data[3], filran, null);
     getData(data[4], bufmel, null);
     getData(data[5], bufran, null);
+    getData(data[6], hhc, dig_hhc);
     
     ////データの設定
     ////確認内容
@@ -495,33 +541,65 @@ function dataLoad(str){
      $('#op_irene').prop('checked', save[95]);
      
      //必死計算
-     expr = '';
-     $('#hhc_time').val(val[18]);
+     var ih = 0;
+     $('#hhc_time').val(hhc[ih++]);
      $('input[name="hhcmode"]:eq(' + save[96] + ')').prop('checked', true);
-     $('#hhc_emyAtk').val(val[19]);
-     $('#hhc_emyMotion').val(val[20]);
-     $('#hhc_emyFrm').val(val[21]);
+     $('#hhc_emyHp').val(hhc[ih++]);
+     $('#hhc_emyAtk').val(hhc[ih++]);
+     $('#hhc_emyDef').val(hhc[ih++]);
+     $('#hhc_emyResi').val(hhc[ih++]);
+     $('#hhc_emyMotion').val(hhc[ih++]);
+     $('#hhc_emyFrm').val(hhc[ih++]);
      $('#hhc_emyType').prop('selectedIndex', save[97]);
-     
-     $('#hhcHp').val(val[22]);
-     $('#hhcDef').val(val[23]);
-     $('#hhcResi').val(val[24]);
 
-     $('#hhc_Heal1').val(val[25]);
-     $('#hhc_Heal1_Motion').val(val[26]);
-     $('#hhc_Heal1_Frm').val(val[27]);
-     $('#hhc_Heal1_Shift').val(val[28]);
+     $('#hhcHp').val(hhc[ih++]);
+     $('#hhcDef').val(hhc[ih++]);
+     $('#hhcResi').val(hhc[ih++]);
      
-     $('#hhc_Heal2').val(val[29]);
-     $('#hhc_Heal2_Motion').val(val[30]);
-     $('#hhc_Heal2_Frm').val(val[31]);
-     $('#hhc_Heal2_Shift').val(val[32]);
+     $('#hhcAtk').val(hhc[ih++]);
+     $('#hhcMotion').val(hhc[ih++]);
+     $('#hhcFrm').val(hhc[ih++]);
+     
+     $('#hhcSkill').val(hhc[ih++] / 1000);
+     $('#hhcSP').val(hhc[ih++] / 1000);
+     $('#hhcType').prop('selectedIndex', save[98]);
 
-     $('#hhc_Heal3').val(val[33]);
-     $('#hhc_Heal3_Motion').val(val[34]);
-     $('#hhc_Heal3_Frm').val(val[35]);
-     $('#hhc_Heal3_Shift').val(val[36]);
-          
+     $('#hhc_Atk1').val(hhc[ih++]);
+     $('#hhc_Atk1_Motion').val(hhc[ih++]);
+     $('#hhc_Atk1_Frm').val(hhc[ih++]);
+     $('#hhc_Atk1_Skill').val(hhc[ih++] / 1000);
+     $('#hhc_Atk1_SP').val(hhc[ih++] / 1000);
+     $('#hhc_Atk1_Type').prop('selectedIndex', save[99]);
+
+     $('#hhc_Atk2').val(hhc[ih++]);
+     $('#hhc_Atk2_Motion').val(hhc[ih++]);
+     $('#hhc_Atk2_Frm').val(hhc[ih++]);
+     $('#hhc_Atk2_Skill').val(hhc[ih++] / 1000);
+     $('#hhc_Atk2_SP').val(hhc[ih++] / 1000);
+     $('#hhc_Atk2_Type').prop('selectedIndex', save[100]);
+
+     $('#hhc_Atk3').val(hhc[ih++]);
+     $('#hhc_Atk3_Motion').val(hhc[ih++]);
+     $('#hhc_Atk3_Frm').val(hhc[ih++]);
+     $('#hhc_Atk3_Skill').val(hhc[ih++] / 1000);
+     $('#hhc_Atk3_SP').val(hhc[ih++] / 1000);
+     $('#hhc_Atk3_Type').prop('selectedIndex', save[101]);
+
+     $('#hhc_Heal1').val(hhc[ih++]);
+     $('#hhc_Heal1_Motion').val(hhc[ih++]);
+     $('#hhc_Heal1_Frm').val(hhc[ih++]);
+     $('#hhc_Heal1_Shift').val(hhc[ih++]);
+
+     $('#hhc_Heal2').val(hhc[ih++]);
+     $('#hhc_Heal2_Motion').val(hhc[ih++]);
+     $('#hhc_Heal2_Frm').val(hhc[ih++]);
+     $('#hhc_Heal2_Shift').val(hhc[ih++]);
+
+     $('#hhc_Heal3').val(hhc[ih++]);
+     $('#hhc_Heal3_Motion').val(hhc[ih++]);
+     $('#hhc_Heal3_Frm').val(hhc[ih++]);
+     $('#hhc_Heal3_Shift').val(hhc[ih++]);     
+     
      //職フィルタ
      var selmel = $('input[group="cls_mel"]');
      var selran = $('input[group="cls_ran"]');
@@ -636,7 +714,6 @@ function bufClsChk(melran){
 
 function encodeSave(save, digit){
     var str = '';
-    var temp = 0;
     var len = save.length - 1;
 
     if(digit === null){
@@ -650,25 +727,9 @@ function encodeSave(save, digit){
     str = zip52(str);
     return str;
 }
-function decodeSave(param){
-    var ary = new Array();
-    var save = new Array();
-    var val = new Array();
-    var filmel = new Array();
-    var filran = new Array();
-    var bufmel = new Array();
-    var bufran = new Array();
-    
-    ary = param.split('&');
-    save = (ary[0])? ary[0]: null;
-    val =  (ary[1])? ary[1]: null;
-    
-    
-}
 
 function DECto52(val, digit){
     var result = '', ret = '';
-    var mod = [];
     var pad = '';
     var len = 0;
     
@@ -701,7 +762,6 @@ function DECto52(val, digit){
 function DECby52(str){
     var len = str.length - 1;
     var dec = 0;
-    var num = 0;
 
     for(var i=0; i<=len; i++){
         dec += $.inArray(str.substr(i, 1), S52) * Math.pow(52, len - i);
@@ -747,7 +807,6 @@ function unzip52(str){
     for(var i = 0; i <= len; i++){
         ary[i] = str.charAt(i);
     }
-    
     
     for(var i = 0; i <= len; i++){
         if(isFinite(ary[i])){

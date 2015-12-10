@@ -83,17 +83,21 @@ function chkMode_Change(){
 
 function number_Change(){
     var t = $(this);
-    var val = t.val();
+    var val = toNum(t.val());
+    var min = toNum(t.attr('min'));
+    var max = toNum(t.attr('max'));
     
     if(isFinite(val)){
-        val = Math.floor(val);
+        if(!t.attr('step')){
+            val = Math.floor(val);
+        }
     } else {
-        val = t.attr('min');
+        val = min;
     }
-    if(val < t.attr('min')){
-        val = t.attr('min');
-    } else if(val > t.attr('max')){
-        val = t.attr('max');
+    if(val < min){
+        val = min;
+    } else if(val > max){
+        val = max;
     }
     t.val(val);
 }
@@ -352,7 +356,8 @@ function op_anna_Change(){
 
 function outputURL_Click(){
     var t = $('#txt_outputURL');
-    t.val('http://ranranraigis.github.io/calculator/AigisCalc/?' + dataSave());
+    var url = window.location.href;
+    t.val(url + '?' + dataSave());
     t.focus().select();
 }
 

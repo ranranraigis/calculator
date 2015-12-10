@@ -14,18 +14,15 @@ html{
 #contents{
     width: 1038px;
 }
-#datas{
-	height: 550px;
-}
 #main{
-    width: 430px;
+    width: 500px;
     float: left;
 }
 #option{
     float: right;
 }
 #buff{
-    width: 590px;
+    width: 520px;
 }
 .mainrow{
     margin-top: 3px;
@@ -182,15 +179,17 @@ table[id^=output] thead, table[id^=output] tbody{
 	text-align: center;
 }
 #outputTable_hhc th:nth-child(-n+4){ width: 59px; }
-#outputTable_hhc th:nth-child(5){ width: 476px; }
-#outputTable_hhc th:nth-child(6){ width: 74px; }
-#outputTable_hhc th:nth-child(n+7){ width: 51px; }
+#outputTable_hhc th:nth-child(5)
+,#outputTable_hhc th:nth-child(6){ width: 233px; }
+#outputTable_hhc th:nth-child(7){ width: 74px; }
+#outputTable_hhc th:nth-child(n+8){ width: 51px; }
 
 #outputTable_hhc td:nth-child(-n+3){ width: 65px; text-align: right; }
 #outputTable_hhc td:nth-child(4){ width: 65px; }
-#outputTable_hhc td:nth-child(5){ width: 482px; text-align: left;}
-#outputTable_hhc td:nth-child(6){ width: 80px; }
-#outputTable_hhc td:nth-child(n+7){ width: 57px; }
+#outputTable_hhc td:nth-child(5)
+,#outputTable_hhc td:nth-child(6){ width: 239px; text-align: left;}
+#outputTable_hhc td:nth-child(7){ width: 80px; }
+#outputTable_hhc td:nth-child(n+8){ width: 57px; }
 
 div>table{
 	width: 100%;

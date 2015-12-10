@@ -188,7 +188,7 @@
 	        <div id="hhcField" class="admField" style="display: none;">
 	            <div class="mainrow">
 	                <label class="maincap">計測：</label>
-	                <input type="number" id="hhc_time" class="num3" min="0" max="999" value="30" /> 秒
+	                <input type="number" id="hhc_time" class="num4" min="0" max="999" value="30" /> 秒
 	            </div>
 	            <div class="mainrow">
 	                <label class="maincap">出力：</label>
@@ -199,51 +199,136 @@
 	            <br>
 	            <div class="mainrow">
 	                <label class="maincap">　</label>
-	                <label style="width: 60px; display: block; float: left; text-align: center;">攻撃</label>
-	                <label style="width: 46px; display: block; float: left; text-align: center;">発生</label>
-	                <label style="width: 46px; display: block; float: left; text-align: center;">全体</label>
-	                <label style="width: 50px; display: block; float: left; text-align: center;">属性</label>
+                    <label style="width: 59px; display: block; float: left; text-align: center;">ＨＰ</label>
+                    <label style="width: 66px; display: block; float: left; text-align: center;">攻撃</label>
+                    <label style="width: 64px; display: block; float: left; text-align: center;">防御</label>
+                    <label style="width: 46px; display: block; float: left; text-align: center;">魔耐</label>
+                    <label style="width: 48px; display: block; float: left; text-align: center;">発生</label>
+	                <label style="width: 42px; display: block; float: left; text-align: center;">全体</label>
 	                <br style="clear: both;">
 	            </div>
-	            <div>
-	                <label class="maincap" style="margin-top: 4px;">敵ｽﾃｰﾀｽ：</label>
-	                <input type="number" id="hhc_emyAtk" class="num5" min="1" max="65535" value="3000" />
-	                <input type="number" id="hhc_emyMotion" class="num3" min="0" max="999" value="18" />
-	                <input type="number" id="hhc_emyFrm" class="num3" min="0" max="999" value="32" />
-	                <select id="hhc_emyType">
-	                    <option value="1" selected>物理
-	                    <option value="2">魔法
-	                </select>
-	            </div>
-	            
+                <div>
+                    <label class="maincap" style="margin-top: 4px;">敵ｽﾃｰﾀｽ：</label>
+                    <input type="number" id="hhc_emyHp" class="num5" min="1" max="16777215" value="75000" />
+                    <input type="number" id="hhc_emyAtk" class="num5" min="1" max="65535" value="3000" />
+                    <input type="number" id="hhc_emyDef" class="num5" min="0" max="65535" value="700" />
+                    <input type="number" id="hhc_emyResi" class="num3" min="0" max="100" value="30" />
+                    <input type="number" id="hhc_emyMotion" class="num3" min="0" max="999" value="18" />
+                    <input type="number" id="hhc_emyFrm" class="num3" min="0" max="999" value="32" />
+                </div>
+                <div class="mainrow">
+                    <label class="maincap">　</label>
+                    <select id="hhc_emyType">
+                        <option value="1" selected>物理
+                        <option value="2">魔法
+                        <option value="3">貫通
+                    </select>
+                </div>
+                
 	            <br>
 	            <div>
 	                <label class="maincap">　</label>
-	                <label style="width: 60px; display: block; float: left; text-align: center;">ＨＰ</label>
-	                <label style="width: 60px; display: block; float: left; text-align: center;">防御</label>
-	                <label style="width: 52px; display: block; float: left; text-align: center;">魔耐</label>
+                    <label style="width: 59px; display: block; float: left; text-align: center;">ＨＰ</label>
+                    <label style="width: 66px; display: block; float: left; text-align: center;">防御</label>
+                    <label style="width: 46px; display: block; float: left; text-align: center;">魔耐</label>
 	                <br style="clear: both;">
 	            </div>
 	            <div>
 	                <label class="maincap" style="margin-top: 4px;">壁ｽﾃｰﾀｽ：</label>
 	                <input type="number" id="hhcHp" class="num5" min="0" max="65535" value="2600" />
-	                <input type="number" id="hhcDef" class="num5" min="0" max="65535" value="2520" />
+                    <input type="number" id="hhcDef" class="num5" min="0" max="65535" value="2520" />
 	                <input type="number" id="hhcResi" class="num3" min="0" max="100" value="20" />
 	            </div>
+                <div style="margin-top: 4px;">
+                    <label class="maincap">　</label>
+                    <label style="width: 60px; display: block; float: left; text-align: center;">攻撃</label>
+                    <label style="width: 50px; display: block; float: left; text-align: center;">発生</label>
+                    <label style="width: 40px; display: block; float: left; text-align: center;">全体</label>
+                    <label style="width: 70px; display: block; float: left; text-align: center;">ｽｷﾙ</label>
+                    <label style="width: 58px; display: block; float: left; text-align: center;">特攻</label>
+                    <br style="clear: both;">
+                </div>
+                
+                <div>
+                    <label class="maincap">攻撃(壁)：</label>
+                    <input type="number" id="hhcAtk" class="num5" min="0" max="65535" value="648" />
+                    <input type="number" id="hhcMotion" class="num3" min="0" max="999" value="3" />
+                    <input type="number" id="hhcFrm" class="num3" min="0" max="999" value="34" />
+                    <input type="number" id="hhcSkill" class="num5" min="0" max="10" value="3" step="0.001"/>
+                    <input type="number" id="hhcSP" class="num5" min="0" max="10" value="1" step="0.001"/>
+                    <select id="hhcType">
+                        <option value="1" selected>物理
+                        <option value="2">魔法
+                        <option value="3">貫通
+                    </select>
+                </div>
 	
-	            <br>
-	            <div>
-	                <label class="maincap">　</label>
-	                <label style="width: 60px; display: block; float: left; text-align: center;">回復</label>
-	                <label style="width: 46px; display: block; float: left; text-align: center;">発生</label>
-	                <label style="width: 46px; display: block; float: left; text-align: center;">全体</label>
-	                <label style="width: 46px; display: block; float: left; text-align: center;">ずらし</label>
-	                <br style="clear: both;">
-	            </div>
-	
+                <br>
+                <div>
+                    <label class="maincap">　</label>
+                    <label style="width: 60px; display: block; float: left; text-align: center;">攻撃</label>
+                    <label style="width: 50px; display: block; float: left; text-align: center;">発生</label>
+                    <label style="width: 40px; display: block; float: left; text-align: center;">全体</label>
+                    <label style="width: 70px; display: block; float: left; text-align: center;">ｽｷﾙ</label>
+                    <label style="width: 58px; display: block; float: left; text-align: center;">特攻</label>
+                    <br style="clear: both;">
+                </div>
+    
+                <div>
+                    <label class="maincap" style="margin-top: 4px;">攻撃(1)：</label>
+                    <input type="number" id="hhc_Atk1" class="num5" min="0" max="65535" value="374" />
+                    <input type="number" id="hhc_Atk1_Motion" class="num3" min="1" max="999" value="4" />
+                    <input type="number" id="hhc_Atk1_Frm" class="num3" min="1" max="999" value="21" />
+                    <input type="number" id="hhc_Atk1_Skill" class="num5" min="0" max="10" value="1.6" step="0.001"/>
+                    <input type="number" id="hhc_Atk1_SP" class="num5" min="0" max="10" value="1.4" step="0.001"/>
+                    <select id="hhc_Atk1_Type">
+                        <option value="1" selected>物理
+                        <option value="2">魔法
+                        <option value="3">貫通
+                    </select>
+                </div>
+    
+                <div class="mainrow">
+                    <label class="maincap" style="margin-top: 4px;">攻撃(2)：</label>
+                    <input type="number" id="hhc_Atk2" class="num5" min="0" max="65535" value="294" />
+                    <input type="number" id="hhc_Atk2_Motion" class="num3" min="1" max="999" value="15" />
+                    <input type="number" id="hhc_Atk2_Frm" class="num3" min="1" max="999" value="71" />
+                    <input type="number" id="hhc_Atk2_Skill" class="num5" min="0" max="10" value="1" step="0.001"/>
+                    <input type="number" id="hhc_Atk2_SP" class="num5" min="0" max="10" value="1" step="0.001"/>
+                    <select id="hhc_Atk2_Type">
+                        <option value="1" selected>物理
+                        <option value="2">魔法
+                        <option value="3">貫通
+                    </select>
+                </div>
+    
+                <div class="mainrow">
+                    <label class="maincap" style="margin-top: 4px;">攻撃(3)：</label>
+                    <input type="number" id="hhc_Atk3" class="num5" min="0" max="65535" value="707" />
+                    <input type="number" id="hhc_Atk3_Motion" class="num3" min="1" max="999" value="18" />
+                    <input type="number" id="hhc_Atk3_Frm" class="num3" min="1" max="999" value="82" />
+                    <input type="number" id="hhc_Atk3_Skill" class="num5" min="0" max="10" value="1" step="0.001"/>
+                    <input type="number" id="hhc_Atk3_SP" class="num5   " min="0" max="10" value="1" step="0.001"/>
+                    <select id="hhc_Atk3_Type">
+                        <option value="1">物理
+                        <option value="2" selected>魔法
+                        <option value="3">貫通
+                    </select>
+                </div>
+    
+                <br>
+                <div>
+                    <label class="maincap">　</label>
+                    <label style="width: 60px; display: block; float: left; text-align: center;">回復</label>
+                    <label style="width: 50px; display: block; float: left; text-align: center;">発生</label>
+                    <label style="width: 40px; display: block; float: left; text-align: center;">全体</label>
+                    <label style="width: 54px; display: block; float: left; text-align: center;">ずらし</label>
+                    <br style="clear: both;">
+                </div>
+    
 	            <div>
 	                <label class="maincap" style="margin-top: 4px;">ﾋｰﾗｰ(1)：</label>
-	                <input type="number" id="hhc_Heal1" class="num5" min="0" max="65535" value="513" />
+	                <input type="number" id="hhc_Heal1" class="num5" min="0" max="65535" value="428" />
 	                <input type="number" id="hhc_Heal1_Motion" class="num3" min="1" max="999" value="31" />
 	                <input type="number" id="hhc_Heal1_Frm" class="num3" min="1" max="999" value="82" />
 	                <input type="number" id="hhc_Heal1_Shift" class="num3" min="0" max="999" value="0" />
@@ -251,7 +336,7 @@
 	
 	            <div class="mainrow">
 	                <label class="maincap" style="margin-top: 4px;">ﾋｰﾗｰ(2)：</label>
-	                <input type="number" id="hhc_Heal2" class="num5" min="0" max="65535" value="349" />
+	                <input type="number" id="hhc_Heal2" class="num5" min="0" max="65535" value="291" />
 	                <input type="number" id="hhc_Heal2_Motion" class="num3" min="1" max="999" value="25" />
 	                <input type="number" id="hhc_Heal2_Frm" class="num3" min="1" max="999" value="84" />
 	                <input type="number" id="hhc_Heal2_Shift" class="num3" min="0" max="999" value="0" />
@@ -259,7 +344,7 @@
 	            
 	            <div class="mainrow">
 	                <label class="maincap" style="margin-top: 4px;">ﾋｰﾗｰ(3)：</label>
-	                <input type="number" id="hhc_Heal3" class="num5" min="0" max="65535" value="258" />
+	                <input type="number" id="hhc_Heal3" class="num5" min="0" max="65535" value="215" />
 	                <input type="number" id="hhc_Heal3_Motion" class="num3" min="1" max="999" value="42" />
 	                <input type="number" id="hhc_Heal3_Frm" class="num3" min="1" max="999" value="82" />
 	                <input type="number" id="hhc_Heal3_Shift" class="num3" min="0" max="999" value="0" />
@@ -400,7 +485,7 @@
 	            
 	            <div class="bufrow">
 	                <label class="bufcap">　</label>
-	                <label class="tooltip" tooltip="神器の継承者" ><input type="radio" name="op_prince" class="skillradio" value="1" style="margin-right: 3px !important;" />神器</label>
+	                <label class="tooltip" tooltip="神器の継承者" ><input type="radio" name="op_prince" class="skillradio" value="1.2" style="margin-right: 3px !important;" />神器</label>
 	            </div>
 	            
 	            <div class="bufrow">
@@ -901,7 +986,8 @@
                     <th>ﾌﾚｰﾑ数
                     <th>時間(秒)
                     <th>状態
-                    <th>ＨＰ変化
+                    <th>ＨＰ(壁)
+                    <th>ＨＰ(敵)
                     <th>被弾
                     <th>ﾋｰﾗｰ1
                     <th>ﾋｰﾗｰ2
@@ -963,7 +1049,9 @@
             　　　　　　　Dmg列には与ダメ(1回分)が表示されます<br>
             <br>
             　　　　　　<b>(new)必死計算(β)</b>(永遠にβ)<br>
-            　　　　　　　<font color="red">この計算では入力値に対してバフ・士気高揚などのオプションは適用されません</font><br>
+            　　　　　　　<s>この計算では入力値に対してバフ・士気高揚などのオプションは適用されません</s><br>
+            　　　　　　　<font color="red">この計算では攻撃(壁,１～３)と回復(１～３)に対してだけ士気高揚が適用されます</font><br>
+            　　　　　　　※スキルや特攻計算のため変更。防御にはかかりません<br>
             　　　　　　　(´・ω・｀)スキルとか含めると効果時間なんかを筆頭に諸々増えすぎて作成に時間がかかりすぎるので許してね<br>
             　　　　　　　<br>
             　　　　　　　攻撃○○、攻撃速度(発生、全体)○○の敵を<br>
@@ -1211,6 +1299,7 @@
 <script type="text/javascript" src="./js/parser-input-select.js"></script>
 <script type="text/javascript" src="./js/linq.min.js"></script>
 <script type="text/javascript" src="./js/jquery.linq.min.js"></script>
+<script type="text/javascript" src="./js/hhc.js"></script>
 <script type="text/javascript" src="./js/submit.js"></script>
 <script type="text/javascript" src="./js/result.js"></script>
 <script type="text/javascript" src="./js/save.js"></script>
