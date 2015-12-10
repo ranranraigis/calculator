@@ -21,6 +21,7 @@ function submit_hhc(){
 
     var sBuf = skillbuffs;
     var prince = sBuf.prince;
+    prince = (sBuf.prince_s === 1.2)? 1.2: prince;
     
     var hp = toNum($('#hhcHp').val());
     var def = toNum($('#hhcDef').val());
